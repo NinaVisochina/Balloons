@@ -7774,11 +7774,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj",
+      "projectUniqueName": "D:\\step\\project-root\\backend\\BackendShop.csproj",
       "projectName": "BackendShop",
-      "projectPath": "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj",
+      "projectPath": "D:\\step\\project-root\\backend\\BackendShop.csproj",
       "packagesPath": "C:\\Users\\HOME\\.nuget\\packages\\",
-      "outputPath": "D:\\repos\\BackendShop2-\\BackendShop\\obj\\",
+      "outputPath": "D:\\step\\project-root\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "rf9T1ATmla8=",
+  "dgSpecHash": "QULnFNBjpbU=",
   "success": true,
-  "projectFilePath": "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj",
+  "projectFilePath": "D:\\step\\project-root\\backend\\BackendShop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HOME\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\HOME\\.nuget\\packages\\azure.core\\1.44.1\\azure.core.1.44.1.nupkg.sha512",
