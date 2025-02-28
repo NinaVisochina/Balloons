@@ -18,6 +18,7 @@ public class CartService : ICartService
         var cart = await _context.Carts
             .Include(c => c.Items)
             .ThenInclude(ci => ci.Product)
+            .ThenInclude(p => p.ProductImages) // Додано Include для зображень
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
         if (cart == null) return new CartDto { UserId = userId };
@@ -31,7 +32,10 @@ public class CartService : ICartService
                 ProductId = i.ProductId,
                 ProductName = i.Product.Name,
                 Quantity = i.Quantity,
-                Price = i.Product.Price
+                Price = i.Product.Price,
+                Images = i.Product.ProductImages != null
+                    ? i.Product.ProductImages.Select(img => img.Image).ToList()
+                    : new List<string>()
             }).ToList()
         };
     }
@@ -90,4 +94,27 @@ public class CartService : ICartService
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task UpdateCartItemQuantityAsync(string userId, int productId, int quantity)
+    {
+        var cart = await _context.Carts
+            .Include(c => c.Items)
+            .FirstOrDefaultAsync(c => c.UserId == userId);
+
+        if (cart != null)
+        {
+            var cartItem = cart.Items.FirstOrDefault(ci => ci.ProductId == productId);
+            if (cartItem != null)
+            {
+                cartItem.Quantity = quantity;
+                if (cartItem.Quantity <= 0)
+                {
+                    cart.Items.Remove(cartItem);
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
+
+
 }

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using BackendShop.Core.Dto;
+using BackendShop.Core.Dto.User;
 using BackendShop.Core.Exceptions;
 using BackendShop.Core.Interfaces;
 using BackendShop.Data.Entities;
 using BackendShop.Data.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BackendShop.Core.Services
@@ -50,12 +53,30 @@ namespace BackendShop.Core.Services
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
                 throw new HttpException("Invalid login or password.", HttpStatusCode.BadRequest);
+            
 
+            var roles = await userManager.GetRolesAsync(user); // Отримуємо ролі користувача
+            //bool isAdmin = roles.Contains("Admin"); // Перевіряємо, чи є роль Admin
+            bool isAdmin = roles.Any(role => role.Equals("Admin", StringComparison.OrdinalIgnoreCase));
+
+
+            // Можна додати додатковий лог для перевірки ролей
+            Console.WriteLine($"User roles: {string.Join(", ", roles)}");
+
+            // Генеруємо access токен з ролями користувача
+            var claims = jwtService.GetClaims(user).ToList(); // Отримуємо claims для користувача
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role))); // Додаємо ролі як claims
+            Console.WriteLine($"Claims before adding roles: {string.Join(", ", claims.Select(c => c.Type + ":" + c.Value))}");
+            var accessToken = jwtService.CreateToken(claims); // Створюємо токен з усіма claims
             // generate access token... (JWT)
+            var entity = await CreateRefreshToken(user.Id);
+
             return new UserTokens
             {
-                AccessToken = jwtService.CreateToken(jwtService.GetClaims(user)),
-                RefreshToken = CreateRefreshToken(user.Id).Token
+                AccessToken = accessToken,
+                RefreshToken = entity.Token,
+                UserId = user.Id, // Додаємо userId до відповіді
+                IsAdmin = isAdmin//повертати також поле isAdmin
             };
         }
 
@@ -68,7 +89,7 @@ namespace BackendShop.Core.Services
             await refreshTokenR.Save();
         }
 
-        private RefreshToken CreateRefreshToken(string userId)
+        private async Task<RefreshToken> CreateRefreshToken(string userId)
         {
             var refeshToken = jwtService.CreateRefreshToken();
 
@@ -79,14 +100,50 @@ namespace BackendShop.Core.Services
                 CreationDate = DateTime.UtcNow // Now vs UtcNow
             };
 
-            refreshTokenR.Insert(refreshTokenEntity);
-            refreshTokenR.Save();
+            await refreshTokenR.Insert(refreshTokenEntity);
+            await refreshTokenR.Save();
 
             return refreshTokenEntity;
         }
 
         public async Task<UserTokens> RefreshTokens(UserTokens userTokens)
         {
+            //// Розпарсити claims із протермінованого токена
+            //var claims = jwtService.GetClaimsFromExpiredToken(userTokens.AccessToken);
+
+            //// Знайти користувача через claims
+            //var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            //if (string.IsNullOrEmpty(userId))
+            //    throw new HttpException("Invalid access token.", HttpStatusCode.BadRequest);
+
+            //var user = await userManager.FindByIdAsync(userId);
+
+            //if (user == null)
+            //    throw new HttpException("User not found.", HttpStatusCode.NotFound);
+
+            //// Перевірити рефреш-токен
+            //var refreshToken = user.RefreshTokens.FirstOrDefault(rt => rt.Token == userTokens.RefreshToken);
+
+            //if (refreshToken == null || jwtService.IsRefreshTokenExpired(refreshToken.CreationDate))
+            //    throw new HttpException("Invalid or expired refresh token.", HttpStatusCode.Unauthorized);
+
+            //// Оновити рефреш-токен (якщо потрібно)
+            //var newRefreshToken = jwtService.CreateRefreshToken();
+            //refreshToken.Token = newRefreshToken;
+            //refreshToken.CreationDate = DateTime.UtcNow;
+
+            //await userManager.UpdateAsync(user);
+
+            //// Створити новий access токен
+            //var newAccessToken = jwtService.CreateToken(claims);
+
+            //return new UserTokens
+            //{
+            //    AccessToken = newAccessToken,
+            //    RefreshToken = newRefreshToken
+            //};
+
             var refrestToken = (await refreshTokenR.Get(x => x.Token == userTokens.RefreshToken)).FirstOrDefault();
 
             if (refrestToken == null || jwtService.IsRefreshTokenExpired(refrestToken.CreationDate))
@@ -108,7 +165,6 @@ namespace BackendShop.Core.Services
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             };
-
             return tokens;
         }
 
@@ -123,29 +179,66 @@ namespace BackendShop.Core.Services
             }
             await refreshTokenR.Save();
         }
+        public async Task<User> GetProfileAsync(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
 
-        //public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
-        //{
-        //    var users = await userManager.GetUsersInRoleAsync("User");
-        //    return users.Select(user => new UserDto
-        //    {
-        //        Id = user.UserId,
-        //        Firstname = user.Firstname,
-        //        Lastname = user.Lastname,
-        //        Email = user.Email
-        //    });
-        //}
+            if (user == null)
+                throw new HttpException("User not found.", HttpStatusCode.NotFound);
 
-        //public async Task<IEnumerable<UserDto>> GetAllAdminsAsync()
-        //{
-        //    var admins = await userManager.GetUsersInRoleAsync("Admin");
-        //    return admins.Select(admin => new UserDto
-        //    {
-        //        Id = admin.UserId,
-        //        Firstname = admin.Firstname,
-        //        Lastname = admin.Lastname,
-        //        Email = admin.Email
-        //    });
-        //}
+            return new User
+            {
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Birthdate = user.Birthdate
+            };
+        }
+
+        public async Task UpdateProfileAsync(string userId, UpdateProfileDto model)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new Exception("Користувача не знайдено");
+
+            // Оновлюємо дані користувача
+            user.Firstname = model.FirstName;
+            user.Lastname = model.LastName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Email = model.Email;
+
+            // Додайте валідацію для інших полів, якщо потрібно
+            if (!string.IsNullOrEmpty(model.Birthdate))
+            {
+                if (DateTime.TryParse(model.Birthdate, out var birthdate))
+                {
+                    user.Birthdate = birthdate;
+                }
+                else
+                {
+                    throw new Exception("Некоректний формат дати народження");
+                }
+            }
+
+            // Зберігаємо зміни
+            var result = await userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await userManager.GetUsersInRoleAsync("User");
+        }
+
+        public async Task<IEnumerable<User>> GetAllAdminsAsync()
+        {
+            return await userManager.GetUsersInRoleAsync("Admin");
+        }
     }
 }

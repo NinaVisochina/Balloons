@@ -56,6 +56,27 @@ namespace BackendShop.BackShop.Controllers
             var result = await _productService.UploadDescImageAsync(model);
             return Ok(result);
         }
+
+        [HttpGet("bySubCategory/{subCategoryId}")]
+        public async Task<IActionResult> GetBySubCategoryId(int subCategoryId)
+        {
+            var products = await _productService.GetBySubCategoryIdAsync(subCategoryId);
+            return Ok(products);
+        }
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery(Name = "name")] string query)
+        {
+            var products = await _productService.SearchProductsAsync(query);
+            return Ok(products);
+        }
+        [HttpGet("slug/{slug}")]
+        public async Task<IActionResult> GetBySlug(string slug)
+        {
+            var product = await _productService.GetBySlugAsync(slug);
+            if (product == null) return NotFound();
+            return Ok(product);
+        }
+
     }
 
     //[Route("api/[controller]")]

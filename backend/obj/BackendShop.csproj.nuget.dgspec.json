@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\step\\Programs\\BackendShop2-master\\BackendShop2-master\\BackendShop\\BackendShop.csproj": {}
+    "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj": {}
   },
   "projects": {
-    "D:\\step\\Programs\\BackendShop2-master\\BackendShop2-master\\BackendShop\\BackendShop.csproj": {
+    "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\step\\Programs\\BackendShop2-master\\BackendShop2-master\\BackendShop\\BackendShop.csproj",
+        "projectUniqueName": "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj",
         "projectName": "BackendShop",
-        "projectPath": "D:\\step\\Programs\\BackendShop2-master\\BackendShop2-master\\BackendShop\\BackendShop.csproj",
+        "projectPath": "D:\\repos\\BackendShop2-\\BackendShop\\BackendShop.csproj",
         "packagesPath": "C:\\Users\\HOME\\.nuget\\packages\\",
-        "outputPath": "D:\\step\\Programs\\BackendShop2-master\\BackendShop2-master\\BackendShop\\obj\\",
+        "outputPath": "D:\\repos\\BackendShop2-\\BackendShop\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -70,9 +70,9 @@
               "target": "Package",
               "version": "[1.8.17, )"
             },
-            "Hangfire.SqlServer": {
+            "Hangfire.PostgreSql": {
               "target": "Package",
-              "version": "[1.8.17, )"
+              "version": "[1.20.10, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
@@ -87,10 +87,6 @@
               "version": "[8.0.11, )"
             },
             "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.0.0, )"
-            },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
@@ -115,6 +111,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.1, )"
             },
             "SixLabors.ImageSharp": {
               "target": "Package",

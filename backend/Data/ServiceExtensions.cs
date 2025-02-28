@@ -10,13 +10,13 @@ namespace BackendShop.Data
 {
     public static class ServiceExtensions
     {
+       
         public static void AddDbContext(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<ShopDbContext>(options =>
-                options.UseSqlServer(connectionString)
+                options.UseNpgsql(connectionString)
             );
         }
-
         public static void AddIdentity(this IServiceCollection services)
         {
             services.AddIdentityCore<User>(options =>

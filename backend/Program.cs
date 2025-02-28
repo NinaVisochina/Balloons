@@ -15,6 +15,8 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+//builder.Services.AddDbContext<ShopDbContext>(options =>
+//    options.UseNpgsql(connectionString));
 
 // Add services to the container.
 

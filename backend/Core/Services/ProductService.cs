@@ -42,6 +42,7 @@ namespace BackendShop.Services
         public async Task CreateAsync(ProductCreateViewModel model)
         {
             var entity = _mapper.Map<ProductEntity>(model);
+            entity.GenerateSlug();
             _context.Products.Add(entity);
             await _context.SaveChangesAsync();
 
@@ -70,6 +71,7 @@ namespace BackendShop.Services
             }
         }
 
+
         public async Task EditAsync(ProductEditViewModel model)
         {
             var product = await _context.Products
@@ -78,6 +80,23 @@ namespace BackendShop.Services
 
             if (product == null) throw new Exception("Продукт не знайдено");
 
+            // Перевіряємо, чи змінилась назва продукту
+            if (product.Name != model.Name)
+            {
+                product.Name = model.Name;
+                product.GenerateSlug(); // Генеруємо новий Slug
+
+                // Перевіряємо, чи новий Slug вже існує
+                var existingSlug = await _context.Products
+                    .AnyAsync(p => p.Slug == product.Slug && p.Id != product.Id);
+
+                if (existingSlug)
+                {
+                    throw new Exception("Slug вже використовується. Оберіть іншу назву.");
+                }
+            }
+
+            // Оновлюємо інші поля продукту
             _mapper.Map(model, product);
 
             var oldNameImages = model.Images.Where(x => x.ContentType.Contains("old-image"))
@@ -117,6 +136,7 @@ namespace BackendShop.Services
             await _context.SaveChangesAsync();
         }
 
+
         public async Task DeleteAsync(int id)
         {
             var product = await _context.Products
@@ -155,5 +175,41 @@ namespace BackendShop.Services
 
             throw new Exception("Зображення не завантажено");
         }
+        public async Task<List<ProductItemViewModel>> GetBySubCategoryIdAsync(int subCategoryId)
+        {
+            var products = await _context.Products
+                .Where(p => p.SubCategoryId == subCategoryId)
+                .ProjectTo<ProductItemViewModel>(_mapper.ConfigurationProvider) // Автоматичне мапінг DTO через AutoMapper
+                .ToListAsync();
+
+            if (!products.Any())
+                throw new Exception("Продуктів для цієї підкатегорії не знайдено");
+
+            return products;
+        }
+        public async Task<List<ProductItemViewModel>> SearchProductsAsync(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return new List<ProductItemViewModel>(); // Повертаємо пустий список замість викидання винятку
+            }
+
+            var products = await _context.Products
+                .Where(p => p.Name.ToLower().Contains(query.ToLower()) ||
+                            p.Description.ToLower().Contains(query.ToLower())) // Робимо пошук нечутливим до регістру
+                .ProjectTo<ProductItemViewModel>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return products; // Просто повертаємо пустий список, якщо нічого не знайдено
+        }
+
+        public async Task<ProductItemViewModel> GetBySlugAsync(string slug)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Slug == slug);
+            if (product == null) return null;
+            return _mapper.Map<ProductItemViewModel>(product);
+        }
+
+
     }
 }

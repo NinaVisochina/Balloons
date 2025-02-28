@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BackendShop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+31930971fd60409b7f5198bc37614b9533f62545")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8dcfc8243d03fb83a976aa45cfb2dba7fee054e")]
 [assembly: System.Reflection.AssemblyProductAttribute("BackendShop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BackendShop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

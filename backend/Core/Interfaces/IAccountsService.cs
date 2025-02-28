@@ -1,4 +1,6 @@
 ﻿using BackendShop.Core.Dto;
+using BackendShop.Core.Dto.User;
+using BackendShop.Data.Entities;
 
 namespace BackendShop.Core.Interfaces
 {
@@ -7,9 +9,11 @@ namespace BackendShop.Core.Interfaces
         Task Register(RegisterDto model);
         Task<UserTokens> Login(LoginDto model);
         Task Logout(string refreshToken);
-        //Task<IEnumerable<UserDto>> GetAllUsersAsync();
-        //Task<IEnumerable<UserDto>> GetAllAdminsAsync();
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<IEnumerable<User>> GetAllAdminsAsync();
         Task<UserTokens> RefreshTokens(UserTokens tokens);
         Task RemoveExpiredRefreshTokens();
+        Task<User> GetProfileAsync(string userId);
+        Task UpdateProfileAsync(string userId, UpdateProfileDto model);
     }
 }

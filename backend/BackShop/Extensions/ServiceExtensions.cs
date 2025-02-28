@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace BackendShop.BackShop.Extensions
 {
@@ -68,11 +69,20 @@ namespace BackendShop.BackShop.Extensions
                 });
             });
         }
+        //public static void AddHangfire(this IServiceCollection services, string connectionString)
+        //{
+        //    services.AddHangfire(config =>
+        //    {
+        //        config.UseSqlServerStorage(connectionString);
+        //    });
+
+        //    services.AddHangfireServer();
+        //}
         public static void AddHangfire(this IServiceCollection services, string connectionString)
         {
             services.AddHangfire(config =>
             {
-                config.UseSqlServerStorage(connectionString);
+                config.UsePostgreSqlStorage(connectionString);
             });
 
             services.AddHangfireServer();
