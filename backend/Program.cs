@@ -45,7 +45,7 @@ builder.Services.AddExceptionHandler();
 
 builder.Services.AddJWT(builder.Configuration);
 builder.Services.AddSwaggerJWT();
-builder.Services.AddHangfire(connectionString);
+//builder.Services.AddHangfire(connectionString);
 
 builder.Services.AddCorsPolicies();
 
@@ -73,7 +73,7 @@ if (!Directory.Exists(imagesDirPath))
 {
     Directory.CreateDirectory(imagesDirPath);
 }
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("front-end-cors-policy");
 
@@ -85,8 +85,8 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(imagesDirPath),
     RequestPath = "/images"
 });
-app.UseHangfireDashboard("/dash");
-JobConfigurator.AddJobs();
+//app.UseHangfireDashboard("/dash");
+//JobConfigurator.AddJobs();
 app.SeedDataAsync();
 app.MapControllers();
 using (var scope = app.Services.CreateScope())
