@@ -18,10 +18,7 @@ dist-ssr/
 
 # Environment variables
 *.local
-.env
-frontend/.env
-frontend/.env.development
-backend/.env
+
 
 # Editor directories and files
 .vscode/
