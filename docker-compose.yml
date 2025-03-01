@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     container_name: balloons_frontend_1  # ✅ Назва контейнера для фронтенду
     ports:
-      - "3000:3000"  # ✅ Фронтенд слухає на 3000 порту
+      - "3000:80"  # ✅ Фронтенд слухає на 3000 порту
     depends_on:
       - backend
     restart: always
