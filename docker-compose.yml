@@ -9,7 +9,7 @@ services:
     ports:
       - "5000:5000"  # ✅ Бекенд слухає на 5000 порту всередині контейнера
     environment:
-      - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=mydb;Username=postgres;Password=123456
+      - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
     depends_on:
       - db
     restart: always  # ✅ Додаємо автоматичний рестарт при збої
@@ -32,7 +32,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: mydb
+      POSTGRES_DB: backendshop
     ports:
       - "5432:5432"
     volumes:
