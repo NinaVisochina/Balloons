@@ -1,28 +1,33 @@
-
+version: '3.9'
 
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: balloons_backend_1  # ✅ Додаємо зрозумілу назву контейнера бекенду
     ports:
-      - "5000:80"
+      - "5000:5000"  # ✅ Бекенд слухає на 5000 порту всередині контейнера
     environment:
-      - ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=mydb;User Id=postgres;Password=123456;
+      - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=mydb;Username=postgres;Password=123456
     depends_on:
       - db
+    restart: always  # ✅ Додаємо автоматичний рестарт при збої
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: balloons_frontend_1  # ✅ Назва контейнера для фронтенду
     ports:
-      - "3000:80"
+      - "3000:3000"  # ✅ Фронтенд слухає на 3000 порту
     depends_on:
       - backend
+    restart: always
 
   db:
     image: postgres:latest
+    container_name: balloons_db_1  # ✅ Назва контейнера для бази даних
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -32,6 +37,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:  # ✅ Перевірка, чи PostgreSQL запущений
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
 
 volumes:
   postgres_data:
