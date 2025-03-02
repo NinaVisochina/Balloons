@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\step\\project-root\\backend\\BackendShop.csproj": {}
+    "D:\\diplom\\backend\\BackendShop.csproj": {}
   },
   "projects": {
-    "D:\\step\\project-root\\backend\\BackendShop.csproj": {
+    "D:\\diplom\\backend\\BackendShop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\step\\project-root\\backend\\BackendShop.csproj",
+        "projectUniqueName": "D:\\diplom\\backend\\BackendShop.csproj",
         "projectName": "BackendShop",
-        "projectPath": "D:\\step\\project-root\\backend\\BackendShop.csproj",
-        "packagesPath": "C:\\Users\\HOME\\.nuget\\packages\\",
-        "outputPath": "D:\\step\\project-root\\backend\\obj\\",
+        "projectPath": "D:\\diplom\\backend\\BackendShop.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "D:\\diplom\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\HOME\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -42,7 +42,7 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
         "SdkAnalysisLevel": "9.0.100"
       },
@@ -148,7 +148,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
