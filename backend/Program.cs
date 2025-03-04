@@ -85,8 +85,8 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(imagesDirPath),
     RequestPath = "/images"
 });
-app.UseHangfireDashboard("/dash");
-JobConfigurator.AddJobs();
+//app.UseHangfireDashboard("/dash");
+//JobConfigurator.AddJobs();
 app.SeedDataAsync();
 app.MapControllers();
 using (var scope = app.Services.CreateScope())
@@ -95,6 +95,7 @@ using (var scope = app.Services.CreateScope())
 
     await services.SeedRoles();
     await services.SeedAdmin();
+    //hello
 }
 app.Run();
 //using BackendShop.Core.Interfaces;

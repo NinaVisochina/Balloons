@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
         '/api': {
-            target: 'http://localhost:5126', // Порт, на якому працює ваш бекенд
+            target: 'http://localhost:5000', // Порт, на якому працює ваш бекенд
             changeOrigin: true,
             secure: false
         }
