@@ -1,4 +1,4 @@
-# Ігноруємо зайві файли в Docker
+# пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ Docker
 node_modules
 dist
 bin
@@ -8,4 +8,4 @@ Dockerfile
 .dockerignore
 .git
 .gitignore
-.env
+
