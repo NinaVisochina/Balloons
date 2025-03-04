@@ -45,7 +45,7 @@ builder.Services.AddExceptionHandler();
 
 builder.Services.AddJWT(builder.Configuration);
 builder.Services.AddSwaggerJWT();
-builder.Services.AddHangfire(connectionString);
+//builder.Services.AddHangfire(connectionString);
 
 builder.Services.AddCorsPolicies();
 
@@ -59,11 +59,11 @@ var app = builder.Build();
 //}
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler();
@@ -73,7 +73,7 @@ if (!Directory.Exists(imagesDirPath))
 {
     Directory.CreateDirectory(imagesDirPath);
 }
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("front-end-cors-policy");
 
