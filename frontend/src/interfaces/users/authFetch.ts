@@ -1,4 +1,4 @@
-const API_URL = "/api/Accounts";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const refreshTokens = async (onLogout: () => void): Promise<string | null> => {
   try {
@@ -7,7 +7,7 @@ const refreshTokens = async (onLogout: () => void): Promise<string | null> => {
     
     if (!refreshToken) throw new Error("Refresh token is missing");
 
-    const response = await fetch(`${API_URL}/refreshTokens`, {
+    const response = await fetch(`${API_URL}/api/accounts/refreshTokens`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -41,14 +41,14 @@ export const authFetch = async (
   onLogout: () => void
 ): Promise<Response> => {
   const accessToken = localStorage.getItem("accessToken");
-
+  const fullUrl = url.startsWith("http") ? url : `${API_URL}${url}`; // Додаємо базовий URL, якщо це відносний шлях
   if (!options.headers) options.headers = {};
   options.headers = {
     ...options.headers,
     Authorization: `Bearer ${accessToken}`,
   };
 
-  let response = await fetch(url, options);
+  let response = await fetch(fullUrl, options);
 
   // Якщо токен прострочений, спробуємо оновити його
   if (response.status === 401) {

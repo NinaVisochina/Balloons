@@ -10,7 +10,14 @@ export default defineConfig({
             changeOrigin: true,
             secure: false
         }
+    },
+    fs: {
+      allow: [
+        '.', // Дозволяє доступ до кореня проєкту (frontend)
+        '../node_modules/slick-carousel/slick' // Дозволяє доступ до шрифтів slick-carousel
+      ]
     }
 },
+
   plugins: [react()],
 })

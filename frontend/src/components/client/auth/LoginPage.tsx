@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthResponse } from "../../../interfaces/users/AuthResponse";
-import { authFetch } from "../../../interfaces/users/authFetch";
+//import { AuthResponse } from "../../../interfaces/users/AuthResponse";
+//import { authFetch } from "../../../interfaces/users/authFetch";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { cartSlice, clearCart } from "../../../interfaces/cart/cartSlice";
+import { cartSlice } from "../../../interfaces/cart/cartSlice";
 import { API_URL } from "../../../env";
+import { useLoginMutation } from "../../../services/authApi";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [login] = useLoginMutation(); // Хук для логіну
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -28,47 +30,51 @@ const LoginPage = () => {
   
   const handleLogin = async () => {
     try {
-      const response = await authFetch("/api/accounts/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      }, () => navigate("/login")); // Pass a logout callback if necessary
+      const result = await login({ email, password }).unwrap();
+      localStorage.setItem("accessToken", result.token); // Зберігаємо токен
+      localStorage.setItem("userId", "some-user-id"); // Заміни на реальний userId, якщо бекенд повертає
+      navigate("/"); // Перенаправлення
+      // const response = await authFetch("/api/accounts/auth/login", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({ email, password }),
+      // }, () => navigate("/login")); // Pass a logout callback if necessary
   
-      if (response.ok) {
-        const data: AuthResponse = await response.json();
-        console.log(data);
+      // if (response.ok) {
+      //   const data: AuthResponse = await response.json();
+      //   console.log(data);
 
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("userId", data.userId);
-        //console.log("Saving isAdmin:", data.isAdmin);
-        localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
-        //console.log("Is Admin saved:", localStorage.getItem("isAdmin"));
+      //   localStorage.setItem("accessToken", data.accessToken);
+      //   localStorage.setItem("refreshToken", data.refreshToken);
+      //   localStorage.setItem("userId", data.userId);
+      //   //console.log("Saving isAdmin:", data.isAdmin);
+      //   localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
+      //   //console.log("Is Admin saved:", localStorage.getItem("isAdmin"));
 
-        // Перевірка чи є адміністратор
-        const isAdmin = JSON.parse(localStorage.getItem("isAdmin") || "false");
-        //console.log("Is Admin from localStorage:", isAdmin);
+      //   // Перевірка чи є адміністратор
+      //   const isAdmin = JSON.parse(localStorage.getItem("isAdmin") || "false");
+      //   //console.log("Is Admin from localStorage:", isAdmin);
 
-        // Перевірка чи є адміністратором
-        if (isAdmin) {
-          //alert("Ви увійшли як адміністратор");
-          navigate("/admin");
-        } else {
-          //alert("Успішний вхід як звичайний користувач");
-          navigate("/");
-        }
+      //   // Перевірка чи є адміністратором
+      //   if (isAdmin) {
+      //     //alert("Ви увійшли як адміністратор");
+      //     navigate("/admin");
+      //   } else {
+      //     //alert("Успішний вхід як звичайний користувач");
+      //     navigate("/");
+      //   }
 
-        // Синхронізувати кошик
-        await syncCartToServer(data.accessToken);
+      //   // Синхронізувати кошик
+      //   await syncCartToServer(data.accessToken);
 
-        // Отримати кошик користувача з сервера
-        await fetchCartFromServer(data.accessToken);
+      //   // Отримати кошик користувача з сервера
+      //   await fetchCartFromServer(data.accessToken);
 
-        //alert("Успішний вхід");
-        //navigate("/"); // Перенаправлення на головну сторінку
-      } else {
-        alert("Невірний логін або пароль");
-      }
+      //   //alert("Успішний вхід");
+      //   //navigate("/"); // Перенаправлення на головну сторінку
+      // } else {
+      //   alert("Невірний логін або пароль");
+      // }
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -101,37 +107,37 @@ const LoginPage = () => {
     }
   };
   
-  const syncCartToServer = async (accessToken: string) => {
-    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const userId = localStorage.getItem("userId");
+  // const syncCartToServer = async (accessToken: string) => {
+  //   const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
+  //   const userId = localStorage.getItem("userId");
   
-    if (localCart.length > 0 && userId) {
-      try {
-        console.log("Syncing cart with server:", localCart);
+  //   if (localCart.length > 0 && userId) {
+  //     try {
+  //       console.log("Syncing cart with server:", localCart);
   
-        for (const item of localCart) {
-          const response = await axios.post(
-            `${API_URL}/api/Cart/add`,
-            {
-              UserId: userId,
-              ProductId: item.productId,
-              Quantity: item.quantity
-            },
-            {
-              headers: { Authorization: `Bearer ${accessToken}` },
-            }
-          );
-          console.log("Item synced successfully:", response.data);
-        }
+  //       for (const item of localCart) {
+  //         const response = await axios.post(
+  //           `${API_URL}/api/Cart/add`,
+  //           {
+  //             UserId: userId,
+  //             ProductId: item.productId,
+  //             Quantity: item.quantity
+  //           },
+  //           {
+  //             headers: { Authorization: `Bearer ${accessToken}` },
+  //           }
+  //         );
+  //         console.log("Item synced successfully:", response.data);
+  //       }
   
-        // Очищення локального кошика після синхронізації
-        localStorage.removeItem("cart");
-        dispatch(clearCart());
-      } catch (error) {
-        console.error("Error syncing cart", error);
-      }
-    }
-  };
+  //       // Очищення локального кошика після синхронізації
+  //       localStorage.removeItem("cart");
+  //       dispatch(clearCart());
+  //     } catch (error) {
+  //       console.error("Error syncing cart", error);
+  //     }
+  //   }
+  // };
   
       // try {
       //   for (const item of localCart) {

@@ -1,10 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { API_URL } from "../env";
+
 import { ISubCategoryItem } from "../interfaces/subcategory";
 
 export const subcategoryApi = createApi({
     reducerPath: "subcategoryApi",
-    baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api` }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: import.meta.env.VITE_API_URL
+          ? `${import.meta.env.VITE_API_URL}/api`
+          : '/api', // Для dev із проксі
+          prepareHeaders: (headers) => {
+            console.log('SubCategory API baseUrl:', import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api');
+            return headers;
+          },
+      }),
     endpoints: (builder) => ({
         getSubCategories: builder.query<ISubCategoryItem[], void>({
             query: () => "/subcategory",

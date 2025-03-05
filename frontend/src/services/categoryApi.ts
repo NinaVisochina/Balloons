@@ -1,10 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { ICategoryItem } from '../interfaces/categories';
-import { API_URL } from '../env';
 
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',
-    baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api` }),
+    baseQuery: fetchBaseQuery({
+        
+        baseUrl: import.meta.env.VITE_API_URL
+          ? `${import.meta.env.VITE_API_URL}/api`
+          : '/api', // Для dev із проксі
+          prepareHeaders: (headers) => {
+            console.log('Category API baseUrl:', import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api');
+            return headers;
+          },
+      }),
     endpoints: (builder) => ({
         getCategories: builder.query<ICategoryItem[], void>({
             query: () => 'category',
