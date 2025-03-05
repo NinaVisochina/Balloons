@@ -1,0 +1,11 @@
+# Ігноруємо зайві файли в Docker
+node_modules
+dist
+bin
+obj
+.vs
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.env
