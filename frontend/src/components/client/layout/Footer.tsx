@@ -1,33 +1,42 @@
 import { Link } from "react-router-dom";
 import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
-// import backgroundImage from '../../../assets/images/image-from-rawpixel-id-15134866-jpeg 1.png';
-
-        // primary: '#EDCBC2',        // header
-        // background: '#FFF3EF',   // для фону
-        // accent: '#844E38',      // Темніший для заголовків
-        // secondary: '#CB8E75',            // для іншого тексту
 const Footer = () => {
     return (
-         <footer className="w-full h-[175px] shadow-md items-center justify-between px-6 border-t border-primary">
-            {/* style={{ backgroundImage: `url(${backgroundImage})` }}    */}
-            {/* Thin Top Line with Elevated Inverted Shadow */}
+        <footer className="w-full h-[175px] shadow-md items-center justify-between px-6 border-t border-primary">          
             <div className="bg-background shadow-md"></div>
             <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 mt-2 ">
                 {/* Лого та соціальні мережі */}
                 <div className="flex flex-col items-center md:items-start">
-                    <h2 className="text-accent font-sans mb-4">Ballons<span className="text-accent">Shop</span></h2>
+                    <h2 className="text-accent font-sans mb-4">
+                        Ballons<span className="text-accent">Shop</span>
+                    </h2>
                     <div className="flex space-x-4">
-                        <a href="#" aria-label="Instagram" className="hover:text-darkPurple hover:scale-110 transition duration-200">
+                        <a
+                            href="https://www.instagram.com/kulky_rivne?utm_source=qr&igsh=bm9qZzlkMmpuZDds"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                            className="hover:text-darkPurple hover:scale-110 transition duration-200"
+                        >
                             <FaInstagram className="w-6 h-6" />
                         </a>
-                        <a href="#" aria-label="Facebook" className="hover:text-darkPurple hover:scale-110 transition duration-200">
+                        <a
+                            href="#"
+                            aria-label="Facebook"
+                            className="hover:text-darkPurple hover:scale-110 transition duration-200"
+                        >
                             <FaFacebook className="w-6 h-6" />
                         </a>
-                        <a href="#" aria-label="YouTube" className="hover:text-darkPurple hover:scale-110 transition duration-200">
+                        <a
+                            href="#"
+                            aria-label="YouTube"
+                            className="hover:text-darkPurple hover:scale-110 transition duration-200"
+                        >
                             <FaYoutube className="w-6 h-6" />
                         </a>
                     </div>
                 </div>
+
 
                 {/* Колонка з інформацією */}
                 <div className="text-center md:text-left">
@@ -44,7 +53,7 @@ const Footer = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/pricing" className="hover:underline hover:text-secondary transition duration-200">
+                            <Link to="/pricing-policy" className="hover:underline hover:text-secondary transition duration-200">
                                 Цінова політика
                             </Link>
                         </li>
@@ -61,8 +70,8 @@ const Footer = () => {
                     <h3 className="font-caveat mb-4">Послуги і сервіси</h3>
                     <ul className="space-y-2">
                         <li>
-                            <Link to="/joint-purchases" className="hover:underline hover:text-accent transition duration-200">
-                                Спільні покупки
+                            <Link to="/workinghours" className="hover:underline hover:text-accent transition duration-200">
+                                Графік роботи
                             </Link>
                         </li>
                         <li>

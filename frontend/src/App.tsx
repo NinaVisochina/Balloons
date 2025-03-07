@@ -21,6 +21,7 @@ import RegisterPage from "./components/client/auth/RegisterPage.tsx";
 import ProfilePage from "./components/client/profile/ProfilePage.tsx";
 import AboutPage from "./components/client/layout/AboutPage.tsx";
 import ContactsPage from "./components/client/layout/ContactsPage";
+import WorkingHoursPage from "./components/client/layout/WorkingHoursPage";
 import PricingPolicyPage from "./components/client/layout/PricingPolicyPage.tsx";
 import CategoryPage from "./components/client/layout/CategoryPage.tsx";
 import ProductsPage from "./components/client/layout/ProductsPage.tsx";
@@ -47,22 +48,21 @@ export default function App() {
                         {/* Категорії */}
                         <Route path="categories" element={<CategoriesListPage />} />
                         <Route path="categories/create" element={<CategoryCreatePage />} />
-                        <Route path="categories/edit/:slug" element={<CategoryEditPage />} />
-                        <Route path="categories/view/:slug" element={<CategoryViewPage />} />
+                        <Route path="categories/edit/:id" element={<CategoryEditPage />} />
+                        <Route path="categories/view/:id" element={<CategoryViewPage />} />
 
                         {/* Підкатегорії */}
                         <Route path="subcategories" element={<SubCategoryListPage />} />
                         <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
-                        <Route path="subcategories/edit/:slug" element={<SubCategoryEditPage />} />
-                        <Route path="subcategories/view/:slug" element={<SubCategoryViewPage />} />
+                        <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
+                        <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
 
                         {/* PRODUCTS */}
                         <Route path={"products"}>
                             <Route index element={<ProductListPage />} />
                             <Route path="create" element={<ProductCreatePage />} />
-                            <Route path="edit/:slug" element={<ProductEditPage />} />
-                            <Route path="/admin/products/view/:slug" element={<ProductViewPage />} />
-                            <Route path="subcategory/:subslug" element={<ProductListPage />} />
+                            <Route path="edit/:id" element={<ProductEditPage />} />
+                            <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
                         </Route>
 
                         {/* USERS */}
@@ -88,6 +88,7 @@ export default function App() {
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />
+                    <Route path="workinghours" element={<WorkingHoursPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
                     {/* <Route path="/product/:id" element={<ProductPage />}/> */}
                     {/* <Route path="/subcategory/:id/products" element={<CategoryPage />} /> */}

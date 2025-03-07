@@ -40,8 +40,8 @@ const SidebarLinks = () => {
                 <h3 className="font-bold mb-2 text-lg">Послуги і сервіси</h3>
                 <ul className="space-y-1 text-sm">
                     <li>
-                        <Link to="/joint-purchases" className="text-purple-600 hover:underline font-medium">
-                            Спільні покупки
+                        <Link to="/workinghours" className="text-purple-600 hover:underline font-medium">
+                            Графік роботи
                         </Link>
                     </li>
                     <li>
