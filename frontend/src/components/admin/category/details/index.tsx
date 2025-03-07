@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { API_URL } from "../../../../env/index.ts";
 import { useGetCategoryBySlugQuery, useGetSubCategoriesByCategorySlugQuery } from "../../../../services/categoryApi.ts";
-import Loader from "../../../common/Loader/index.tsx";
-import { ICategoryItem } from "../../../../interfaces/categories/index.ts";
 import { ISubCategoryItem } from "../../../../interfaces/subcategory/index.ts";
 
 const CategoryViewPage = () => {

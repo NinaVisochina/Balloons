@@ -21,7 +21,7 @@ const CategoryEditPage = () => {
     const [file, setFile] = useState<UploadFile | null>(null);
 
     // Завантажуємо категорію за slug
-    const { data: category, isLoading } = useGetCategoryBySlugQuery(slug!, {
+    const { data: category } = useGetCategoryBySlugQuery(slug!, {
         skip: !slug,
     });
 

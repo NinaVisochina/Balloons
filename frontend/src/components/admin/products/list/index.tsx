@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { API_URL, http_common } from "../../../../env";
-import { IProductItem } from "../../../../interfaces/products";
+import { API_URL } from "../../../../env";
 import { useGetSubCategoryBySlugQuery } from "../../../../services/subcategoryApi";
 import { useGetProductsQuery } from "../../../../services/productApi";
 import Loader from "../../../common/Loader";
