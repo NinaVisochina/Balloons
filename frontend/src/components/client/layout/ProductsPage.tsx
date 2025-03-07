@@ -25,21 +25,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
   const categoryId = category?.id ?? null;
   const subCategoryId = subCategory?.id ?? null;
 
-  const { data: products = [], isLoading } = categoryId
+  const { data: products = []} = categoryId
     ? useGetProductsByCategoryIdQuery(categoryId, { skip: !categoryId })
     : useGetProductsBySubCategoryIdQuery(subCategoryId ?? 0, { skip: !subCategoryId });
-
-  // const ProductsPage: React.FC<ProductsPageProps> = ({ categoryId, subCategoryId }) => {
-  //   const { id } = useParams();
-  //   const subId = subCategoryId || Number(id);
-  //   const location = useLocation();
-
-  //   // Отримуємо продукти
-  //   const { data: category } = useGetCategoryQuery(categoryId);
-  //   const { data: subCategory } = useGetSubCategoryQuery(subId);
-  //   const { data: products = [], isLoading } = categoryId
-  //     ? useGetProductsByCategoryIdQuery(categoryId)
-  //     : useGetProductsBySubCategoryIdQuery(subId);
 
   // Стан для вибраних фільтрів
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
@@ -119,7 +107,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
     const toggleWishList = async (productId: number) => {
       const token = localStorage.getItem("accessToken");
-      const userId = localStorage.getItem("userId");
+      // const userId = localStorage.getItem("userId");
 
       // Отримуємо товар за productId
       const product = products?.find(p => p.id === productId);
@@ -231,14 +219,6 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                   onMouseEnter={() => setHoveredProductId(product.id)}
                   onMouseLeave={() => setHoveredProductId(null)}
                 >
-                  {/* <Link to={`/product/${product.id}`} className="block">
-                  <img
-                    src={`${API_URL}/images/600_${product.images[0]}`}
-                    alt={product.name}
-                    className="w-full h-40 object-cover rounded-t-lg"
-                  />
-                  <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
-                </Link> */}
                   <Link to={`/product/${product.slug}`} className="block">
                     <img
                       src={`${API_URL}/images/600_${product.images[0]}`}

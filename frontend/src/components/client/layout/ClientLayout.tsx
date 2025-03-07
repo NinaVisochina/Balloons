@@ -41,42 +41,6 @@ const ClientLayout = () => {
     }
   }, [subCategoryData, hoveredCategory]);
   
-  
-  
-// const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
-
-// const { data: subCategoryData } = useGetSubCategoriesByCategorySlugQuery(
-//   hoveredCategory && categories
-//     ? categories.find(cat => cat.id === hoveredCategory)?.slug ?? ''
-//     : '',
-//   { skip: !hoveredCategory || !categories }
-// );
-
-// useEffect(() => {
-//   if (subCategoryData && hoveredCategory !== null && categories) { // 🔍 Додаємо перевірку categories
-//     const filtered = subCategoryData.filter(
-//       (subCategory: any) => 
-//         categories.find(cat => cat.id === hoveredCategory)?.slug === subCategory.categorySlug
-//     );
-//     setFilteredSubCategories(filtered);
-//   }
-// }, [subCategoryData, hoveredCategory, categories]);
-
-
-  // const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
-  // const { data: subCategoryData } = useGetSubCategoriesByCategoryIdQuery(
-  //   hoveredCategory ?? -1,
-  //   { skip: hoveredCategory === null }
-  // );
-
-  // useEffect(() => {
-  //   if (subCategoryData && hoveredCategory !== null) {
-  //     const filtered = subCategoryData.filter(
-  //       (subCategory: any) => subCategory.categoryId === hoveredCategory
-  //     );
-  //     setFilteredSubCategories(filtered);
-  //   }
-  // }, [subCategoryData, hoveredCategory]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -99,10 +63,10 @@ const ClientLayout = () => {
     setHoveredCategory(categoryId);
   };
 
-  const handleCategoryLeave = () => {
-    setHoveredCategory(null);
-    setFilteredSubCategories([]);
-  };
+  // const handleCategoryLeave = () => {
+  //   setHoveredCategory(null);
+  //   setFilteredSubCategories([]);
+  // };
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
