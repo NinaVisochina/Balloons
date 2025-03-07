@@ -1,38 +1,50 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { API_URL, http_common } from "../../../../env";
 import { IProductItem } from "../../../../interfaces/products";
+import { useGetSubCategoryBySlugQuery } from "../../../../services/subcategoryApi";
+import { useGetProductsQuery } from "../../../../services/productApi";
+import Loader from "../../../common/Loader";
 
 const ProductListPage = () => {
-    const [list, setList] = useState<IProductItem[]>([]);
-    const [subcategories, setSubCategories] = useState<{ id: number; name: string }[]>([]);
+    const { subslug } = useParams<{ subslug?: string }>(); // Отримуємо subslug із URL
+  const [subcategories, setSubCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
 
-    const handleDelete = async (id: number) => {
-        if (window.confirm("Ви впевнені, що хочете видалити цей товар?")) {
-            try {
-                await http_common.delete("/api/products/" + id);
-                setList(list.filter(item => item.id !== id));
-            } catch {
-                //toast
-            }
-        }
-    };
-    useEffect(() => {
-        http_common.get<IProductItem[]>("/api/Products")
-            .then(resp => {
-                setList(resp.data);
-            });
-    }, []);
-    useEffect(() => {
-        // Завантаження підкатегорій для відображення
-        fetch(`${API_URL}/api/SubCategory`)
-            .then((response) => response.json())
-            .then((data) => setSubCategories(data))
-            .catch((err) => console.error("Помилка завантаження підкатегорій:", err));
-    }, []);
+  // Завантажуємо всі продукти
+  const { data: products, isLoading: productsLoading } = useGetProductsQuery();
 
-    //if (isLoading) return <Loader loading={isLoading} size={150} color={"#1f2937"} />;
-    //if (!products) return <div>Список продуктів відсутній.</div>;
+  // Завантажуємо підкатегорію за subslug, якщо вона є
+  const { data: subCategory, isLoading: subCategoryLoading } = subslug
+    ? useGetSubCategoryBySlugQuery(subslug)
+    : { data: undefined, isLoading: false };
+
+  // Завантажуємо всі підкатегорії для відображення їх назв
+  useEffect(() => {
+    fetch(`${API_URL}/api/SubCategory`)
+      .then((response) => response.json())
+      .then((data) => setSubCategories(data))
+      .catch((err) => console.error("Помилка завантаження підкатегорій:", err));
+  }, []);
+
+  // Фільтруємо продукти за subCategoryId, якщо subslug є
+  const filteredProducts = subslug && subCategory && products
+    ? products.filter((product) => product.subCategoryId === subCategory.id)
+    : products;
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm("Ви впевнені, що хочете видалити цей товар?")) {
+      try {
+        await fetch(`${API_URL}/api/products/${id}`, { method: "DELETE" });
+        // Оновлюємо список локально (тимчасово перезавантажуємо сторінку)
+        window.location.reload();
+      } catch (error) {
+        console.error("Помилка видалення:", error);
+      }
+    }
+  };
+
+  if (productsLoading || subCategoryLoading) return <Loader loading={true} size={150} color={"#1f2937"} />;
+  if (!filteredProducts || filteredProducts.length === 0) return <div>Список продуктів відсутній.</div>;
 
     return (
         <>
@@ -50,7 +62,7 @@ const ProductListPage = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {list.map((product, index) => (
+                    {filteredProducts.map((product, index) => (
                         <tr key={product.id} className="hover:bg-gray-100">
                             <td className="p-2 border text-center">{index + 1}</td>
                             <td className="p-2 border text-center">

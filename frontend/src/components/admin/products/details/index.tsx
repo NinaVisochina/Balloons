@@ -7,6 +7,8 @@ const ProductViewPage = () => {
     const { slug } = useParams<{ slug: string }>(); // Отримуємо `slug` з URL
     const { data: product, isLoading, error } = useGetProductBySlugQuery(slug!); // Запитуємо продукт по `slug`
 
+    console.log("Product data:", product);
+    
     if (isLoading) return <Loader loading={true} size={150} color="#1f2937" />;
     if (error || !product) return <div>Помилка завантаження продукту або продукт не знайдений.</div>;
 

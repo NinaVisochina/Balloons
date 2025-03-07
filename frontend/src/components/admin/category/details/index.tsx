@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { API_URL } from "../../../../env/index.ts";
 import { useGetCategoryBySlugQuery, useGetSubCategoriesByCategorySlugQuery } from "../../../../services/categoryApi.ts";
 import Loader from "../../../common/Loader/index.tsx";
@@ -7,22 +7,49 @@ import { ICategoryItem } from "../../../../interfaces/categories/index.ts";
 import { ISubCategoryItem } from "../../../../interfaces/subcategory/index.ts";
 
 const CategoryViewPage = () => {
-    const { slug } = useParams();
-    const categorySlug = slug || "";
-    const [category, setCategory] = useState<ICategoryItem | null>(null);
-    const [subCategories, setSubCategories] = useState<ISubCategoryItem[]>([]);
+    const { slug } = useParams<{ slug?: string }>();
+    console.log('Raw slug from useParams:', slug);
 
-    const { data: categoryData, isLoading: categoryLoading } = useGetCategoryBySlugQuery(categorySlug);
-    const { data: subCategoryData, isLoading: subCategoryLoading } = useGetSubCategoriesByCategorySlugQuery(slug);
+    // Отримання категорії за SLUG
+    const { data: category, isLoading: categoryLoading } = useGetCategoryBySlugQuery(slug!, {
+        skip: !slug,
+    });
 
+    const [categoryId, setCategoryId] = useState<number | null>(null);
 
+    // Оновлюємо categoryId після отримання даних категорії
     useEffect(() => {
-        if (categoryData) setCategory(categoryData);
-        if (subCategoryData) setSubCategories(subCategoryData);
-    }, [categoryData, subCategoryData]);
+        if (category) setCategoryId(category.id);
+    }, [category]);
+
+    // Отримання підкатегорій за SLUG категорії (а не за ID!)
+    const { data: subCategories, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategorySlugQuery(slug!, {
+        skip: !slug,
+    });
+
+    if (categoryLoading || subCategoriesLoading) {
+        return <div>Завантаження...</div>;
+    }
+
+    // Фільтрація підкатегорій за categoryId
+    const filteredSubCategories = subCategories?.filter((sub: ISubCategoryItem) => sub.categoryId === categoryId) || [];
+    console.log("Отримані підкатегорії:", subCategories); // Додано для перевірки
+    console.log("Переданий slug:", slug);
+    // const categorySlug = slug || "";
+    // const [category, setCategory] = useState<ICategoryItem | null>(null);
+    // const [subCategories, setSubCategories] = useState<ISubCategoryItem[]>([]);
+
+    // const { data: categoryData, isLoading: categoryLoading } = useGetCategoryBySlugQuery(categorySlug);
+    // const { data: subCategoryData, isLoading: subCategoryLoading } = useGetSubCategoriesByCategorySlugQuery(slug);
 
 
-    if (categoryLoading || subCategoryLoading) return <Loader loading={true} size={150} color="#1f2937" />;
+    // useEffect(() => {
+    //     if (categoryData) setCategory(categoryData);
+    //     if (subCategoryData) setSubCategories(subCategoryData);
+    // }, [categoryData, subCategoryData]);
+
+
+    // if (categoryLoading || subCategoryLoading) return <Loader loading={true} size={150} color="#1f2937" />;
 
     return (
         <div className="p-6">
@@ -49,22 +76,22 @@ const CategoryViewPage = () => {
 
             {/* Підкатегорії */}
             <h2 className="text-xl font-semibold mt-6 mb-4">Підкатегорії</h2>
-            {subCategories?.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {subCategories.map((subCategory: any) => (
-                        <div
-                            key={subCategory.id}
-                            className="p-4 border rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow"
-                        >
-                            <h3 className="text-lg font-bold mb-2">{subCategory.name}</h3>
-                            <img
-                                src={`${API_URL}/images/300_${subCategory.imageSubCategory}`}
-                                alt={subCategory.name}
-                                className="h-24 w-24 object-cover rounded-lg border mb-4"
-                            />
-                        </div>
-                    ))}
-                </div>
+            {filteredSubCategories.length > 0 ? (
+                <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {filteredSubCategories.map((sub: ISubCategoryItem) => (
+                    <li key={sub.id} className="bg-white p-4 shadow-md rounded-lg">
+                    <img 
+                        src={`${API_URL}/images/300_${sub.imageSubCategory}`} 
+                        alt={sub.name} 
+                        className="w-full h-40 object-cover rounded-t-lg" 
+                    />
+                    <h2 className="text-lg font-semibold mt-2">{sub.name}</h2>
+                    <Link to={`/admin/products/subcategory/${sub.slug}`} className="text-blue-500 hover:underline mt-2 block">
+                        Переглянути продукти
+                    </Link>
+                    </li>
+                ))}
+                </ul>
             ) : (
                 <p className="text-gray-600">Немає підкатегорій для цієї категорії.</p>
             )}

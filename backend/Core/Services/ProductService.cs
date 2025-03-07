@@ -205,7 +205,9 @@ namespace BackendShop.Services
 
         public async Task<ProductItemViewModel> GetBySlugAsync(string slug)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Slug == slug);
+            var product = await _context.Products
+                .Include(p => p.ProductImages) // Завантажуємо зображення
+                .FirstOrDefaultAsync(p => p.Slug == slug);
             if (product == null) return null;
             return _mapper.Map<ProductItemViewModel>(product);
         }

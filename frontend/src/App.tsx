@@ -47,21 +47,22 @@ export default function App() {
                         {/* Категорії */}
                         <Route path="categories" element={<CategoriesListPage />} />
                         <Route path="categories/create" element={<CategoryCreatePage />} />
-                        <Route path="categories/edit/:id" element={<CategoryEditPage />} />
-                        <Route path="categories/view/:id" element={<CategoryViewPage />} />
+                        <Route path="categories/edit/:slug" element={<CategoryEditPage />} />
+                        <Route path="categories/view/:slug" element={<CategoryViewPage />} />
 
                         {/* Підкатегорії */}
                         <Route path="subcategories" element={<SubCategoryListPage />} />
                         <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
-                        <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
-                        <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
+                        <Route path="subcategories/edit/:slug" element={<SubCategoryEditPage />} />
+                        <Route path="subcategories/view/:slug" element={<SubCategoryViewPage />} />
 
                         {/* PRODUCTS */}
                         <Route path={"products"}>
                             <Route index element={<ProductListPage />} />
                             <Route path="create" element={<ProductCreatePage />} />
-                            <Route path="edit/:id" element={<ProductEditPage />} />
-                            <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
+                            <Route path="edit/:slug" element={<ProductEditPage />} />
+                            <Route path="/admin/products/view/:slug" element={<ProductViewPage />} />
+                            <Route path="subcategory/:subslug" element={<ProductListPage />} />
                         </Route>
 
                         {/* USERS */}

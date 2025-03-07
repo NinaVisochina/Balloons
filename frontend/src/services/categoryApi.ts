@@ -4,8 +4,7 @@ import { ICategoryItem } from '../interfaces/categories';
 console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',
-    baseQuery: fetchBaseQuery({
-        
+    baseQuery: fetchBaseQuery({        
         baseUrl: import.meta.env.VITE_API_URL
           ? `${import.meta.env.VITE_API_URL}/api`
           : '/api', // Для dev із проксі
@@ -34,6 +33,13 @@ export const categoryApi = createApi({
         getSubCategoriesByCategorySlug: builder.query({ // ✅ Підкатегорії через slug
             query: (categorySlug) => `/subcategory?categorySlug=${categorySlug}`,
         }),
+        updateCategory: builder.mutation<ICategoryItem, FormData>({
+            query: (formData) => ({
+                url: `category/edit`, // Змінено на правильний маршрут
+                method: 'PUT',
+                body: formData,
+            }),
+        }),
     }),
 });
 
@@ -41,5 +47,6 @@ export const {
     useGetCategoriesQuery,
     useGetCategoryBySlugQuery, // ✅ Оновлено на slug
     useGetSubCategoriesByCategorySlugQuery, // ✅ Оновлено на slug
-    useDeleteCategoryMutation
+    useDeleteCategoryMutation,
+    useUpdateCategoryMutation,
 } = categoryApi;

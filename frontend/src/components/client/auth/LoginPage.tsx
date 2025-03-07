@@ -31,9 +31,16 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const result = await login({ email, password }).unwrap();
-      localStorage.setItem("accessToken", result.token); // Зберігаємо токен
-      localStorage.setItem("userId", "some-user-id"); // Заміни на реальний userId, якщо бекенд повертає
-      navigate("/"); // Перенаправлення
+      console.log("Login result:", result); // Для дебагу
+      localStorage.setItem("accessToken", result.accessToken);
+      localStorage.setItem("userId", result.userId);
+      localStorage.setItem("isAdmin", JSON.stringify(result.isAdmin));
+
+      if (result.isAdmin) {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
       // const response = await authFetch("/api/accounts/auth/login", {
       //   method: "POST",
       //   headers: { "Content-Type": "application/json" },

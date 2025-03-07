@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
 import { API_URL, http_common } from "../../../../env/index.ts";
-import { useGetCategoriesQuery } from "../../../../services/categoryApi.ts";
+import { useGetCategoriesQuery, useGetCategoryBySlugQuery, useUpdateCategoryMutation } from "../../../../services/categoryApi.ts";
 import { ICategoryEdit} from "../../../../interfaces/categories/index.ts";
 
 const CategoryEditPage = () => {
+    const { slug } = useParams<{ slug?: string }>();
     const { refetch } = useGetCategoriesQuery();
     const { id } = useParams();
     const navigate = useNavigate();
@@ -18,6 +19,15 @@ const CategoryEditPage = () => {
     const [previewTitle, setPreviewTitle] = useState("");
 
     const [file, setFile] = useState<UploadFile | null>(null);
+
+    // Завантажуємо категорію за slug
+    const { data: category, isLoading } = useGetCategoryBySlugQuery(slug!, {
+        skip: !slug,
+    });
+
+    // Оновлення категорії через RTK Query
+    const [updateCategory] = useUpdateCategoryMutation();
+    
     //const [currentImage, setCurrentImage] = useState<string | null>(null); // Зберігаємо поточну назву зображення
 
     // const onSubmit = async (values: ICategoryEdit) => {
@@ -53,19 +63,19 @@ const CategoryEditPage = () => {
             : values.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
     
         const formData = new FormData();
-        formData.append("id", id!);
+        formData.append("id", category.id.toString()); // Використовуємо id із даних категорії
         formData.append("name", values.name);
         formData.append("slug", slug); // ✅ Передаємо `slug`
         
         if (file && file.originFileObj) {
             formData.append("imageCategory", file.originFileObj);
+        } else if (file && file.name) {
+            formData.append("currentImage", file.name); // Передаємо поточне зображення, якщо не змінено
         }
     
         try {
-            const response = await http_common.put(`/api/Category/${id}`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            console.log("Update category", response.data);
+            await updateCategory(formData).unwrap();
+            alert("Категорія успішно оновлена!");
             refetch();
             navigate("/admin/categories");
         } catch (error) {
@@ -74,18 +84,23 @@ const CategoryEditPage = () => {
         }
     };
     
-
+    // Заповнюємо форму даними категорії
     useEffect(() => {
-        const nameValue = form.getFieldValue("name");
-        if (nameValue) {
-            form.setFieldsValue({
-                slug: nameValue
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^a-z0-9-]/g, ""),
+        if (category) {
+          form.setFieldsValue({
+            name: category.name,
+            slug: category.slug || category.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, ""),
+          });
+          if (category.imageCategory) {
+            setFile({
+              uid: "-1",
+              name: category.imageCategory,
+              status: "done",
+              url: `${API_URL}/images/300_${category.imageCategory}`,
             });
+          }
         }
-    }, [form, form.getFieldValue("name")]);
+      }, [category, form]);
     
     
     useEffect(() => {
@@ -135,7 +150,7 @@ const CategoryEditPage = () => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                     label="Slug"
                     name="slug"
                     rules={[
@@ -144,7 +159,7 @@ const CategoryEditPage = () => {
                     ]}
                 >
                     <Input />
-                </Form.Item>
+                </Form.Item> */}
 
                 <Form.Item
                     name="imageCategory"
