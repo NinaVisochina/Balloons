@@ -32,6 +32,7 @@ const CategoriesListPage = () => {
                         <th className="p-2 border">Зображення</th>
                         <th className="p-2 border">Назва</th>
                         <th className="p-2 border">Опис</th>
+                        <th className="p-2 border">id</th>
                         <th className="p-2 border">Дії</th>
                     </tr>
                 </thead>
@@ -48,19 +49,9 @@ const CategoriesListPage = () => {
                             </td>
                             <td className="p-2 border">{category.name}</td>
                             <td className="p-2 border">{category.description}</td>
+                            <td className="p-2 border">{category.slug}</td>
+                            <td className="p-2 border">{category.id}</td>
                             <td className="p-2 border text-center space-x-2">
-                                {/* <Link
-                                    to={`/admin/categories/view/${category.id}`}
-                                    className="text-blue-600 hover:text-blue-800"
-                                >
-                                    Переглянути
-                                </Link>
-                                <Link
-                                    to={`/admin/categories/edit/${category.id}`}
-                                    className="text-yellow-600 hover:text-yellow-800"
-                                >
-                                    Редагувати
-                                </Link> */}
                                 <Link to={`/admin/categories/view/${category.slug}`} className="text-blue-600 hover:text-blue-800">
                                     Переглянути
                                 </Link>

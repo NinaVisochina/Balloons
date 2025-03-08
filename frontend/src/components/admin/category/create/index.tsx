@@ -44,39 +44,6 @@ const CategoryCreatePage = () => {
         }
     };
 
-    // const onSubmit = async (values: ICategoryCreate) => {
-    //     // const formData = new FormData();
-    //     // formData.append("name", values.name);
-    //     // formData.append("imageCategory", values.imageCategory as File);    
-    //     // try {
-    //     //     const response = await http_common.post("/api/Category/create", formData, {
-    //     //         headers: { "Content-Type": "multipart/form-data" },
-    //     //     });
-    //     //     alert("Категорію успішно створено!");
-    //     //     console.log("Create category", response.data);
-    //     //     navigate('/');
-    //     // } catch (error) {
-    //     //     console.error("Помилка при створенні категорії:", error);
-    //     //     alert("Помилка при створенні категорії");
-    //     // }
-
-    //     console.log("Send Data", values);
-    //     http_common.post<ICategoryCreate>("/api/Category/create", values,
-    //         {headers: {"Content-Type": "multipart/form-data"}})
-    //         .then(resp => {
-    //             console.log("Create category", resp.data);
-    //             refetch();
-    //             // Повідомлення про успіх
-    //             alert("Категорію успішно додано!");
-    //             navigate('/admin/categories'); // Перенаправлення на список категорій
-    //         })
-    //         .catch((error) => {
-    //             console.error("Помилка при створенні категорії:", error);
-    //             alert("Помилка при створенні категорії");
-    //         });
-    // };
-
-
     return (
         <>
             <h1 className={"text-center text-3xl font-bold tracking-tight text-gray-900 mb-2"}>Додати категорії</h1>
@@ -108,17 +75,6 @@ const CategoryCreatePage = () => {
                             return e.fileList.length > 0 ? e.fileList[0].originFileObj : null;
                         }}
                     >
-
-                        {/* <Form.Item
-                        name="imageCategory"
-                        label="Фото"
-                        valuePropName="file"
-                        getValueFromEvent={(e: UploadChangeParam) => {
-                            const image = e?.fileList[0] as IUploadedFile;
-                            return image?.originFileObj;
-                        }}
-                        // rules={[{required: true, message: 'Оберіть фото категорії!'}]}
-                    > */}
                         <Upload
                             // showUploadList={{showPreviewIcon: false}}
                             beforeUpload={() => false}
