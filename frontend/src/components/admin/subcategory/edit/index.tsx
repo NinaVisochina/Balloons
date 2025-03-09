@@ -70,28 +70,59 @@ const SubCategoryEditPage: React.FC = () => {
 
         console.log("Send Data", values);
         const formData = new FormData();
-        formData.append("id", subcategoryId.toString()); // ✅ Використовуємо `subcategoryId`
-        formData.append("name", values.name);
-        formData.append("categoryId", values.categoryId.toString());
+formData.append("Id", subcategoryId?.toString() || ""); // 🔹 Велика літера "I"
+formData.append("Name", values.name);
+formData.append("CategoryId", values.categoryId.toString()); // 🔹 Переконайся, що число
+
+// Перевіряємо, чи змінили зображення
+if (file?.originFileObj) {
+    formData.append("ImageSubCategory", file.originFileObj); // 🔹 Велика літера "I"
+} else if (file?.name) {
+    formData.append("CurrentImage", file.name); // 🔹 Можливо, бекенд очікує це
+}
+
+// Перевірка перед відправкою
+console.log("Фінальні дані:", Object.fromEntries(formData.entries()));
+
+try {
+    await http_common.put(`${API_URL}/api/SubCategory`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    alert("Підкатегорія успішно оновлена!");
+    await refetch();
+    navigate("/admin/subcategories");
+} catch (error) {
+    console.error("Помилка редагування підкатегорії:", error);
+    alert("Помилка при редагуванні підкатегорії");
+}
+
+        // const formData = new FormData();
+        // formData.append("id", subcategoryId.toString()); // ✅ Використовуємо `subcategoryId`
+        // formData.append("name", values.name);
+        // formData.append("categoryId", values.categoryId.toString());
         
-        if (file && file.originFileObj) {
-            formData.append("imageSubCategory", file.originFileObj);
-        } else if (file && file.url) {
-            formData.append("currentImage", file.name);
-        }
+        // if (file && file.originFileObj) {
+        //     formData.append("imageSubCategory", file.originFileObj);
+        // } else if (file && file.url) {
+        //     formData.append("currentImage", file.name);
+        // }
 
-        try {
-            await http_common.put<ISubCategoryEdit>(`${API_URL}/api/SubCategory`, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+        // try {
+        //     console.log("Дані, які відправляємо:", Object.fromEntries(formData.entries()));
 
-            alert("Підкатегорія успішно оновлена!");
-            refetch();
-            navigate("/admin/subcategories");
-        } catch (error) {
-            console.error("Помилка редагування підкатегорії:", error);
-            alert("Помилка при редагуванні підкатегорії");
-        }
+        //     await http_common.put<ISubCategoryEdit>(`${API_URL}/api/SubCategory`, formData, {
+        //         headers: { "Content-Type": "multipart/form-data" },
+        //     });
+
+        //     alert("Підкатегорія успішно оновлена!");
+        //     await refetch(); // Чекаємо, поки оновляться дані
+        //     navigate("/admin/subcategories");
+            
+        // } catch (error) {
+        //     console.error("Помилка редагування підкатегорії:", error);
+        //     alert("Помилка при редагуванні підкатегорії");
+        // }
     };
     
     return (

@@ -86,18 +86,65 @@ namespace BackendShop.Services
         //    _context.SubCategories.Update(subCategory);
         //    await _context.SaveChangesAsync();
         //}
+        //public async Task EditAsync(EditSubCategoryDto model)
+        //{
+        //    var subCategory = await _context.SubCategories.SingleOrDefaultAsync(x => x.SubCategoryId == model.Id);
+        //    if (subCategory == null) throw new Exception("Підкатегорію не знайдено");
+
+        //    // Перевіряємо, чи змінилась назва підкатегорії
+        //    if (subCategory.Name != model.Name)
+        //    {
+        //        subCategory.Name = model.Name;
+        //        subCategory.GenerateSlug(); // Генеруємо новий Slug
+
+        //        // Перевіряємо, чи новий Slug вже існує
+        //        var existingSlug = await _context.SubCategories
+        //            .AnyAsync(x => x.Slug == subCategory.Slug && x.SubCategoryId != subCategory.SubCategoryId);
+
+        //        if (existingSlug)
+        //        {
+        //            throw new Exception("Slug вже використовується. Оберіть іншу назву.");
+        //        }
+        //    }
+
+        //    subCategory.CategoryId = model.CategoryId;
+
+        //    if (model.ImageSubCategory != null && model.ImageSubCategory.Length > 0)
+        //    {
+        //        if (!string.IsNullOrEmpty(subCategory.ImageSubCategoryPath))
+        //        {
+        //            _imageHulk.Delete(subCategory.ImageSubCategoryPath);
+        //        }
+
+        //        var newImageName = await _imageHulk.Save(model.ImageSubCategory);
+        //        subCategory.ImageSubCategoryPath = newImageName;
+        //    }
+
+        //    _context.SubCategories.Update(subCategory);
+        //    await _context.SaveChangesAsync();
+        //}
         public async Task EditAsync(EditSubCategoryDto model)
         {
-            var subCategory = await _context.SubCategories.SingleOrDefaultAsync(x => x.SubCategoryId == model.Id);
+            var subCategory = await _context.SubCategories
+                .SingleOrDefaultAsync(x => x.SubCategoryId == model.Id);
+
             if (subCategory == null) throw new Exception("Підкатегорію не знайдено");
 
-            // Перевіряємо, чи змінилась назва підкатегорії
+            // Оновлення назви
             if (subCategory.Name != model.Name)
             {
                 subCategory.Name = model.Name;
-                subCategory.GenerateSlug(); // Генеруємо новий Slug
 
-                // Перевіряємо, чи новий Slug вже існує
+                if (string.IsNullOrWhiteSpace(model.Slug))
+                {
+                    subCategory.GenerateSlug(); // 🔹 Генеруємо Slug тільки якщо його немає
+                }
+                else
+                {
+                    subCategory.Slug = model.Slug; // 🔹 Дозволяємо передавати `Slug` як необов'язковий
+                }
+
+                // Перевіряємо, чи новий Slug унікальний
                 var existingSlug = await _context.SubCategories
                     .AnyAsync(x => x.Slug == subCategory.Slug && x.SubCategoryId != subCategory.SubCategoryId);
 
@@ -107,8 +154,10 @@ namespace BackendShop.Services
                 }
             }
 
+            // Оновлення категорії
             subCategory.CategoryId = model.CategoryId;
 
+            // Оновлення зображення
             if (model.ImageSubCategory != null && model.ImageSubCategory.Length > 0)
             {
                 if (!string.IsNullOrEmpty(subCategory.ImageSubCategoryPath))
@@ -123,6 +172,7 @@ namespace BackendShop.Services
             _context.SubCategories.Update(subCategory);
             await _context.SaveChangesAsync();
         }
+
 
 
         public async Task DeleteAsync(int id)

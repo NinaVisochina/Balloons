@@ -21,7 +21,10 @@ namespace BackendShop.Data.Entities
         public  Category? Category { get; set; }
         public void GenerateSlug()
         {
-            Slug = SlugService.GenerateSlug(Name);
+            if (string.IsNullOrWhiteSpace(Slug)) // 🔹 Генеруємо, якщо пусто
+            {
+                Slug = SlugService.GenerateSlug(Name);
+            }
         }
     }
 }
