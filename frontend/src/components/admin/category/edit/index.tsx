@@ -227,19 +227,21 @@ const CategoryEditPage = () => {
                     </Upload>
                 </Form.Item> */}
 
-                <Row style={{ display: "flex", justifyContent: "center" }}>
+                <Row style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                     <Button
-                        style={{ margin: 10 }}
+                        className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
                         type="primary"
                         htmlType="submit"
                     >
                         Зберегти
                     </Button>
-                    <Link to="/admin/categories">
-                        <Button style={{ margin: 10 }} htmlType="button">
-                            Скасувати
-                        </Button>
-                    </Link>
+                    <Button
+                        className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                        style={{ marginLeft: 10 }}
+                        onClick={() => navigate('/admin/categories')}
+                    >
+                        Скасувати
+                    </Button>
                 </Row>
             </Form>
 

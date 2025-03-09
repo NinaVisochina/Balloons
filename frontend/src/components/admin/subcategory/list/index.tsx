@@ -4,6 +4,7 @@ import Loader from "../../../common/Loader/index.tsx";
 import { useGetSubCategoriesQuery, useDeleteSubCategoryMutation } from "../../../../services/subcategoryApi.ts";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 const SubCategoryListPage = () => {
     const { data: list, isLoading, refetch } = useGetSubCategoriesQuery();
@@ -63,25 +64,27 @@ const SubCategoryListPage = () => {
                             <td className="p-2 border">
                                 {categories.find(category => category.id === subcategory.categoryId)?.name || "Категорія не знайдена"}
                             </td>
-                            <td className="p-2 border text-center space-x-2">
-                                <Link
-                                    to={`/admin/subcategories/view/${subcategory.slug}`} // ✅ Використовуємо slug
-                                    className="text-blue-600 hover:text-blue-800"
-                                >
-                                    Переглянути
-                                </Link>
-                                <Link
-                                    to={`/admin/subcategories/edit/${subcategory.slug}`} // ✅ Використовуємо slug
-                                    className="text-yellow-600 hover:text-yellow-800"
-                                >
-                                    Редагувати
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(subcategory.id)}
-                                    className="text-red-600 hover:text-red-800"
-                                >
-                                    Видалити
-                                </button>
+                            <td className="p-2 border text-center">
+                                <div className="flex justify-center space-x-4">
+                                    <Link
+                                        to={`/admin/subcategories/view/${subcategory.slug}`}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaEye className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </Link>
+                                    <Link
+                                        to={`/admin/subcategories/edit/${subcategory.slug}`}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaEdit className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(subcategory.id)}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaTrash className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}

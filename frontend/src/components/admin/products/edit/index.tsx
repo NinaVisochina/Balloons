@@ -162,11 +162,21 @@ const ProductEditPage = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 10, offset: 10 }}>
-                    <Space>
-                        <Link to={"/admin/products"}>
-                            <Button htmlType="button" className="text-white bg-gradient-to-br from-red-400 to-purple-600 font-medium rounded-lg px-5">Cancel</Button>
+                <Space>
+                        <Link to="/admin/products">
+                            <Button
+                                className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                                htmlType="button"
+                            >
+                                Відмінити
+                            </Button>
                         </Link>
-                        <Button htmlType="submit" className="text-white bg-gradient-to-br from-green-400 to-blue-600 font-medium rounded-lg px-5">Update</Button>
+                        <Button
+                            className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                            htmlType="submit"
+                        >
+                            Оновити
+                        </Button>
                     </Space>
                 </Form.Item>
             </Form>
