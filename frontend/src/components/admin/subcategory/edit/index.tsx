@@ -183,11 +183,19 @@ try {
                     </Upload>
                 </Form.Item>
 
-                <Row style={{ display: "flex", justifyContent: "center" }}>
-                    <Button style={{ margin: 10 }} className="bg-blue-500 text-white" type="primary" htmlType="submit">
+                <Row style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Button
+                        className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                        type="primary"
+                        htmlType="submit"
+                    >
                         Зберегти
                     </Button>
-                    <Button style={{ margin: 10 }} onClick={() => navigate('/admin/subcategories')}>
+                    <Button
+                        className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                        style={{ marginLeft: 10 }}
+                        onClick={() => navigate('/admin/subcategories')}
+                    >
                         Скасувати
                     </Button>
                 </Row>

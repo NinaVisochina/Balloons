@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useGetAdminOrdersQuery, useUpdateOrderStatusMutation } from "../../../services/ordersApi";
 import { IOrder, OrderStatus } from "../../../interfaces/order";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const AdminOrders = () => {
   const { data: orders = [], isLoading, refetch } = useGetAdminOrdersQuery();
@@ -63,9 +64,16 @@ const AdminOrders = () => {
           <tbody>
             {orders.map((order: any) => (
               <React.Fragment key={order.id}>
-                <tr className="border-b">
-                  <td className="p-2 cursor-pointer" onClick={() => toggleOrderDetails(order.id)}>
-                    {order.id}
+                <tr className="border-b hover:bg-gray-50">
+                  <td className="p-2 cursor-pointer flex items-center space-x-2" onClick={() => toggleOrderDetails(order.id)}
+                    >
+                    <span>{order.id}</span>
+                    {/* Іконка стрілки: вниз або вгору залежно від стану */}
+                    {expandedOrderId === order.id ? (
+                      <FaChevronUp className="text-gray-500" />
+                    ) : (
+                      <FaChevronDown className="text-gray-500" />
+                    )}
                   </td>
                   <td className="p-2">{order.userEmail}</td>
                   <td className="p-2">{order.totalPrice} грн</td>
@@ -85,7 +93,7 @@ const AdminOrders = () => {
                   </td>
                   <td className="p-2">
                     <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded"
+                      className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
                       onClick={() => handleStatusChange(order.id)}
                     >
                       Оновити статус

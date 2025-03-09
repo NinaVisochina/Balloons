@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { API_URL } from "../../../../env/index.ts";
 import Loader from "../../../common/Loader/index.tsx";
 import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../../services/categoryApi.ts";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 const CategoriesListPage = () => {
     const { data: list, /*error,*/ isLoading, refetch } = useGetCategoriesQuery();
@@ -32,7 +33,8 @@ const CategoriesListPage = () => {
                         <th className="p-2 border">Зображення</th>
                         <th className="p-2 border">Назва</th>
                         <th className="p-2 border">Опис</th>
-                        <th className="p-2 border">id</th>
+                        {/* <th className="p-2 border">Slug</th>
+                        <th className="p-2 border">id</th> */}
                         <th className="p-2 border">Дії</th>
                     </tr>
                 </thead>
@@ -49,21 +51,29 @@ const CategoriesListPage = () => {
                             </td>
                             <td className="p-2 border">{category.name}</td>
                             <td className="p-2 border">{category.description}</td>
-                            <td className="p-2 border">{category.slug}</td>
-                            <td className="p-2 border">{category.id}</td>
-                            <td className="p-2 border text-center space-x-2">
-                                <Link to={`/admin/categories/view/${category.slug}`} className="text-blue-600 hover:text-blue-800">
-                                    Переглянути
-                                </Link>
-                                <Link to={`/admin/categories/edit/${category.slug}`} className="text-yellow-600 hover:text-yellow-800">
-                                    Редагувати
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(category.id)}
-                                    className="text-red-600 hover:text-red-800"
-                                >
-                                    Видалити
-                                </button>
+                            {/* <td className="p-2 border">{category.slug}</td>
+                            <td className="p-2 border">{category.id}</td> */}
+                            <td className="p-2 border text-center">
+                                <div className="flex justify-center space-x-4">
+                                    <Link
+                                        to={`/admin/categories/view/${category.slug}`}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaEye className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </Link>
+                                    <Link
+                                        to={`/admin/categories/edit/${category.slug}`}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaEdit className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(category.id)}
+                                        className="text-gray-700 hover:text-gray-900"
+                                    >
+                                        <FaTrash className="text-gray-500 text-lg hover:text-gray-800" />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}
@@ -73,7 +83,9 @@ const CategoriesListPage = () => {
     );
 }
 
-export default CategoriesListPage;// import {Link} from "react-router-dom";
+export default CategoriesListPage;
+
+// import {Link} from "react-router-dom";
 // import { API_URL} from "../../../../env/index.ts";
 // import Loader from "../../../common/Loader/index.tsx";
 // import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../../services/categoryApi.ts";

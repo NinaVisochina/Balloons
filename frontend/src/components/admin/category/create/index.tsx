@@ -101,13 +101,19 @@ const CategoryCreatePage = () => {
 
 
                 <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button style={{ margin: 10 }}
-                        className={"text-white capitalize transition-colors duration-300 transform bg-blue-500"}
-                        type="primary" htmlType="submit">
+                    <Button
+                        className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                        type="primary"
+                        htmlType="submit"
+                    >
                         Додати
                     </Button>
-                    <Link to={"/admin/categories"}>
-                        <Button style={{ margin: 10 }} htmlType="button">
+                    <Link to="/admin/categories">
+                        <Button
+                            className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
+                            style={{ margin: 10 }}
+                            htmlType="button"
+                        >
                             Скасувати
                         </Button>
                     </Link>
@@ -122,7 +128,8 @@ const CategoryCreatePage = () => {
     )
 }
 
-export default CategoryCreatePage;// import {ICategoryCreate, IUploadedFile} from "./types.ts"
+export default CategoryCreatePage;
+// import {ICategoryCreate, IUploadedFile} from "./types.ts"
 // import {Button, Form, Input, Modal, Row, Upload, UploadFile} from "antd";
 // import {Link, useNavigate} from "react-router-dom";
 // import {useState} from "react";

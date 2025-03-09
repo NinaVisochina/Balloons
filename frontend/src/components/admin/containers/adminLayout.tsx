@@ -1,11 +1,22 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 const AdminLayout = () => {
     const [openCategoryMenu, setOpenCategoryMenu] = useState(false);
     const [openProductMenu, setOpenProductMenu] = useState(false);
     const [openSubCategoryMenu, setOpenSubCategoryMenu] = useState(false);
     const [openUserMenu, setOpenUserMenu] = useState(false);
+    const navigate = useNavigate();
+
+    // Логіка logout, адаптована з ClientLayout
+    const handleLogout = () => {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("isAdmin");
+        alert("Ви успішно вийшли з системи!");
+        navigate("/"); // Перенаправлення на сторінку логіну адміна
+    };
 
     return (
         <div className="flex h-screen">
@@ -69,8 +80,8 @@ const AdminLayout = () => {
                             </ul>
                         )}
                     </li>
-                    <li><Link to="/admin/discounts" className="hover:text-gray-400">Знижки</Link></li>
-                    <li><Link to="/admin/filters" className="hover:text-gray-400">Фільтри</Link></li>
+                    {/* <li><Link to="/admin/discounts" className="hover:text-gray-400">Знижки</Link></li>
+                    <li><Link to="/admin/filters" className="hover:text-gray-400">Фільтри</Link></li> */}
                     <li>
                         <Link to="/admin/orders" className="hover:text-gray-400">Замовлення</Link>
                     </li>
@@ -92,7 +103,14 @@ const AdminLayout = () => {
                             </ul>
                         )}
                     </li>
-                    <li><Link to="/logout" className="hover:text-gray-400">Авторизація</Link></li>
+                    <li>
+                        <button
+                            onClick={handleLogout}
+                            className="hover:text-gray-400 w-full text-left"
+                        >
+                            Вийти
+                        </button>
+                    </li>
                 </ul>
             </div>
 
