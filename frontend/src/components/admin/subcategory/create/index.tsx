@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ISubCategoryCreate, IUploadedFile } from "../../../../interfaces/subcategory";
 import { useGetCategoriesQuery } from "../../../../services/categoryApi";
-import { http_common } from "../../../../env";
+import { API_URL, http_common } from "../../../../env";
 import { useNavigate} from "react-router-dom";
 import { Button, Form, Input, Modal, Row, Upload } from "antd";
 import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
@@ -30,10 +30,13 @@ const SubCategoryCreatePage: React.FC = () => {
       }
 
       try {
-          const response = await http_common.post("/api/SubCategory/create", formData, {
-              headers: { "Content-Type": "multipart/form-data" },
-          });
-          console.log("Create subcategory", response.data);
+          // const response = await http_common.post("/api/SubCategory/create", formData, {
+          //     headers: { "Content-Type": "multipart/form-data" },
+          // });
+          await http_common.post(`${API_URL}/api/SubCategory`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+          console.log("Create subcategory");
           refetch();
           alert("Підкатегорію успішно додано!");
           navigate('/admin/subcategories');

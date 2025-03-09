@@ -61,7 +61,7 @@ const SubCategoryListPage = () => {
                             </td>
                             <td className="p-2 border">{subcategory.name}</td>
                             <td className="p-2 border">
-                                {categories.find(category => category.id === subcategory.categoryId)?.name || "Категорія не знайдена"}
+                                    {categories.find(category => Number(category.id) === Number(subcategory.categoryId))?.name || "Категорія не знайдена"}
                             </td>
                             <td className="p-2 border text-center space-x-2">
                                 <Link
