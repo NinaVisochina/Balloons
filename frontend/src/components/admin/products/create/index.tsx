@@ -76,7 +76,7 @@ const ProductCreatePage = () => {
         formData.append("description", values.description);
     
         if (values.images) {
-            values.images.forEach((file) => formData.append("images", file));
+            values.images.forEach((file) => formData.append("images[]", file));
         }
     
         try {

@@ -129,6 +129,7 @@ const CategoryCreatePage = () => {
 }
 
 export default CategoryCreatePage;
+
 // import {ICategoryCreate, IUploadedFile} from "./types.ts"
 // import {Button, Form, Input, Modal, Row, Upload, UploadFile} from "antd";
 // import {Link, useNavigate} from "react-router-dom";
