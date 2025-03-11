@@ -1,4 +1,3 @@
-version: '3.9'
 
 services:
   backend:
@@ -9,7 +8,7 @@ services:
     ports:
       - "5000:5000"  # ✅ Бекенд слухає на 5000 порту всередині контейнера
     volumes:
-     - /volumes/balloons/images:/app/images  # Use the volume name appvol here
+      - /volumes/balloons/images:/app/images  # ✅ Шлях до зображень
     environment:
       - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
     depends_on:
@@ -40,14 +39,7 @@ services:
       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
     restart: always
 
-      **volumes:**  # ✅ Оголошуємо volume, щоб не було помилки
+volumes:  # ✅ Оголошуємо volume, щоб не було помилки
   postgres_data:
-#     volumes:
-# #       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
-#         - postgres_data:/var/lib/postgresql/data 
-    # deploy:
-    #   restart_policy:
-    #     condition: on-failure
-    #     max_attempts: 5
-    #     version: '3.9'
+
 
