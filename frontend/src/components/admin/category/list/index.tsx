@@ -33,8 +33,8 @@ const CategoriesListPage = () => {
                         <th className="p-2 border">Зображення</th>
                         <th className="p-2 border">Назва</th>
                         <th className="p-2 border">Опис</th>
-                        {/* <th className="p-2 border">Slug</th>
-                        <th className="p-2 border">id</th> */}
+                        <th className="p-2 border">Slug</th>
+                        <th className="p-2 border">id</th>
                         <th className="p-2 border">Дії</th>
                     </tr>
                 </thead>
@@ -51,7 +51,7 @@ const CategoriesListPage = () => {
                             </td>
                             <td className="p-2 border">{category.name}</td>
                             <td className="p-2 border">{category.description}</td>
-                            {/* <td className="p-2 border">{category.slug}</td> */}
+                            <td className="p-2 border">{category.slug}</td>
                             <td className="p-2 border">{category.id}</td>
                             <td className="p-2 border text-center">
                                 <div className="flex justify-center space-x-4">
