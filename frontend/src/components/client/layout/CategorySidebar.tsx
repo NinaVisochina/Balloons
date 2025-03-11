@@ -37,7 +37,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ onCategoryChange }) =
   if (isLoading) return <p>Завантаження...</p>;
 
   return (
-    <div className="w-64 bg-blue-500 text-white p-4">
+    <div className="w-64 bg-white text-brown-700 p-4 rounded-lg shadow-md">
       <h2 className="font-bold text-xl mb-2">Категорії</h2>
       <ul>
         {categories?.map((category) => (
@@ -46,7 +46,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ onCategoryChange }) =
               {/* Натискання на назву переходить на сторінку категорії */}
               <Link 
                 to={`/category/${category.slug}`} 
-                className={`cursor-pointer ${categoryId === category.id ? "text-yellow-300" : ""}`}
+                className={`cursor-pointer ${categoryId === category.id ? "text-yellow-600" : ""}`}
               >
                 {category.name}
               </Link>
