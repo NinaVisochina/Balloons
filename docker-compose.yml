@@ -29,7 +29,7 @@ services:
 
   db:
     image: postgres:latest
-    container_name: balloons_db_1  # ✅ Назва контейнера для бази даних
+    container_name: balloons_db_1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
@@ -37,8 +37,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
-        - postgres_data:/var/lib/postgresql/data 
+      - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
+    restart: always
+
+      **volumes:**  # ✅ Оголошуємо volume, щоб не було помилки
+  postgres_data:
+#     volumes:
+# #       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+#         - postgres_data:/var/lib/postgresql/data 
     # deploy:
     #   restart_policy:
     #     condition: on-failure
