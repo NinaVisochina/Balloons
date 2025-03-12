@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendShop.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20250311150640_add2")]
-    partial class add2
+    [Migration("20250312105930_add")]
+    partial class add
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
