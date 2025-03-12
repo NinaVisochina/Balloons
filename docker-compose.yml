@@ -1,4 +1,24 @@
+version: '3.9'
+
+networks:
+  myAppNetwork:   # 🔹 Оголошуємо власну мережу
+    driver: bridge
+
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # ✅ Прокидуємо файл конфігурації Nginx
+    ports:
+      - "80:80"  # ✅ Nginx слухає HTTP-запити
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - myAppNetwork
+    restart: always
+
   backend:
     build:
       context: ./backend
@@ -7,9 +27,11 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
     ports:
-      - "5000:5000" # Відкриваємо порт бекенду
+      - "5000:5000"  # Відкриваємо порт бекенду
     depends_on:
       - db
+    networks:
+      - myAppNetwork
     restart: always  
 
   frontend:
@@ -18,9 +40,11 @@ services:
       dockerfile: Dockerfile
     container_name: balloons_frontend_1  
     ports:
-      - "80:80" # Змінюємо на стандартний порт
+      - "3000:80"  # ✅ Фронтенд на іншому порту, щоб не конфліктував з Nginx
     depends_on:
       - backend
+    networks:
+      - myAppNetwork
     restart: always
 
   db:
@@ -33,93 +57,39 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /home/root/Balloons/pgdata:/var/lib/postgresql/data # Фіксований шлях
+      - /home/root/Balloons/pgdata:/var/lib/postgresql/data  # Фіксований шлях
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - myAppNetwork
 
 volumes:
   postgres_data:
-
-
-# services:
-  # backend:
-    # build:
-      # context: ./backend
-      # dockerfile: Dockerfile
-    # container_name: balloons_backend_1  
-    # environment:
-      # - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
-    # ports:
-      # - "5000:5000" # Відкриваємо порт бекенду
-    # depends_on:
-      # - db
-    # restart: always  
-
-  # frontend:
-    # build:
-      # context: ./frontend
-      # dockerfile: Dockerfile
-    # container_name: balloons_frontend_1  
-    # ports:
-      # - "3000:80"  
-    # depends_on:
-      # - backend
-    # restart: always
-
-  # nginx-backend:
-    # image: nginx:latest
-    # container_name: nginx_backend_1
-    # volumes:
-      # - ./backend/nginx.conf:/etc/nginx/nginx.conf:ro
-    # ports:
-      # - "8080:80"  # API буде доступне на 8080 порту
-    # depends_on:
-      # - backend
-    # restart: always
-
-  # db:
-    # image: postgres:latest
-    # container_name: balloons_db_1
-    # environment:
-      # POSTGRES_USER: postgres
-      # POSTGRES_PASSWORD: 123456
-      # POSTGRES_DB: backendshop
-    # ports:
-      # - "5432:5432"
-    # volumes:
-      # - postgres_data:/var/lib/postgresql/data
-    # restart: always
-
-# volumes:
-  # postgres_data:
-
 # services:
 #   backend:
 #     build:
 #       context: ./backend
 #       dockerfile: Dockerfile
-#     container_name: balloons_backend_1  # ✅ Додаємо зрозумілу назву контейнера бекенду
-#     ports:
-#       - "5000:5000"  # ✅ Бекенд слухає на 5000 порту всередині контейнера
-#     volumes:
-#       - /volumes/balloons/images:/app/images  # ✅ Шлях до зображень
+#     container_name: balloons_backend_1  
 #     environment:
 #       - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
+#     ports:
+#       - "5000:5000" # Відкриваємо порт бекенду
 #     depends_on:
 #       - db
-#     restart: always  # ✅ Додаємо автоматичний рестарт при збої
+#     restart: always  
 
 #   frontend:
 #     build:
 #       context: ./frontend
 #       dockerfile: Dockerfile
-#     container_name: balloons_frontend_1  # ✅ Назва контейнера для фронтенду
+#     container_name: balloons_frontend_1  
 #     ports:
-#       - "3000:80"  # ✅ Фронтенд слухає на 3000 порту
+#       - "80:80" # Змінюємо на стандартний порт
 #     depends_on:
 #       - backend
 #     restart: always
@@ -127,7 +97,6 @@ volumes:
 #   db:
 #     image: postgres:latest
 #     container_name: balloons_db_1
-#     user: "999:999"
 #     environment:
 #       POSTGRES_USER: postgres
 #       POSTGRES_PASSWORD: 123456
@@ -135,18 +104,120 @@ volumes:
 #     ports:
 #       - "5432:5432"
 #     volumes:
-# #       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
-#     - postgres_data:/var/lib/postgresql/data
-#     deploy:
-#       restart_policy:
-#         condition: on-failure
-#         max_attempts: 5
-       
+#       - /home/root/Balloons/pgdata:/var/lib/postgresql/data # Фіксований шлях
+#     restart: unless-stopped
+#     healthcheck:
+#       test: ["CMD", "pg_isready", "-U", "postgres"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+# volumes:
+#   postgres_data:
+
+
+# # services:
+#   # backend:
+#     # build:
+#       # context: ./backend
+#       # dockerfile: Dockerfile
+#     # container_name: balloons_backend_1  
+#     # environment:
+#       # - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
+#     # ports:
+#       # - "5000:5000" # Відкриваємо порт бекенду
+#     # depends_on:
+#       # - db
+#     # restart: always  
+
+#   # frontend:
+#     # build:
+#       # context: ./frontend
+#       # dockerfile: Dockerfile
+#     # container_name: balloons_frontend_1  
+#     # ports:
+#       # - "3000:80"  
+#     # depends_on:
+#       # - backend
+#     # restart: always
+
+#   # nginx-backend:
+#     # image: nginx:latest
+#     # container_name: nginx_backend_1
+#     # volumes:
+#       # - ./backend/nginx.conf:/etc/nginx/nginx.conf:ro
+#     # ports:
+#       # - "8080:80"  # API буде доступне на 8080 порту
+#     # depends_on:
+#       # - backend
+#     # restart: always
+
+#   # db:
+#     # image: postgres:latest
+#     # container_name: balloons_db_1
+#     # environment:
+#       # POSTGRES_USER: postgres
+#       # POSTGRES_PASSWORD: 123456
+#       # POSTGRES_DB: backendshop
+#     # ports:
+#       # - "5432:5432"
+#     # volumes:
+#       # - postgres_data:/var/lib/postgresql/data
+#     # restart: always
+
+# # volumes:
+#   # postgres_data:
+
+# # services:
+# #   backend:
+# #     build:
+# #       context: ./backend
+# #       dockerfile: Dockerfile
+# #     container_name: balloons_backend_1  # ✅ Додаємо зрозумілу назву контейнера бекенду
+# #     ports:
+# #       - "5000:5000"  # ✅ Бекенд слухає на 5000 порту всередині контейнера
 # #     volumes:
-# #       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
+# #       - /volumes/balloons/images:/app/images  # ✅ Шлях до зображень
+# #     environment:
+# #       - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
+# #     depends_on:
+# #       - db
+# #     restart: always  # ✅ Додаємо автоматичний рестарт при збої
+
+# #   frontend:
+# #     build:
+# #       context: ./frontend
+# #       dockerfile: Dockerfile
+# #     container_name: balloons_frontend_1  # ✅ Назва контейнера для фронтенду
+# #     ports:
+# #       - "3000:80"  # ✅ Фронтенд слухає на 3000 порту
+# #     depends_on:
+# #       - backend
 # #     restart: always
 
-# volumes:  # ✅ Оголошуємо volume, щоб не було помилки
-#   postgres_data:
+# #   db:
+# #     image: postgres:latest
+# #     container_name: balloons_db_1
+# #     user: "999:999"
+# #     environment:
+# #       POSTGRES_USER: postgres
+# #       POSTGRES_PASSWORD: 123456
+# #       POSTGRES_DB: backendshop
+# #     ports:
+# #       - "5432:5432"
+# #     volumes:
+# # #       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+# #     - postgres_data:/var/lib/postgresql/data
+# #     deploy:
+# #       restart_policy:
+# #         condition: on-failure
+# #         max_attempts: 5
+       
+# # #     volumes:
+# # #       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
+# # #     restart: always
+
+# # volumes:  # ✅ Оголошуємо volume, щоб не було помилки
+# #   postgres_data:
 
 
