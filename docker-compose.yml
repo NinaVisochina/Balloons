@@ -36,10 +36,17 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
-    restart: always
+#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+    - /data/postgresql/data:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
+#     restart: always
 
-volumes:  # ✅ Оголошуємо volume, щоб не було помилки
-  postgres_data:
+# volumes:  # ✅ Оголошуємо volume, щоб не було помилки
+#   postgres_data:
 
 
