@@ -48,7 +48,7 @@ services:
 #       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
 #     restart: always
 
-# volumes:  # ✅ Оголошуємо volume, щоб не було помилки
-#   postgres_data:
+volumes:  # ✅ Оголошуємо volume, щоб не було помилки
+  postgres_data:
 
 
