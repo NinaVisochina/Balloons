@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: balloons_frontend_1  
     ports:
-      - "80:80" # Змінюємо на стандартний порт
+      - "3000:80" # Змінюємо на стандартний порт
     depends_on:
       - backend
     restart: always
