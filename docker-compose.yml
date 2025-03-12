@@ -1,51 +1,46 @@
 version: '3.9'
 
-networks:
-  myAppNetwork:   # 🔹 Оголошуємо власну мережу
-    driver: bridge
-
 services:
   nginx:
     image: nginx:latest
-    container_name: nginx_proxy
+    container_name: balloons_nginx_1
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # ✅ Прокидуємо файл конфігурації Nginx
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # ✅ Конфіг Nginx
     ports:
-      - "80:80"  # ✅ Nginx слухає HTTP-запити
+      - "80:80"   # ✅ HTTP на стандартному порту 80
+      - "443:443" # ✅ HTTPS (якщо плануєте сертифікати SSL)
     depends_on:
       - backend
       - frontend
-    networks:
-      - myAppNetwork
     restart: always
+    networks:
+      - myAppNetwork  # ✅ Оголошення мережі
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: balloons_backend_1  
+    container_name: balloons_backend_1
     environment:
       - ConnectionStrings__DefaultConnection=Host=balloons_db_1;Port=5432;Database=backendshop;Username=postgres;Password=123456
-    ports:
-      - "5000:5000"  # Відкриваємо порт бекенду
+    expose:
+      - "5000"  # ✅ Використовуємо expose, бо Nginx проксуватиме запити
     depends_on:
       - db
+    restart: always
     networks:
       - myAppNetwork
-    restart: always  
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: balloons_frontend_1  
-    ports:
-      - "3000:80"  # ✅ Фронтенд на іншому порту, щоб не конфліктував з Nginx
+    container_name: balloons_frontend_1
     depends_on:
       - backend
+    restart: always
     networks:
       - myAppNetwork
-    restart: always
 
   db:
     image: postgres:latest
@@ -54,21 +49,19 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: backendshop
-    ports:
-      - "5432:5432"
     volumes:
-      - /home/root/Balloons/pgdata:/var/lib/postgresql/data  # Фіксований шлях
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
     networks:
       - myAppNetwork
 
 volumes:
   postgres_data:
+
+networks:
+  myAppNetwork:
+    driver: bridge
+
 # services:
 #   backend:
 #     build:
