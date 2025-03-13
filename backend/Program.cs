@@ -13,7 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// ¬кажи порт 80 €вно
+builder.WebHost.UseUrls("http://0.0.0.0:80");
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 //builder.Services.AddDbContext<ShopDbContext>(options =>
 //    options.UseNpgsql(connectionString));
