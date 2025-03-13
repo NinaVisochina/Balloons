@@ -9,8 +9,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=backendshop
-    networks:
-      - myAppNetwork
     volumes:
 #       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
         - /data/postgresql/data:/var/lib/postgresql/data
