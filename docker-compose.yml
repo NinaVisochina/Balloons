@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   db:
     container_name: balloons_db_1
@@ -16,13 +15,6 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - myAppNetwork
 
   backend:
     build:
@@ -31,14 +23,10 @@ services:
     container_name: balloons_backend_1
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=backendshop;Username=postgres;Password=123456
-    ports:
-      - "5000:5000"  # Додайте для тестування
+    # Порт 5000 залишається внутрішнім, без мапінгу на хост
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     restart: always
-    networks:
-      - myAppNetwork
 
   frontend:
     build:
@@ -50,13 +38,6 @@ services:
     depends_on:
       - backend
     restart: always
-    networks:
-      - myAppNetwork
-
-networks:
-  myAppNetwork:
-    driver: bridge
-    
     # version: "3.9"
 # services:
 #   db:
