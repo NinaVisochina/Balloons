@@ -1,5 +1,4 @@
-
-using BackendShop.BackShop;
+Ôªøusing BackendShop.BackShop;
 using BackendShop.BackShop.Extensions;
 using BackendShop.Core;
 using BackendShop.Core.Interfaces;
@@ -13,11 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
-// ¬Í‡ÊË ÔÓÚ 80 ˇ‚ÌÓ
-//builder.WebHost.UseUrls("http://0.0.0.0:80");
+
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-//builder.Services.AddDbContext<ShopDbContext>(options =>
-//    options.UseNpgsql(connectionString));
 
 // Add services to the container.
 
@@ -46,7 +42,7 @@ builder.Services.AddExceptionHandler();
 
 builder.Services.AddJWT(builder.Configuration);
 builder.Services.AddSwaggerJWT();
-//builder.Services.AddHangfire(connectionString);
+builder.Services.AddHangfire(connectionString);
 
 builder.Services.AddCorsPolicies();
 
@@ -60,11 +56,11 @@ var app = builder.Build();
 //}
 
 // Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
-//}
+}
 if (app.Environment.IsProduction())
 {
     app.UseExceptionHandler();
@@ -74,13 +70,13 @@ if (!Directory.Exists(imagesDirPath))
 {
     Directory.CreateDirectory(imagesDirPath);
 }
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseCors("front-end-cors-policy");
 
 app.UseAuthentication();
 app.UseAuthorization();
-// ƒÓ‰‡∫ Ó·Ó·ÍÛ ÒÚ‡ÚË˜ÌËı Ù‡ÈÎ≥‚
+// √Ñ√Æ√§√†¬∫ √Æ√°√∞√Æ√°√™√≥ √±√≤√†√≤√®√∑√≠√®√µ √¥√†√©√´¬≥√¢
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(imagesDirPath),
@@ -96,9 +92,109 @@ using (var scope = app.Services.CreateScope())
 
     await services.SeedRoles();
     await services.SeedAdmin();
-    //hello
 }
 app.Run();
+
+//using BackendShop.BackShop;
+//using BackendShop.BackShop.Extensions;
+//using BackendShop.Core;
+//using BackendShop.Core.Interfaces;
+//using BackendShop.Core.Services;
+//using BackendShop.Data;
+//using BackendShop.Data.Data;
+//using BackendShop.Data.DataSeeder;
+//using BackendShop.Services;
+//using Hangfire;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.FileProviders;
+
+//var builder = WebApplication.CreateBuilder(args);
+//// –í–∫–∞–∂–∏ –ø–æ—Ä—Ç 80 —è–≤–Ω–æ
+////builder.WebHost.UseUrls("http://0.0.0.0:80");
+//string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+////builder.Services.AddDbContext<ShopDbContext>(options =>
+////    options.UseNpgsql(connectionString));
+
+//// Add services to the container.
+
+//builder.Services.AddControllers();
+////builder.Services.AddDbContext<ShopDbContext>(options =>
+////options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
+
+//builder.Services.AddDbContext(connectionString);
+//builder.Services.AddIdentity();
+//builder.Services.AddRepository();
+
+//// fluent validators
+
+//builder.Services.AddHttpContextAccessor();
+//builder.Services.AddAutoMapper();
+//builder.Services.AddFluentValidators();
+
+//// custom services
+//builder.Services.AddCustomServices();
+
+//// exception handlers
+//builder.Services.AddExceptionHandler();
+
+//builder.Services.AddJWT(builder.Configuration);
+//builder.Services.AddSwaggerJWT();
+////builder.Services.AddHangfire(connectionString);
+
+//builder.Services.AddCorsPolicies();
+
+//var app = builder.Build();
+
+//// -------------- Seed Initial Data
+////using (var scope = app.Services.CreateScope())
+////{
+////    scope.ServiceProvider.SeedRoles().Wait();
+////    scope.ServiceProvider.SeedAdmin().Wait();
+////}
+
+//// Configure the HTTP request pipeline.
+////if (app.Environment.IsDevelopment())
+////{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+////}
+//if (app.Environment.IsProduction())
+//{
+//    app.UseExceptionHandler();
+//}
+//string imagesDirPath = Path.Combine(Directory.GetCurrentDirectory(), builder.Configuration["ImagesDir"]);
+//if (!Directory.Exists(imagesDirPath))
+//{
+//    Directory.CreateDirectory(imagesDirPath);
+//}
+////app.UseHttpsRedirection();
+
+//app.UseCors("front-end-cors-policy");
+
+//app.UseAuthentication();
+//app.UseAuthorization();
+//// –î–æ–¥–∞—î –æ–±—Ä–æ–±–∫—É —Å—Ç–∞—Ç–∏—á–Ω–∏—Ö —Ñ–∞–π–ª—ñ–≤
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    FileProvider = new PhysicalFileProvider(imagesDirPath),
+//    RequestPath = "/images"
+//});
+////app.UseHangfireDashboard("/dash");
+////JobConfigurator.AddJobs();
+//app.SeedDataAsync();
+//app.MapControllers();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+
+//    await services.SeedRoles();
+//    await services.SeedAdmin();
+//    //hello
+//}
+//app.Run();
 //using BackendShop.Core.Interfaces;
 //using BackendShop.Data.Data;
 //using BackendShop.Data.DataSeeder;
@@ -141,9 +237,9 @@ app.Run();
 //        ValidateAudience = true,
 //        ValidateLifetime = true,
 //        ValidateIssuerSigningKey = true,
-//        ValidIssuer = "YourIssuer", // ¬Í‡Ê≥Ú¸ ‚‡¯ Issuer
-//        ValidAudience = "YourAudience", // ¬Í‡Ê≥Ú¸ ‚‡¯Û Audience
-//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey")) // —ÂÍÂÚÌËÈ ÍÎ˛˜
+//        ValidIssuer = "YourIssuer", // –í–∫–∞–∂—ñ—Ç—å –≤–∞—à Issuer
+//        ValidAudience = "YourAudience", // –í–∫–∞–∂—ñ—Ç—å –≤–∞—à—É Audience
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourSecretKey")) // –°–µ–∫—Ä–µ—Ç–Ω–∏–π –∫–ª—é—á
 //    };
 //});
 //builder.Services.AddIdentity<IdentityUser, IdentityRole>()

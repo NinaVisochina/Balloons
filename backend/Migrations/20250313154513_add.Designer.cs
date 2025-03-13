@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendShop.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20250313150908_add")]
+    [Migration("20250313154513_add")]
     partial class add
     {
         /// <inheritdoc />
