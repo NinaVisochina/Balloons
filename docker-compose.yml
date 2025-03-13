@@ -15,6 +15,8 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
+    networks:
+      - app_network
 
   backend:
     build:
@@ -23,10 +25,11 @@ services:
     container_name: balloons_backend_1
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=backendshop;Username=postgres;Password=123456
-    # Порт 5000 залишається внутрішнім, без мапінгу на хост
     depends_on:
       - db
     restart: always
+    networks:
+      - app_network
 
   frontend:
     build:
@@ -38,6 +41,65 @@ services:
     depends_on:
       - backend
     restart: always
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    container_name: balloons_nginx_1
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+# version: "3.9"
+# services:
+#   db:
+#     container_name: balloons_db_1
+#     image: postgres:latest
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=123456
+#       - POSTGRES_DB=backendshop
+#     volumes:
+#       - /data/postgresql/data:/var/lib/postgresql/data
+#     deploy:
+#       restart_policy:
+#         condition: on-failure
+#         max_attempts: 5
+
+#   backend:
+#     build:
+#       context: ./backend
+#       dockerfile: Dockerfile
+#     container_name: balloons_backend_1
+#     environment:
+#       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=backendshop;Username=postgres;Password=123456
+#     # Порт 5000 залишається внутрішнім, без мапінгу на хост
+#     depends_on:
+#       - db
+#     restart: always
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile
+#     container_name: balloons_frontend_1
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - backend
+#     restart: always
 #   db:
 #     image: postgres:latest
 #     container_name: balloons_db_1
