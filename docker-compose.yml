@@ -3,26 +3,25 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: balloons_backend_1  
+    container_name: balloons_backend_1
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=backendshop;Username=postgres;Password=123456
     ports:
-      - "5000:5000"  # Оновлено з "5000:80"
+      - "5000:5000" # Оновлено з "5000:80"
     depends_on:
       - db
-    restart: always 
+    restart: always
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: balloons_frontend_1  
+    container_name: balloons_frontend_1
     ports:
       - "80:80"
     depends_on:
       - backend
     restart: always
-
   db:
     image: postgres:latest
     container_name: balloons_db_1
@@ -38,15 +37,49 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-    # healthcheck:
-    #   test: ["CMD", "pg_isready", "-U", "postgres"]
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 5
-      networks: 
-      default:
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - myAppNetwork
+
+networks:
+  myAppNetwork:
     driver: bridge
-      # services:
+
+volumes:
+  postgres_data:
+version: '3.9'
+  # db:
+  #   image: postgres:latest
+  #   container_name: balloons_db_1
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: 123456
+  #     POSTGRES_DB: backendshop
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - /data/postgresql/data:/var/lib/postgresql/data
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #       max_attempts: 5
+  #   # healthcheck:
+  #   #   test: ["CMD", "pg_isready", "-U", "postgres"]
+  #   #   interval: 10s
+  #   #   timeout: 5s
+  #   #   retries: 5
+  #     networks: 
+  #     default:
+  #   driver: bridge
+
+
+
+  # services:
+
 #   backend:
 #     build:
 #       context: ./backend
@@ -104,7 +137,7 @@ services:
 #     driver: bridge
 
 # volumes:
-  # postgres_data:
+# postgres_data:
 # version: '3.9'
 
 # services:
@@ -325,12 +358,10 @@ services:
 # #       restart_policy:
 # #         condition: on-failure
 # #         max_attempts: 5
-       
+
 # # #     volumes:
 # # #       - postgres_data:/var/lib/postgresql/data  # ✅ Використання volume
 # # #     restart: always
 
 # # volumes:  # ✅ Оголошуємо volume, щоб не було помилки
 # #   postgres_data:
-
-
