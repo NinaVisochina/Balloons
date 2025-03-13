@@ -14,16 +14,20 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 // Вкажи порт 80 явно
-builder.WebHost.UseUrls("http://0.0.0.0:80");
+//builder.WebHost.UseUrls("http://0.0.0.0:80");
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
 //builder.Services.AddDbContext<ShopDbContext>(options =>
 //    options.UseNpgsql(connectionString));
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+// Налаштування контролерів із вказівкою простору імен
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(BackendShop.BackShop.Controllers.CategoryController).Assembly);
+
 //builder.Services.AddDbContext<ShopDbContext>(options =>
-    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
