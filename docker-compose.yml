@@ -1,4 +1,27 @@
+version: "3.9"
+networks:
+  myAppNetwork:
+    driver: bridge
+
 services:
+  db:
+    container_name: balloons_db_1
+    image: postgres:latest
+    ports:
+      - "5422:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=backendshop
+    networks:
+      - myAppNetwork
+    volumes:
+#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+        - /data/postgresql/data:/var/lib/postgresql/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
   backend:
     build:
       context: ./backend
@@ -22,36 +45,36 @@ services:
     depends_on:
       - backend
     restart: always
-  db:
-    image: postgres:latest
-    container_name: balloons_db_1
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: backendshop
-    ports:
-      - "5432:5432"
-    volumes:
-      - /data/postgresql/data:/var/lib/postgresql/data
-    deploy:
-      restart_policy:
-        condition: on-failure
-        max_attempts: 5
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - myAppNetwork
+#   db:
+#     image: postgres:latest
+#     container_name: balloons_db_1
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: 123456
+#       POSTGRES_DB: backendshop
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - /data/postgresql/data:/var/lib/postgresql/data
+#     deploy:
+#       restart_policy:
+#         condition: on-failure
+#         max_attempts: 5
+#     healthcheck:
+#       test: [ "CMD", "pg_isready", "-U", "postgres" ]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+#     networks:
+#       - myAppNetwork
 
-networks:
-  myAppNetwork:
-    driver: bridge
+# networks:
+#   myAppNetwork:
+#     driver: bridge
 
-volumes:
-  postgres_data:
-version: '3.9'
+# volumes:
+#   postgres_data:
+# version: '3.9'
   # db:
   #   image: postgres:latest
   #   container_name: balloons_db_1
