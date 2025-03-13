@@ -1,8 +1,4 @@
 version: "3.9"
-networks:
-  myAppNetwork:
-    driver: bridge
-
 services:
   db:
     container_name: balloons_db_1
