@@ -1,3 +1,4 @@
+# Будуємо фронтенд
 FROM node:20 AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -5,11 +6,16 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+# Встановлюємо Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Додаємо nginx.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
 # # ������������� Node.js ��� ����� ���������
 # FROM node:20 AS build
 # WORKDIR /app

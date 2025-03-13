@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   db:
     container_name: balloons_db_1
@@ -15,8 +16,6 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 5
-    networks:
-      - app_network
 
   backend:
     build:
@@ -28,38 +27,28 @@ services:
     depends_on:
       - db
     restart: always
-    networks:
-      - app_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: balloons_frontend_1
-    ports:
-      - "80:80"
     depends_on:
       - backend
     restart: always
-    networks:
-      - app_network
 
   nginx:
     image: nginx:latest
     container_name: balloons_nginx_1
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend
       - backend
-    networks:
-      - app_network
+    restart: always
 
-networks:
-  app_network:
-    driver: bridge
 # version: "3.9"
 # services:
 #   db:
