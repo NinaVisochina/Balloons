@@ -98,11 +98,18 @@ services:
       - "5432:5432"
     # volumes:
     #   - /home/root/Balloons/pgdata:/var/lib/postgresql/data # Фіксований шлях
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data
+    # # restart: unless-stopped
+    # deploy:
+    # restart_policy:
+    #     condition: on-failure
+    #     max_attempts: 5
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    # restart: unless-stopped
+#       - d:/web/pd322/postgresql:/var/lib/postgresql/data  # Use the volume name msvol here
+        - /data/postgresql/data:/var/lib/postgresql/data
     deploy:
-    restart_policy:
+      restart_policy:
         condition: on-failure
         max_attempts: 5
     healthcheck:
