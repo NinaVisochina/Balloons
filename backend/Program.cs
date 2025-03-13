@@ -21,11 +21,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 // Add services to the container.
 
-//builder.Services.AddControllers();
-// Налаштування контролерів із вказівкою простору імен
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(BackendShop.BackShop.Controllers.CategoryController).Assembly);
-
+builder.Services.AddControllers();
 //builder.Services.AddDbContext<ShopDbContext>(options =>
 //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -92,7 +88,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 //app.UseHangfireDashboard("/dash");
 //JobConfigurator.AddJobs();
-//app.SeedDataAsync();
+app.SeedDataAsync();
 app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
