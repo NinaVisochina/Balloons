@@ -96,9 +96,15 @@ services:
       POSTGRES_DB: backendshop
     ports:
       - "5432:5432"
+    # volumes:
+    #   - /home/root/Balloons/pgdata:/var/lib/postgresql/data # Фіксований шлях
     volumes:
-      - /home/root/Balloons/pgdata:/var/lib/postgresql/data # Фіксований шлях
-    restart: unless-stopped
+      - postgres_data:/var/lib/postgresql/data
+    # restart: unless-stopped
+    deploy:
+    restart_policy:
+        condition: on-failure
+        max_attempts: 5
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: 10s
