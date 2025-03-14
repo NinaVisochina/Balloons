@@ -20,18 +20,32 @@ RUN echo 'server { \
         proxy_set_header X-Real-IP $remote_addr; \
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
         proxy_set_header X-Forwarded-Proto $scheme; \
+        proxy_http_version 1.1; \
+        proxy_set_header Upgrade $http_upgrade; \
+        proxy_set_header Connection "upgrade"; \
     } \
-    error_page 404 /index.html; \
+    location /images/ { \
+        proxy_pass http://balloons_backend_1:5000/images/; \
+    } \
 } \
 server { \
     listen 80; \
     server_name api.balloos.in.ua; \
     location / { \
-        proxy_pass http://balloons_backend_1:5000/; \
+        proxy_pass http://balloons_backend_1:5000/swagger/; \
+    } \
+    location /swagger/ { \
+        proxy_pass http://balloons_backend_1:5000/swagger/; \
+    } \
+    location /api/ { \
+        proxy_pass http://balloons_backend_1:5000/api/; \
         proxy_set_header Host $host; \
         proxy_set_header X-Real-IP $remote_addr; \
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
         proxy_set_header X-Forwarded-Proto $scheme; \
+    } \
+    location /images/ { \
+        proxy_pass http://balloons_backend_1:5000/images/; \
     } \
 }' > /etc/nginx/conf.d/default.conf
 EXPOSE 80
