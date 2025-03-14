@@ -95,13 +95,13 @@ app.UseStaticFiles(new StaticFileOptions
 //JobConfigurator.AddJobs();
 //app.SeedDataAsync();
 app.MapControllers();
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
-//    await services.SeedRoles();
-//    await services.SeedAdmin();
-//}
+    await services.SeedRoles();
+    await services.SeedAdmin();
+}
 app.Run();
 
 //using BackendShop.BackShop;
