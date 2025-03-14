@@ -14,13 +14,13 @@ COPY /etc/letsencrypt/live/balloos.in.ua/privkey.pem /etc/nginx/ssl/privkey.pem
 
 RUN echo 'server { \
     listen 80; \
-    server_name balloos.in.ua www.balloos.in.ua api.balloos.in.ua; \
+    server_name balloos.in.ua api.balloos.in.ua; \
     # Перенаправлення всіх HTTP-запитів на HTTPS \
     return 301 https://$host$request_uri; \
 } \
 server { \
     listen 443 ssl; \
-    server_name balloos.in.ua www.balloos.in.ua; \
+    server_name balloos.in.ua; \
     ssl_certificate /etc/nginx/ssl/fullchain.pem; \
     ssl_certificate_key /etc/nginx/ssl/privkey.pem; \
     location / { \
