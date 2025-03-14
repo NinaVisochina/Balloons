@@ -7,9 +7,22 @@ RUN npm run build
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Копіюємо сертифікати в контейнер
+COPY /etc/letsencrypt/live/balloos.in.ua/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY /etc/letsencrypt/live/balloos.in.ua/privkey.pem /etc/nginx/ssl/privkey.pem
+
 RUN echo 'server { \
     listen 80; \
+    server_name balloos.in.ua www.balloos.in.ua api.balloos.in.ua; \
+    # Перенаправлення всіх HTTP-запитів на HTTPS \
+    return 301 https://$host$request_uri; \
+} \
+server { \
+    listen 443 ssl; \
     server_name balloos.in.ua www.balloos.in.ua; \
+    ssl_certificate /etc/nginx/ssl/fullchain.pem; \
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem; \
     location / { \
         root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
@@ -29,13 +42,18 @@ RUN echo 'server { \
     } \
 } \
 server { \
-    listen 80; \
+    listen 443 ssl; \
     server_name api.balloos.in.ua; \
+    ssl_certificate /etc/nginx/ssl/fullchain.pem; \
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem; \
     location / { \
         proxy_pass http://balloons_backend_1:5000/swagger/; \
     } \
     location /swagger/ { \
         proxy_pass http://balloons_backend_1:5000/swagger/; \
+    } \
+    location /swagger/index.html { \
+        proxy_pass http://balloons_backend_1:5000/swagger/index.html; \
     } \
     location /api/ { \
         proxy_pass http://balloons_backend_1:5000/api/; \
@@ -48,7 +66,9 @@ server { \
         proxy_pass http://balloons_backend_1:5000/images/; \
     } \
 }' > /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
 #  FROM node:20 AS build
 # WORKDIR /app
