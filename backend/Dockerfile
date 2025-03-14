@@ -17,5 +17,4 @@ RUN dotnet publish "BackendShop.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-COPY images /app/wwwroot/images  # Копіюємо картинки
 ENTRYPOINT ["dotnet", "BackendShop.dll"]
