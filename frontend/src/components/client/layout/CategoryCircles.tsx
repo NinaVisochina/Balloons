@@ -1,6 +1,7 @@
 import Slider from "react-slick"; 
 import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../../services/categoryApi";
+import { API_URL } from "../../../env";
 
 
 const CategoryCircles = () => {
@@ -32,7 +33,7 @@ const CategoryCircles = () => {
                             {/* Кружечок із зображенням */}
                             <div className="w-40 h-40 rounded-full overflow-hidden border shadow-lg">
                                 <img
-                                    src={`/images/1200_${category.imageCategory}`} // 🔹 Виправлено синтаксис  src={`${API_URL}/images/300_${category.imageCategory}`}
+                                    src={`${API_URL}/images/1200_${category.imageCategory}`} // 🔹 Виправлено синтаксис  src={`${API_URL}/images/300_${category.imageCategory}`}
                                     alt={category.name}
                                     className="w-full h-full object-cover"
                                 />
