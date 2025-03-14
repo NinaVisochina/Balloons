@@ -42,8 +42,8 @@ services:
       - backend
     restart: always
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro  # Монтуємо сертифікати
-      
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot
       
     # version: "3.9"
 # services:

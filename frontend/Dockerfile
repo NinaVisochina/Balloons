@@ -8,21 +8,19 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Копіюємо сертифікати в контейнер
-COPY /etc/letsencrypt/live/balloos.in.ua/fullchain.pem /etc/nginx/ssl/fullchain.pem
-COPY /etc/letsencrypt/live/balloos.in.ua/privkey.pem /etc/nginx/ssl/privkey.pem
-
 RUN echo 'server { \
     listen 80; \
     server_name balloos.in.ua api.balloos.in.ua; \
-    # Перенаправлення всіх HTTP-запитів на HTTPS \
+    location /.well-known/acme-challenge/ { \
+        root /var/www/certbot; \
+    } \
     return 301 https://$host$request_uri; \
 } \
 server { \
     listen 443 ssl; \
     server_name balloos.in.ua; \
-    ssl_certificate /etc/nginx/ssl/fullchain.pem; \
-    ssl_certificate_key /etc/nginx/ssl/privkey.pem; \
+    ssl_certificate /etc/letsencrypt/live/balloos.in.ua/fullchain.pem; \
+    ssl_certificate_key /etc/letsencrypt/live/balloos.in.ua/privkey.pem; \
     location / { \
         root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
@@ -44,8 +42,8 @@ server { \
 server { \
     listen 443 ssl; \
     server_name api.balloos.in.ua; \
-    ssl_certificate /etc/nginx/ssl/fullchain.pem; \
-    ssl_certificate_key /etc/nginx/ssl/privkey.pem; \
+    ssl_certificate /etc/letsencrypt/live/balloos.in.ua/fullchain.pem; \
+    ssl_certificate_key /etc/letsencrypt/live/balloos.in.ua/privkey.pem; \
     location / { \
         proxy_pass http://balloons_backend_1:5000/swagger/; \
     } \
