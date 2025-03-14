@@ -14,5 +14,9 @@ docker-compose down --rmi all --volumes
 chmod +x docker_actions.sh
 ./docker_actions.sh
 
+ls -l /data/postgresql/data
+
+docker exec -it balloons_db_1 psql -U postgres -d backendshop
+
 
 ```
