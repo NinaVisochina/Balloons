@@ -11,7 +11,7 @@ const CategoryCircles = () => {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 5, // Кількість видимих категорій одночасно
+        slidesToShow: 6, // Кількість видимих категорій одночасно
         slidesToScroll: 1,
         arrows: true, // Відображення стрілок
     };
