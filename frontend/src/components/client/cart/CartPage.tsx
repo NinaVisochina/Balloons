@@ -73,7 +73,7 @@ const CartPage: React.FC = () => {
 
   const handleCheckout = () => {
     if (cart.length === 0) {
-      alert("Your cart is empty!");
+      alert("Корзина порожня!");
       return;
     }
     // Перехід на сторінку оформлення замовлення за допомогою useNavigate
@@ -82,9 +82,9 @@ const CartPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
+      <h1 className="text-2xl font-bold mb-4">Корзина</h1>
       {!Array.isArray(cart) || cart.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p>Корзина порожня</p>
       ) : (
         <ul className="space-y-4">
           {cart.map(item => (
@@ -97,7 +97,7 @@ const CartPage: React.FC = () => {
                 />
                 <div>
                   <h3 className="font-semibold">{item.productName || `Product ID: ${item.productId}`}</h3>
-                    <p>Quantity: {item.quantity}</p>
+                    <p>Кількість: {item.quantity}</p>
                     <p className="text-gray-500"><span>{isNaN(item.price) ? "N/A" : `${item.price} грн`}</span></p>
                 </div>
               </div>
@@ -117,7 +117,7 @@ const CartPage: React.FC = () => {
           className="bg-blue-500 px-4 py-2 text-white rounded-md hover:bg-blue-600"
           onClick={handleCheckout}
         >
-          Proceed to Checkout
+          Оформити замовлення
         </button>
       </div>
     </div>
