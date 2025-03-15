@@ -25,7 +25,7 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=backendshop;Username=postgres;Password=123456
     # Порт 5000 залишається внутрішнім, без мапінгу на хост
     volumes:
-      - /root/Balloons/backend/images:/app/images  # Зміни на /app/images  # Монтуємо картинки
+      - /data/Balloons/images:/app/images  # Зміни на /app/images  # Монтуємо картинки
     depends_on:
       - db
     restart: always
