@@ -14,7 +14,7 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
-
+Console.WriteLine(builder.Configuration.GetConnectionString("DefaultConnection"));
 // Add services to the container.
 
 builder.Services.AddControllers();
