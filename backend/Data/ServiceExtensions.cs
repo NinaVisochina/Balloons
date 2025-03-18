@@ -13,9 +13,20 @@ namespace BackendShop.Data
        
         public static void AddDbContext(this IServiceCollection services, string connectionString)
         {
+            Console.WriteLine($"Using connection string: {connectionString}");
             services.AddDbContext<ShopDbContext>(options =>
-                options.UseNpgsql(connectionString)
-            );
+            {
+                options.UseNpgsql(connectionString, npgsqlOptions =>
+                {
+                    // Додаткові налаштування (опціонально)
+                    npgsqlOptions.EnableRetryOnFailure(); // Увімкнення повторних спроб при збої
+                    npgsqlOptions.CommandTimeout(60);     // Таймаут команд (у секундах)
+                });
+            });
+
+            //services.AddDbContext<ShopDbContext>(options =>
+            //    options.UseNpgsql(connectionString)
+            //);
         }
         public static void AddIdentity(this IServiceCollection services)
         {
