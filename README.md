@@ -29,4 +29,22 @@ docker system prune -a -f
 Видалить кешовані образи
 Видалить тимчасові файли Docker
 
+Зупиніть і видаліть усі контейнери:
+docker-compose down
+docker rm -f $(docker ps -a -q)
+Очистіть теку /data/postgresql/data:
+sudo rm -rf /data/postgresql/data/*
+sudo chown -R 999:999 /data/postgresql/data
+sudo chmod -R 700 /data/postgresql/data
+Видаліть образи:
+docker rmi -f $(docker images -q balloons_backend)
+docker rmi -f $(docker images -q balloons_frontend)
+docker rmi -f $(docker images -q postgres)
+Очистіть мережі:
+docker network prune -f
+Перезберіть і запустіть:
+
+docker-compose build --no-cache
+docker-compose up
+
 ```
