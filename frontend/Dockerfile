@@ -44,8 +44,8 @@ server { \
 server { \
     listen 443 ssl; \
     server_name api.balloons.in.ua; \
-    ssl_certificate /etc/letsencrypt/live/balloos.in.ua/fullchain.pem; \
-    ssl_certificate_key /etc/letsencrypt/live/balloos.in.ua/privkey.pem; \
+    ssl_certificate /etc/letsencrypt/live/balloons.in.ua/fullchain.pem; \
+    ssl_certificate_key /etc/letsencrypt/live/balloons.in.ua/privkey.pem; \
     location / { \
         proxy_pass http://balloons_backend_1:5000/swagger/; \
     } \
