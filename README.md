@@ -21,7 +21,6 @@ docker exec -it balloons_db_1 psql -U postgres -d backendshop
 docker volume ls
 Відображає два volumes:
 balloons_postgres_data
-myproject_postgres_data Це означає, що дані бази ще існують у Docker volume.
 
 docker system prune -a -f
 Що це зробить?
