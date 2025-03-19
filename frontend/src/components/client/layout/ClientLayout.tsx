@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
-import { FaSearch, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaHeart, FaSearch, FaShoppingCart, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
@@ -95,36 +95,36 @@ const ClientLayout = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-background text-accent">
-      <header className=" text-accent ">
-        <div className="flex items-center justify-between p-2 ">
+    <div className="bg-background text-text font-sans">
+      <header className="bg-primary shadow-md">
+        <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
           <Link to="/" className="flex items-center space-x-2">
-            <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
-            <span className="text-4xl font-sans text-accent">
+            <img src={Logo} alt="Logo" className="h-12 w-auto" />
+            <span className="text-3xl font-caveat text-text">
               BallonsShop
             </span>
           </Link>
   
           <button
             onClick={toggleMenu}
-            className="border border-accent text-accent text-xl px-6 py-3 rounded-lg hover:text-primary transition duration-300"
+            className="border border-accent text-accent text-lg px-6 py-2 rounded-lg hover:bg-accent hover:text-white transition duration-300"
           >
             Каталог
           </button>
           {isMenuOpen && !categoriesLoading && categories && (
   <div
-    className="absolute left-0 top-0 w-[500px] h-screen bg-white text-black shadow-lg z-50 flex"
+    className="absolute left-0 top-0 w-[500px] h-screen bg-white text-text shadow-lg z-50 flex"
     onMouseEnter={() => setIsMenuOpen(true)}
     onMouseLeave={() => setIsMenuOpen(false)}
   >
     {/* Ліва панель категорій */}
-    <div className="w-[250px] bg-gray-100 p-4">
+    <div className="w-[250px] bg-gray-50 p-4">
       <ul className="space-y-2">
         {categories.map((category) => (
           <li
             key={category.id}
             className={`flex justify-between items-center px-4 py-2 cursor-pointer transition-all duration-300 ${
-              hoveredCategory === category.id ? "bg-gray-300" : ""
+              hoveredCategory === category.id ? "bg-accent text-white" : "hover:bg-gray-200"
             }`}
             onMouseEnter={() => handleCategoryHover(category.id)}
             onClick={() => {
@@ -133,7 +133,7 @@ const ClientLayout = () => {
             }}
           >
             <span>{category.name}</span>
-            <span className="text-gray-500">›</span>
+            <span className="text-secondary">›</span>
           </li>
         ))}
       </ul>
@@ -142,17 +142,17 @@ const ClientLayout = () => {
     {/* Права панель підкатегорій (при наведенні на категорію) */}
     {hoveredCategory && filteredSubCategories.length > 0 && (
       <div
-        className="w-[250px] bg-white shadow-md p-4 border-l border-gray-300 transition-opacity duration-300"
+        className="w-[250px] bg-white shadow-md p-4 border-l border-gray-200 transition-opacity duration-300"
         onMouseEnter={() => setHoveredCategory(hoveredCategory)}
         onMouseLeave={() => setHoveredCategory(null)}
       >
-        <h3 className="font-bold text-lg mb-2">Підкатегорії</h3>
+        <h3 className="font-caveat text-text text-lg mb-2">Підкатегорії</h3>
         <ul className="space-y-2">
           {filteredSubCategories.map((subCategory) => (
             <li key={subCategory.id}>
               <Link
                 to={`/subcategory/products/${subCategory.slug}`}
-                className="text-gray-800 hover:text-gray-500 transition-all"
+                className="text-text hover:text-accent transition-all"
                 onClick={() => {
                   setIsMenuOpen(false); // Закриває меню після натискання
                 }}
@@ -167,17 +167,17 @@ const ClientLayout = () => {
   </div>
 )}
 
-          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 border border-accent">
+          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 border border-gray-200">
             <input
               type="text"
               placeholder="Я шукаю..."
-              className="outline-none px-3 py-1 text-lg text-accent w-64"
+              className="outline-none px-3 py-1 text-lg text-text w-64"
               value={search}
               onChange={handleSearch}
             />
             <button
               type="submit"
-              className="text-accent text-lg px-5 py-2 rounded-lg hover:text-primary transition duration-300"
+              className="text-accent text-lg px-3 py-1 rounded-lg hover:text-primary transition duration-300"
             >
               <FaSearch />
             </button>
@@ -186,7 +186,7 @@ const ClientLayout = () => {
     {searchResults?.map((product) => (
       <li
         key={product.id}
-        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
         onClick={() => handleSuggestionClick(product.id)}
       >
         {product.name}
@@ -198,32 +198,32 @@ const ClientLayout = () => {
           </form>
   
           <div className="flex items-center space-x-6">
-            <Link to="/cart" className="flex items-center space-x-2 text-xl">
-              <span>🛒</span>
-              <span>{cartTotal}</span>
-            </Link>
-  
+          <Link to="/cart" className="flex items-center space-x-2 text-xl text-accent hover:text-accent-dark">
+            <FaShoppingCart size={24} />
+            <span>{cartTotal}</span>
+          </Link>  
             <nav className="flex items-center space-x-4 text-xl">
               {token ? (
                 <>
-                  <Link to="/profile" className="hover:text-mint"><FaUser size={24} /></Link>
-                  <button onClick={handleLogout} className="hover:text-mint">
+                  <Link to="/profile" className="text-accent hover:text-accent-dark"><FaUser size={24} /></Link>
+                  <button onClick={handleLogout} className="text-accent hover:text-accent-dark">
                     <FaSignOutAlt size={24} />
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="hover:text-mint">
+                <Link to="/login" className="text-accent hover:text-accent-dark">
                   <FaSignInAlt size={24} />
                 </Link>
               )}
-            </nav>
-  
-            <Link to="/wishlist" className="hover:text-yellowAccent text-xl">❤️</Link>
+            </nav>  
+            <Link to="/wishlist" className="text-accent hover:text-accent-dark">
+              <FaHeart size={24} />
+            </Link>
           </div>
         </div>
       </header>
       {/* className=container mx-auto py-6 px-6 */}
-      <main className="w-full">  
+      <main className="max-w-7xl mx-auto py-6 px-6">  
         <Outlet />
       </main>
   
