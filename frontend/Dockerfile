@@ -12,7 +12,7 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 RUN echo 'server { \
     listen 80; \
-    server_name balloos.in.ua api.balloos.in.ua; \
+    server_name balloons.in.ua api.balloons.in.ua; \
     location /.well-known/acme-challenge/ { \
         root /var/www/certbot; \
     } \
@@ -20,9 +20,9 @@ RUN echo 'server { \
 } \
 server { \
     listen 443 ssl; \
-    server_name balloos.in.ua; \
-    ssl_certificate /etc/letsencrypt/live/balloos.in.ua/fullchain.pem; \
-    ssl_certificate_key /etc/letsencrypt/live/balloos.in.ua/privkey.pem; \
+    server_name balloons.in.ua; \
+    ssl_certificate /etc/letsencrypt/live/balloons.in.ua/fullchain.pem; \
+    ssl_certificate_key /etc/letsencrypt/live/balloons.in.ua/privkey.pem; \
     location / { \
         root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
@@ -43,7 +43,7 @@ server { \
 } \
 server { \
     listen 443 ssl; \
-    server_name api.balloos.in.ua; \
+    server_name api.balloons.in.ua; \
     ssl_certificate /etc/letsencrypt/live/balloos.in.ua/fullchain.pem; \
     ssl_certificate_key /etc/letsencrypt/live/balloos.in.ua/privkey.pem; \
     location / { \
