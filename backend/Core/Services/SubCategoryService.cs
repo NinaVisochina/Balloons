@@ -186,29 +186,11 @@ namespace BackendShop.Services
 
             // Перевіряємо, чи є продукти у підкатегорії
             if (subCategory.Products.Any())
-                throw new Exception("Неможливо видалити підкатегорію, яка містить продукти.");
-
-            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                try
-                {
-                    // Видаляємо зображення підкатегорії, якщо воно є
-                    if (!string.IsNullOrEmpty(subCategory.ImageSubCategoryPath))
-                    {
-                        _imageHulk.Delete(subCategory.ImageSubCategoryPath);
-                    }
-
-                    _context.SubCategories.Remove(subCategory);
-                    await _context.SaveChangesAsync();
-
-                    await transaction.CommitAsync(); // Підтверджуємо транзакцію
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync(); // Відкочуємо транзакцію у разі помилки
-                    throw new Exception("Помилка під час видалення підкатегорії.");
-                }
+                throw new Exception("Неможливо видалити підкатегорію, яка містить продукти.");
             }
+             _context.SubCategories.Remove(subCategory);
+              await _context.SaveChangesAsync();
         }
 
         public async Task<SubCategoryDto> GetBySlugAsync(string slug)
