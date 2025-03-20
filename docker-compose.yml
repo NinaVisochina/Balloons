@@ -11,8 +11,6 @@ services:
     image: postgres:latest
     # Замість "ports: - 5432:5432"
     # Нічого не вказуй або вкажи тільки внутрішній порт
-    ports:
-      - "5432/tcp"
     expose:
       - "5432"  # Доступно лише в мережі Docker
     environment:
