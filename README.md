@@ -46,4 +46,7 @@ docker network prune -f
 docker-compose build --no-cache
 docker-compose up
 
+статус фаервол
+sudo ufw status
+
 ```
