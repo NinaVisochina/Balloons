@@ -150,7 +150,7 @@ const CategoryEditPage = () => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
+                {/* <Form.Item
                     label="Slug"
                     name="slug"
                     rules={[
@@ -159,7 +159,7 @@ const CategoryEditPage = () => {
                     ]}
                 >
                     <Input />
-                </Form.Item>
+                </Form.Item> */}
 
                 <Form.Item
                     name="imageCategory"
