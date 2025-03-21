@@ -66,21 +66,6 @@ const CategoryCreatePage = () => {
                         className={"block w-full px-5  text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"} />
                 </Form.Item>
 
-                <Form.Item
-                    label={"Slug (URL-назва)"}
-                    name={"slug"}
-                    htmlFor={"slug"}
-                    rules={[
-                        { required: false },
-                        { pattern: /^[a-z0-9-]*$/, message: "Тільки малі латинські літери, цифри та дефіси" }
-                    ]}
-                >
-                    <Input autoComplete="off"
-                         placeholder="my-category"
-                         className={"block w-full px-5 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"} />
-                </Form.Item>
-
-
                 <div className="flex items-center col-span-2 gap-x-2">
                     <Form.Item
                         name="imageCategory"
