@@ -77,48 +77,7 @@ const CategoriesListPage = () => {
                             </td>
                         </tr>
                     ))}
-                </tbody>
-
-                <tbody>
-                    {list?.map((category, index) => (
-                        <tr key={category.id} className="hover:bg-gray-100">
-                            <td className="p-2 border text-center">{index + 1}</td>
-                            <td className="p-2 border text-center">
-                                <img
-                                    src={`${API_URL}/images/300_${category.imageCategory}`}
-                                    alt={category.name}
-                                    className="h-16 w-16 object-cover rounded"
-                                />
-                            </td>
-                            <td className="p-2 border">{category.name}</td>
-                            <td className="p-2 border">{category.description}</td>
-                            <td className="p-2 border">{category.slug}</td>
-                            <td className="p-2 border">{category.id}</td>
-                            <td className="p-2 border text-center">
-                                <div className="flex justify-center space-x-4">
-                                    <Link
-                                        to={`/admin/categories/view/${category.slug}`}
-                                        className="text-gray-700 hover:text-gray-900"
-                                    >
-                                        <FaEye className="text-gray-500 text-lg hover:text-gray-800" />
-                                    </Link>
-                                    <Link
-                                        to={`/admin/categories/edit/${category.slug}`}
-                                        className="text-gray-700 hover:text-gray-900"
-                                    >
-                                        <FaEdit className="text-gray-500 text-lg hover:text-gray-800" />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDelete(category.id)}
-                                        className="text-gray-700 hover:text-gray-900"
-                                    >
-                                        <FaTrash className="text-gray-500 text-lg hover:text-gray-800" />
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
+                </tbody>               
             </table>
         </>
     );
