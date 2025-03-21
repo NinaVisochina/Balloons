@@ -6,12 +6,24 @@ namespace BackendShop.Core.Services
     {
         public static string GenerateSlug(string name)
         {
-            string transliterated = TransliterateToLatin(name);
-            return transliterated.ToLower()
-                                 .Replace(" ", "-")  // Заміна пробілів на дефіси
-                                 .Replace("--", "-") // Видалення подвійних дефісів
-                                 .Trim('-');         // Видалення дефісів на початку і в кінці
+            string transliterated = TransliterateToLatin(name).Trim(); // Видаляємо зайві пробіли
+
+            string slug = transliterated.ToLower()
+                                        .Replace(" ", "-") // Заміна пробілів
+                                        .Replace("--", "-") // Видалення подвійних дефісів
+                                        .Trim('-'); // Видалення дефісів на початку/кінці
+
+            Console.WriteLine($"[DEBUG] Name: {name}, Slug: {slug}"); // 🔹 Вивід для перевірки
+            return slug;
         }
+        //public static string GenerateSlug(string name)
+        //{
+        //    string transliterated = TransliterateToLatin(name);
+        //    return transliterated.ToLower()
+        //                         .Replace(" ", "-")  // Заміна пробілів на дефіси
+        //                         .Replace("--", "-") // Видалення подвійних дефісів
+        //                         .Trim('-');         // Видалення дефісів на початку і в кінці
+        //}
 
         private static string TransliterateToLatin(string input)
         {
@@ -34,7 +46,7 @@ namespace BackendShop.Core.Services
                     sb.Append(c);
             }
 
-            return sb.ToString().Replace(" ", "-");
+            return sb.ToString();
         }
     }
 
