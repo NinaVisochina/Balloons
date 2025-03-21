@@ -34,7 +34,7 @@ namespace BackendShop.Core.Services
                     sb.Append(c);
             }
 
-            return sb.ToString();
+            return sb.ToString().Replace(" ", "-");
         }
     }
 
