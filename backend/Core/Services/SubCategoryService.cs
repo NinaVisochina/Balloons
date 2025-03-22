@@ -129,30 +129,51 @@ namespace BackendShop.Services
                 .SingleOrDefaultAsync(x => x.SubCategoryId == model.Id);
 
             if (subCategory == null) throw new Exception("Підкатегорію не знайдено");
+            // Назва
+            subCategory.Name = model.Name;
+
+            // Slug
+            if (string.IsNullOrWhiteSpace(model.Slug))
+            {
+                subCategory.GenerateSlug(); // 🔹 Якщо не передано – генеруємо
+            }
+            else
+            {
+                subCategory.Slug = model.Slug; // 🔹 Якщо передано – використовуємо
+            }
+
+            // 🔹 Перевіряємо унікальність slug завжди
+            var existingSlug = await _context.SubCategories
+                .AnyAsync(x => x.Slug == subCategory.Slug && x.SubCategoryId != subCategory.SubCategoryId);
+
+            if (existingSlug)
+            {
+                throw new Exception("Slug вже використовується. Оберіть іншу назву.");
+            }
 
             // Оновлення назви
-            if (subCategory.Name != model.Name)
-            {
-                subCategory.Name = model.Name;
+            //if (subCategory.Name != model.Name)
+            //{
+            //    subCategory.Name = model.Name;
 
-                if (string.IsNullOrWhiteSpace(model.Slug))
-                {
-                    subCategory.GenerateSlug(); // 🔹 Генеруємо Slug тільки якщо його немає
-                }
-                else
-                {
-                    subCategory.Slug = model.Slug; // 🔹 Дозволяємо передавати `Slug` як необов'язковий
-                }
+            //    if (string.IsNullOrWhiteSpace(model.Slug))
+            //    {
+            //        subCategory.GenerateSlug(); // 🔹 Генеруємо Slug тільки якщо його немає
+            //    }
+            //    else
+            //    {
+            //        subCategory.Slug = model.Slug; // 🔹 Дозволяємо передавати `Slug` як необов'язковий
+            //    }
 
-                // Перевіряємо, чи новий Slug унікальний
-                var existingSlug = await _context.SubCategories
-                    .AnyAsync(x => x.Slug == subCategory.Slug && x.SubCategoryId != subCategory.SubCategoryId);
+            //    // Перевіряємо, чи новий Slug унікальний
+            //    var existingSlug = await _context.SubCategories
+            //        .AnyAsync(x => x.Slug == subCategory.Slug && x.SubCategoryId != subCategory.SubCategoryId);
 
-                if (existingSlug)
-                {
-                    throw new Exception("Slug вже використовується. Оберіть іншу назву.");
-                }
-            }
+            //    if (existingSlug)
+            //    {
+            //        throw new Exception("Slug вже використовується. Оберіть іншу назву.");
+            //    }
+            //}
 
             // Оновлення категорії
             subCategory.CategoryId = model.CategoryId;

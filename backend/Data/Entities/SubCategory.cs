@@ -9,7 +9,7 @@ namespace BackendShop.Data.Entities
     {
         [Key]
         public int SubCategoryId { get; set; }
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
         [Required, StringLength(255)]
         public string Name { get; set; } = string.Empty;
         [StringLength(255)]
