@@ -4,7 +4,6 @@ import CategorySidebar from "./CategorySidebar";
 import { API_URL } from "../../../env";
 import { ISubCategoryItem } from "../../../interfaces/subcategory";
 import { useGetCategoryBySlugQuery } from "../../../services/categoryApi";
-
 import { useGetSubCategoriesByCategorySlugQuery } from "../../../services/categoryApi";
 import ProductsPage from "./ProductsPage";
 import { useState, useEffect } from "react";
@@ -13,21 +12,19 @@ import ProductFilter from "./ProductFilter";
 const CategoryPage = () => {
   const { slug } = useParams<{ slug?: string }>();
 
-const { data: category } = slug
-  ? useGetCategoryBySlugQuery(slug) // Виконує запит, якщо slug існує
-  : { data: null }; // В іншому випадку category = null
+  const { data: category } = slug
+    ? useGetCategoryBySlugQuery(slug)
+    : { data: null };
   const [categoryId, setCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (category) setCategoryId(category.id); // ✅ Встановлюємо categoryId після отримання категорії
+    if (category) setCategoryId(category.id);
   }, [category]);
 
-  
   const { data: subCategories, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategorySlugQuery(categoryId);
   const { data: products, isLoading: productsLoading } = slug
-  ? useGetProductsByCategorySlugQuery(slug)
-  : { data: [], isLoading: false };
-  console.log("categoryPage,useGetProductsByCategorySlugQuery",slug);
+    ? useGetProductsByCategorySlugQuery(slug)
+    : { data: [], isLoading: false };
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
 
@@ -35,7 +32,6 @@ const { data: category } = slug
     return <div>Завантаження...</div>;
   }
 
-  // Фільтрація підкатегорій за categoryId
   const filteredSubCategories = subCategories?.filter((sub: ISubCategoryItem) => sub.categoryId === categoryId) || [];
 
   return (
@@ -65,16 +61,19 @@ const { data: category } = slug
         </div>
 
         <div className="w-3/4 ml-6">
-          <h1 className="text-2xl font-bold mb-4">Підкатегорії</h1>
+          <h1 className="text-2xl font-bold mb-4 text-center">Підкатегорії</h1>
           {filteredSubCategories.length > 0 ? (
-            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4 justify-items-center">
               {filteredSubCategories.map((sub: ISubCategoryItem) => (
-                <li key={sub.id} className="bg-white p-4 shadow-md rounded-lg">
-                  <img src={`${API_URL}/images/300_${sub.imageSubCategory}`} alt={sub.name} className="w-full h-40 object-cover rounded-t-lg" />
-                  <h2 className="text-lg font-semibold mt-2">{sub.name}</h2>
-                  <Link to={`/subcategory/products/${sub.slug}`} className="text-blue-500 hover:underline mt-2 block">
-                    Переглянути продукти
+                <li key={sub.id} className="bg-white p-4 shadow-sm rounded-lg sm:p-2">
+                  <Link to={`/subcategory/products/${sub.slug}`} className="block">
+                    <img
+                      src={`${API_URL}/images/300_${sub.imageSubCategory}`}
+                      alt={sub.name}
+                      className="w-24 h-24 object-cover rounded-full mx-auto transition-transform duration-300 hover:scale-105 hover:opacity-90 shadow-md"
+                    />
                   </Link>
+                  <h2 className="text-base font-medium mt-3 text-center">{sub.name}</h2>
                 </li>
               ))}
             </ul>
@@ -82,9 +81,8 @@ const { data: category } = slug
             <p>У цій категорії немає підкатегорій.</p>
           )}
 
-          <h1 className="text-2xl font-bold mt-8 mb-4">Продукти</h1>
+          <h1 className="text-2xl font-bold mt-12 mb-6">Продукти</h1>
           <ProductsPage categorySlug={category?.slug} />
-
         </div>
       </div>
     </div>
