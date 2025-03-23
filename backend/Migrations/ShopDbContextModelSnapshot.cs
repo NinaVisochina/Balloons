@@ -236,9 +236,6 @@ namespace BackendShop.Migrations
                     b.Property<string>("Manufacturer")
                         .HasColumnType("text");
 
-                    b.Property<string>("Modeles")
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -257,7 +254,6 @@ namespace BackendShop.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Slug")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("SubCategoryId")
@@ -349,7 +345,6 @@ namespace BackendShop.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("Slug")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("SubCategoryId");

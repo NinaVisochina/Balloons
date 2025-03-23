@@ -64,7 +64,8 @@ const ProductCreatePage = () => {
         const formData = new FormData();
         formData.append("name", values.name);
         formData.append("slug", slug);
-        formData.append("price", values.price.toString());
+        // formData.append("price", values.price.toString());
+        formData.append("price", values.price.toFixed(2).toString()); // "0.90"
         formData.append("manufacturer", values.manufacturer || "");
         formData.append("size", values.size || "");
         formData.append("color", values.color || "");

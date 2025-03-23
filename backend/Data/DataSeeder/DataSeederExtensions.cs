@@ -95,7 +95,7 @@ namespace BackendShop.Data.DataSeeder
                             Price = decimal.Parse(faker.Commerce.Price()),
                             QuantityInPack = faker.Random.Int(1, 10),
                             QuantityInStock = faker.Random.Int(0, 100),
-                            Modeles = faker.Commerce.ProductMaterial(),
+                            //Modeles = faker.Commerce.ProductMaterial(),
                             SubCategoryId = subCategory.SubCategoryId
                         };
                         product.GenerateSlug(); // 🟢 Додаємо генерацію slug

@@ -69,7 +69,83 @@ namespace BackendShop.Services
                     await _context.SaveChangesAsync();
                 }
             }
+            Console.WriteLine($"[DEBUG] Отримано ціну: {model.Price}");
+
         }
+        //public async Task EditAsync(ProductEditViewModel model)
+        //{
+        //    var product = await _context.Products
+        //        .Include(p => p.ProductImages)
+        //        .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+        //    if (product == null) throw new Exception("Продукт не знайдено");
+
+        //    // Оновлюємо назву
+        //    if (product.Name != model.Name)
+        //    {
+        //        product.Name = model.Name;
+        //    }
+
+        //    // Обробка Slug
+        //    if (string.IsNullOrWhiteSpace(model.Slug))
+        //    {
+        //        product.GenerateSlug(); // Генеруємо автоматично, якщо не передано
+        //    }
+        //    else
+        //    {
+        //        product.Slug = model.Slug; // 🔹 Якщо передано – використовуємо
+        //    }
+
+        //    // Перевірка унікальності slug
+        //    var slugExists = await _context.Products
+        //        .AnyAsync(p => p.Slug == product.Slug && p.Id != product.Id);
+
+        //    if (slugExists)
+        //    {
+        //        throw new Exception("Slug вже використовується. Оберіть інший.");
+        //    }
+
+        //    // Оновлюємо інші поля
+        //    _mapper.Map(model, product);
+
+        //    // Видалення старих фото
+        //    var oldNameImages = model.Images.Where(x => x.ContentType.Contains("old-image"))
+        //        .Select(x => x.FileName) ?? [];
+
+        //    var imgToDelete = product?.ProductImages?.Where(x => !oldNameImages.Contains(x.Image)) ?? [];
+        //    foreach (var imgDel in imgToDelete)
+        //    {
+        //        _context.ProductImages.Remove(imgDel);
+        //        _imageHulk.Delete(imgDel.Image);
+        //    }
+
+        //    // Додавання/оновлення зображень
+        //    if (model.Images is not null)
+        //    {
+        //        int index = 0;
+        //        foreach (var image in model.Images)
+        //        {
+        //            if (image.ContentType == "old-image")
+        //            {
+        //                var oldImage = product?.ProductImages?.FirstOrDefault(x => x.Image == image.FileName)!;
+        //                oldImage.Priority = index;
+        //            }
+        //            else
+        //            {
+        //                var imagePath = await _imageHulk.Save(image);
+        //                _context.ProductImages.Add(new ProductImageEntity
+        //                {
+        //                    Image = imagePath,
+        //                    Product = product,
+        //                    Priority = index
+        //                });
+        //            }
+        //            index++;
+        //        }
+        //    }
+
+        //    await _context.SaveChangesAsync();
+        //}
 
 
         public async Task EditAsync(ProductEditViewModel model)

@@ -108,6 +108,10 @@ const ProductEditPage = () => {
                     <Input placeholder="Enter manufacturer" />
                 </Form.Item>
 
+                <Form.Item name="code" label="Code">
+                    <Input placeholder="Enter code" />
+                </Form.Item>
+
                 <Form.Item name="size" label="Size">
                     <Input placeholder="Enter size" />
                 </Form.Item>

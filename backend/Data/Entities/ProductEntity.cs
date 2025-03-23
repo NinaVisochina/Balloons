@@ -9,7 +9,8 @@ namespace BackendShop.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
+
         [Required]
         public string Code { get; set; } = string.Empty;
 
@@ -33,7 +34,7 @@ namespace BackendShop.Data.Entities
         public int QuantityInStock { get; set; }
        // public bool IsAvailable { get; set; }
 
-        public string? Modeles { get; set; }
+        //public string? Modeles { get; set; }
         [ForeignKey("SubCategory")]
         public int SubCategoryId { get; set; }
         public SubCategory? SubCategory { get; set; }

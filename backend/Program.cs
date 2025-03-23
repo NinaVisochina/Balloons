@@ -93,7 +93,7 @@ app.UseStaticFiles(new StaticFileOptions
 });
 //app.UseHangfireDashboard("/dash");
 //JobConfigurator.AddJobs();
-app.SeedDataAsync();
+//app.SeedDataAsync();
 app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {

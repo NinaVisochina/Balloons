@@ -6,7 +6,7 @@ namespace BackendShop.Core.Dto.Product
     public class ProductItemViewModel
     {
         public int Id { get; set; }
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
         public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
 
@@ -26,7 +26,7 @@ namespace BackendShop.Core.Dto.Product
         public int QuantityInStock { get; set; }
         //public bool IsAvailable { get; set; }
 
-        public string? Modeles { get; set; }
+        //public string? Modeles { get; set; }
         public int SubCategoryId { get; set; }
         public string? SubCategoryName { get; set; }
         public List<string>? Images { get; set; }
