@@ -96,33 +96,6 @@ try {
     console.error("Помилка редагування підкатегорії:", error);
     alert("Помилка при редагуванні підкатегорії");
 }
-
-        // const formData = new FormData();
-        // formData.append("id", subcategoryId.toString()); // ✅ Використовуємо `subcategoryId`
-        // formData.append("name", values.name);
-        // formData.append("categoryId", values.categoryId.toString());
-        
-        // if (file && file.originFileObj) {
-        //     formData.append("imageSubCategory", file.originFileObj);
-        // } else if (file && file.url) {
-        //     formData.append("currentImage", file.name);
-        // }
-
-        // try {
-        //     console.log("Дані, які відправляємо:", Object.fromEntries(formData.entries()));
-
-        //     await http_common.put<ISubCategoryEdit>(`${API_URL}/api/SubCategory`, formData, {
-        //         headers: { "Content-Type": "multipart/form-data" },
-        //     });
-
-        //     alert("Підкатегорія успішно оновлена!");
-        //     await refetch(); // Чекаємо, поки оновляться дані
-        //     navigate("/admin/subcategories");
-            
-        // } catch (error) {
-        //     console.error("Помилка редагування підкатегорії:", error);
-        //     alert("Помилка при редагуванні підкатегорії");
-        // }
     };
     
     return (

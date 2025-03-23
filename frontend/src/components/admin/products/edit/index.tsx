@@ -15,6 +15,7 @@ const ProductEditPage = () => {
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState("");
     const [previewTitle, setPreviewTitle] = useState("");
+    const [productId, setProductId] = useState<number | null>(null);
 
     useEffect(() => {
         http_common.get<ISubCategoryName[]>("/api/SubCategory")
@@ -27,7 +28,9 @@ const ProductEditPage = () => {
         http_common.get<IProductItem>(`/api/products/slug/${slug}`)
             .then(resp => {
                 const { data } = resp;
+                setProductId(data.id);
                 form.setFieldsValue({
+                    id: data.id,
                     code: data.code,
                     name: data.name,
                     price: data.price,
@@ -55,9 +58,10 @@ const ProductEditPage = () => {
 
     const onSubmit = async (values: IProductEdit) => {
         console.log("Send Data", values);
-
+    
         const formData = new FormData();
-        formData.append("slug", slug!); // Використовуємо `slug`
+        formData.append("id", productId!.toString());
+        formData.append("slug", slug!); // Додаємо slug у FormData
         formData.append("name", values.name);
         formData.append("code", values.code);
         formData.append("price", values.price.toString());
@@ -70,15 +74,16 @@ const ProductEditPage = () => {
         formData.append("quantityInStock", values.quantityInStock.toString());
         formData.append("subCategoryId", values.subCategoryId.toString());
         formData.append("description", values.description);
-
+    
         files.forEach(file => {
             if (file.originFileObj) {
                 formData.append("images", file.originFileObj);
             }
         });
-
+    
         try {
-            await http_common.put(`/api/products/${slug}`, formData, {
+            // Змінюємо URL на /api/products (без slug у маршруті)
+            await http_common.put(`/api/Products`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             navigate("/admin/products");
@@ -96,6 +101,9 @@ const ProductEditPage = () => {
         <>
             <p className="text-center text-3xl font-bold mb-7">Edit Product</p>
             <Form form={form} onFinish={onSubmit} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
+            <Form.Item name="id" hidden>
+                    <Input type="hidden" />
+                </Form.Item>
                 <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please provide a valid product name." }]}>
                     <Input placeholder="Type product name" />
                 </Form.Item>

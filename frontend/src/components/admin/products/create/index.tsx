@@ -186,34 +186,7 @@ const ProductCreatePage = () => {
                     rules={[{ required: true, message: 'Please provide a product description.' }]}>
                     {/* Якщо ви хочете використовувати просте поле вводу */}
                     <Input.TextArea placeholder="Enter product description" rows={4} />
-
-                    {/* Або для більш складного текстового редактора */}
-                    {/* <EditorTiny 
-                        value={description}
-                        label="Description"
-                        field="description"
-                        getSelectImage={(image: IProductImageDesc) => {
-                        setDescImages((prevImages) => [...prevImages, image]);
-                    }}
-                    onEditorChange={(text: string) => {
-                        setDescription(text);
-                    }}
-                    /> */}
                 </Form.Item>
-
-                {/* <EditorTiny
-                    value={description} //Значення, яке ми вводимо в поле
-                    label="Опис" //Підпис для даного інпуту
-                    field="description" //Назва інпуту
-                    getSelectImage={(image: IProductImageDesc) => {
-                        setDescImages((prevImages) => [...prevImages, image]);
-                    }}
-                    onEditorChange={(text: string) => {
-                        //Метод, який викликає сам компонет, коли в інпуті змінюється значення
-                        //console.log("Data set value", text);
-                        setDescription(text); //Текст, який в середині інпуту, записуємо у формік в поле description
-                    }}
-                /> */}
 
                 <Form.Item wrapperCol={{ span: 10, offset: 10 }}>
                 <Space>
@@ -243,7 +216,8 @@ const ProductCreatePage = () => {
     );
 };
 
-export default ProductCreatePage;// import {useEffect, useState} from 'react';
+export default ProductCreatePage;
+// import {useEffect, useState} from 'react';
 // import {Form, Input, Button, Modal, Upload, UploadFile, Space, InputNumber, Select} from 'antd';
 // import {useNavigate, Link} from 'react-router-dom';
 // import {RcFile, UploadChangeParam} from "antd/es/upload";
