@@ -178,14 +178,14 @@ const ProductPage = () => {
           <div className="flex items-center mt-4">
             <span className="mr-2">Кількість:</span>
             <button 
-              onClick={() => handleQuantityChange(-1)} className="bg-gray-500 px-3 py-1 rounded-md"
+              onClick={() => handleQuantityChange(-1)} className="bg-gray-300 px-3 py-1 rounded-md"
             >
               -
             </button>
             <span className="mx-2">{quantity}</span>
             <button
               onClick={() => handleQuantityChange(1)}
-              className={`px-3 py-1 rounded-md ${isAddButtonDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-500'}`}
+              className={`px-3 py-1 rounded-md ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-300'}`}
               disabled={isAddButtonDisabled}
             >
               +
@@ -194,7 +194,7 @@ const ProductPage = () => {
 
           <button
             onClick={handleAddToCart}
-            className="bg-accent px-6 py-3 text-white rounded-lg font-semibold transition duration-300 hover:bg-opacity-80"
+            className="mt-4 bg-accent px-6 py-3 text-white rounded-lg font-semibold transition duration-300 hover:bg-opacity-80"
           >
             Купити
           </button>

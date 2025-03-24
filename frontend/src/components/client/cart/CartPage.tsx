@@ -123,10 +123,10 @@ const CartPage: React.FC = () => {
                   >
                     +
                   </button>
-                  <span className="text-gray-700 font-semibold">{item.quantity}</span> {/* Додаємо відображення кількості */}
+                  <span className="text-gray-300 font-semibold">{item.quantity}</span> {/* Додаємо відображення кількості */}
                   <button
                     onClick={() => handleChangeQuantity(item.productId, item.quantity - 1)}
-                    className="bg-gray-600 text-white px-3 py-1 rounded-md hover:bg-gray-700"
+                    className="bg-gray-300 text-white px-3 py-1 rounded-md hover:bg-gray-400"
                   >
                     -
                   </button>
@@ -134,7 +134,7 @@ const CartPage: React.FC = () => {
                     className="bg-red-500 px-3 py-1 rounded-md text-white hover:bg-red-600"
                     onClick={() => handleRemoveItem(item.productId)}
                   >
-                    Remove
+                    Видалити
                   </button>
                 </div>
               </li>
