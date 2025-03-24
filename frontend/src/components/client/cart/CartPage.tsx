@@ -143,12 +143,14 @@ const CartPage: React.FC = () => {
         </ul>
       )}
       <div className="mt-6">
-        <button
-          className="bg-blue-500 px-4 py-2 text-white rounded-md hover:bg-blue-600"
-          onClick={handleCheckout}
-        >
-          Оформити замовлення
-        </button>
+        {cart.length > 0 && (
+          <button
+            className="bg-accent px-6 py-3 text-white rounded-lg font-semibold transition duration-300 hover:bg-opacity-80"
+            onClick={handleCheckout}
+          >
+            Оформити замовлення
+          </button>
+        )}
       </div>
     </div>
   );

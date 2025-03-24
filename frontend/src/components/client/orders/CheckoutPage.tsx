@@ -204,7 +204,7 @@ const CheckoutPage: React.FC = () => {
         {user && (
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Ваші дані</h3>
-            <p><strong>Ім'я:</strong> {user.firstname} {user.lastname}</p>
+            <p><strong>Ім'я:</strong> {user.firstname} {user.lastname || 'Не вказано'}</p>
             <p><strong>Email:</strong> {user.email}</p>
             <p><strong>Телефон:</strong> {user.phoneNumber || 'Не вказано'}</p>
           </div>
@@ -293,7 +293,7 @@ const CheckoutPage: React.FC = () => {
           ))}
         </ul>
         <p className="mt-4 font-semibold">
-          Сума: {cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн
+          Загальна сума: {cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн
         </p>
       </div>
     </div>
