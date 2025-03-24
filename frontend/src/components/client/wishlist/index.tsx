@@ -68,7 +68,7 @@ const WishListPage = () => {
           { userId, productId: item.productId, quantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        dispatch(addToCart({ productId: item.productId, productName: item.productName, price: item.productPrice, quantity, images: [item.productImage] }));
+        dispatch(addToCart({ productId: item.productId, productName: item.productName, price: item.productPrice, quantity, images: [item.productImage], quantityInStock: item.quantityInStock || 0 }));
       } catch (error) {
         console.error("Помилка додавання товару в БД", error);
       }
@@ -79,6 +79,7 @@ const WishListPage = () => {
         price: item.productPrice,
         quantity,
         images: [item.productImage],
+        quantityInStock: item.quantityInStock || 0,
       };
       dispatch(addToCart(cartItem));
 

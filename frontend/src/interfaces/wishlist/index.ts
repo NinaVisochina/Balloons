@@ -4,5 +4,6 @@ export interface IWishListItem {
     productName: string;
     productPrice: number;
     productImage?: string;
+    quantityInStock: number;
   }
   

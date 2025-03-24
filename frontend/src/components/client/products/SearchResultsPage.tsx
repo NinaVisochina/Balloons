@@ -29,6 +29,7 @@ const SearchResultsPage = () => {
       price: product.price,
       quantity,
       images: product.images || [],
+      quantityInStock: product.quantityInStock || 0,
     };
     dispatch(addToCart(cartItem));
 

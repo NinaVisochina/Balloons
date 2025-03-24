@@ -13,7 +13,7 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  //const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Отримуємо ID продукту за його slug
   const { data: productBySlug, isLoading } = useGetProductBySlugQuery(slug!, {
@@ -80,7 +80,7 @@ const ProductPage = () => {
           quantityInStock: product.quantityInStock
         }));
       } catch (error: any) {
-        setErrorMessage(error.response?.data?.message || "Помилка додавання товару в кошик.");
+        //setErrorMessage(error.response?.data?.message || "Помилка додавання товару в кошик.");
       }
     } else {
       dispatch(addToCart({
