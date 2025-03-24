@@ -35,6 +35,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
   const isCategoryPage = location.pathname.includes(`/category/${categorySlug}`);
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const filteredProducts = products.filter((product) => {
     const matchesManufacturer =
@@ -47,9 +48,24 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
   const dispatch = useDispatch();
 
   const handleQuantityChange = (productId: number, increment: number) => {
+    const product = products.find((p: IProductItem) => p.id === productId);
+    if (!product) return;
+
+    const currentQuantity = productQuantities[productId] || 1;
+    const newQuantity = currentQuantity + increment;
+
+    // Перевірка на мінімальну кількість
+    if (newQuantity < 1) return;
+
+    // Перевірка на максимальну кількість (quantityInStock)
+    if (newQuantity > product.quantityInStock) {
+      return; // Не дозволяємо збільшувати кількість, кнопка "+" буде неактивною
+    }
+
+    setErrorMessage(null);
     setProductQuantities(prev => ({
       ...prev,
-      [productId]: Math.max((prev[productId] || 1) + increment, 1),
+      [productId]: newQuantity,
     }));
   };
 
@@ -65,12 +81,26 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           { userId, productId: product.id, quantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        dispatch(addToCart({ productId: product.id, productName: product.name, price: product.price, quantity, images: product.images || [] }));
+        dispatch(addToCart({ 
+          productId: product.id, 
+          productName: product.name, 
+          price: product.price, 
+          quantity, 
+          images: product.images || [],
+          quantityInStock: product.quantityInStock
+        }));
       } catch (error) {
-        console.error("Помилка додавання товару в БД", error);
+        console.error(error.response?.data?.message || "Помилка додавання товару в кошик.");
       }
     } else {
-      const cartItem: CartItem = { productId: product.id, productName: product.name, price: product.price, quantity, images: product.images || [] };
+      const cartItem: CartItem = { 
+        productId: product.id, 
+        productName: product.name, 
+        price: product.price, 
+        quantity, 
+        images: product.images || [],
+        quantityInStock: product.quantityInStock
+      };
       dispatch(addToCart(cartItem));
 
       const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -177,6 +207,13 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           </>
         )}
       </nav>
+      
+      {/* Повідомлення про помилку */}
+      {errorMessage && (
+        <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+          {errorMessage}
+        </div>
+      )}
 
       {/* Основний контент: Sidebar + Продукти */}
       <div className="flex">
@@ -201,70 +238,77 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           {/* Фільтрація продуктів */}
           {filteredProducts.length > 0 ? (
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {filteredProducts.map((product: IProductItem) => (
-                <li
-                  key={product.id}
-                  className="relative bg-white p-4 shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg"
-                  onMouseEnter={() => setHoveredProductId(product.id)}
-                  onMouseLeave={() => setHoveredProductId(null)}
-                >
-                  <Link to={`/product/${product.slug}`} className="block">
-                    <img
-                      src={`${API_URL}/images/600_${product.images[0]}`}
-                      alt={product.name}
-                      className="w-full h-40 object-cover rounded-t-lg"
-                    />
-                    <h2 className="text-lg font-semibold mt-2 font-sans text-text">{product.name}</h2>
-                  </Link>
+              {filteredProducts.map((product: IProductItem) => {
+                const currentQuantity = productQuantities[product.id] || 1;
+                const isAddButtonDisabled = currentQuantity >= product.quantityInStock; // Оголошуємо тут
 
-                  {/* Сердечко для вішліста */}
-                  <button
-                    onClick={() => toggleWishList(product.id)}
-                    className="absolute top-2 right-2 w-6 h-6"
+                return (
+                  <li
+                    key={product.id}
+                    className="relative bg-white p-4 shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg"
+                    onMouseEnter={() => setHoveredProductId(product.id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
                   >
-                    <img
-                      src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
-                      alt="bookmark"
-                      className="w-full h-full object-contain"
-                    />
-                  </button>
+                    <Link to={`/product/${product.slug}`} className="block">
+                      <img
+                        src={`${API_URL}/images/600_${product.images[0]}`}
+                        alt={product.name}
+                        className="w-full h-40 object-cover rounded-t-lg"
+                      />
+                      <h2 className="text-lg font-semibold mt-2 font-sans text-text">{product.name}</h2>
+                    </Link>
 
-                  {/* Ховер-ефект */}
-                  {hoveredProductId === product.id && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center">
+                    {/* Сердечко для вішліста */}
+                    <button
+                      onClick={() => toggleWishList(product.id)}
+                      className="absolute top-2 right-2 w-6 h-6"
+                    >
+                      <img
+                        src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
+                        alt="bookmark"
+                        className="w-full h-full object-contain"
+                      />
+                    </button>
+
+                    {/* Ховер-ефект */}
+                    {hoveredProductId === product.id && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => handleQuantityChange(product.id, -1)}
+                              className="bg-accent text-white px-2 py-1 rounded-md hover:bg-accentDark"
+                            >
+                              -
+                            </button>
+                            <span className="mx-2">{currentQuantity}</span>
+                            <button
+                              onClick={() => handleQuantityChange(product.id, 1)}
+                              className={`px-2 py-1 rounded-md text-white ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-accent hover:bg-accentDark'}`}
+                              disabled={isAddButtonDisabled}
+                            >
+                              +
+                            </button>
+                          </div>
                           <button
-                            onClick={() => handleQuantityChange(product.id, -1)}
-                            className="bg-accent text-white px-2 py-1 rounded-md hover:bg-accentDark"
+                            onClick={() => handleAddToCart(product)}
+                            className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accentDark"
                           >
-                            -
-                          </button>
-                          <span className="mx-2">{productQuantities[product.id] || 1}</span>
-                          <button
-                            onClick={() => handleQuantityChange(product.id, 1)}
-                            className="bg-accent text-white px-2 py-1 rounded-md hover:bg-accentDark"
-                          >
-                            +
+                            Додати в кошик
                           </button>
                         </div>
-                        <button
-                          onClick={() => handleAddToCart(product)}
-                          className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accentDark"
-                        >
-                          Додати в кошик
-                        </button>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  <p className="font-sans text-text">Модель: {product.modeles}</p>
-                  <p className="font-sans text-text">Код: {product.code}</p>
-                  <p className="font-sans text-text">Розмір: {product.size}</p>
-                  <p className="font-sans text-text">Кількість в упаковці: {product.quantityInPack}</p>
-                  <p className="font-bold mt-2 font-sans text-text">{product.price} грн</p>
-                </li>
-              ))}
+                    <p className="font-sans text-text">Модель: {product.modeles}</p>
+                    <p className="font-sans text-text">Код: {product.code}</p>
+                    <p className="font-sans text-text">Розмір: {product.size}</p>
+                    <p className="font-sans text-text">Кількість в упаковці: {product.quantityInPack}</p>
+                    <p className="font-sans text-text">На складі: {product.quantityInStock} шт.</p>
+                    <p className="font-bold mt-2 font-sans text-text">{product.price} грн</p>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p className="text-secondary mt-4 font-sans">Немає продуктів, які відповідають фільтрам.</p>

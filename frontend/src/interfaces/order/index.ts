@@ -1,5 +1,5 @@
 export interface IOrderItem {
-    productId: string;
+    productId: number;
     productName: string;
     price: number;
     quantity: number;
@@ -8,7 +8,6 @@ export interface IOrderItem {
   export interface ICreateOrder {
     userId: string;
     items: IOrderItem[];
-    totalAmount: number;
     address: string;
     discountId?: number | null;
   }

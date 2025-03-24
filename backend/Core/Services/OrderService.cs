@@ -15,6 +15,26 @@ public class OrderService : IOrderService
 
     public async Task<int> CreateOrderAsync(CreateOrderDto orderDto)
     {
+        // Перевіряємо наявність товару на складі
+        foreach (var item in orderDto.Items)
+        {
+            //Console.WriteLine($"Обробка товару: ProductId={item.ProductId}, Quantity={item.Quantity}, Price={item.Price}, ProductName={item.ProductName}");
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product == null)
+            {
+               //Console.WriteLine($"Продукт із ID {item.ProductId} не знайдено.");
+                throw new Exception($"Product with ID {item.ProductId} not found.");
+            }
+            //Console.WriteLine($"Перевірка запасів для продукту {product.Name}: QuantityInStock={product.QuantityInStock}, Requested={item.Quantity}");
+            if (product.QuantityInStock < item.Quantity)
+            {
+                throw new Exception($"Not enough stock for product {product.Name}. Available: {product.QuantityInStock}, Requested: {item.Quantity}.");
+            }
+        }
+
+        // Створюємо замовлення
         var order = new Order
         {
             UserId = orderDto.UserId,
@@ -38,6 +58,21 @@ public class OrderService : IOrderService
             }
         }
         _context.Orders.Add(order);
+
+        // Оновлюємо кількість товару на складі
+        foreach (var item in orderDto.Items)
+        {
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product != null)
+            {
+                //Console.WriteLine($"Оновлення запасів для продукту {product.Name}: Старий QuantityInStock={product.QuantityInStock}, Зменшуємо на {item.Quantity}");
+                product.QuantityInStock -= item.Quantity;
+                _context.Products.Update(product);
+            }
+        }
+
         await _context.SaveChangesAsync();
         return order.OrderId;
     }

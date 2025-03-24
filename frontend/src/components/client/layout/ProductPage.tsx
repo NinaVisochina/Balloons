@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import { useGetProductByIdQuery, useGetProductBySlugQuery } from "../../../services/productApi";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../interfaces/cart/cartSlice";
+import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import { useState, useEffect } from "react";
 import { useGetSubCategoryByIdQuery } from "../../../services/subcategoryApi";
 import { API_URL } from "../../../env";
+import axios from "axios";
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -12,6 +13,7 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Отримуємо ID продукту за його slug
   const { data: productBySlug, isLoading } = useGetProductBySlugQuery(slug!, {
@@ -41,21 +43,70 @@ const ProductPage = () => {
 
   // Зміна кількості товару
   const handleQuantityChange = (increment: number) => {
-    setQuantity((prev) => Math.max(prev + increment, 1));
+    const newQuantity = quantity + increment;
+
+    // Перевірка на мінімальну кількість
+    if (newQuantity < 1) return;
+
+    // Перевірка на максимальну кількість (quantityInStock)
+    if (newQuantity > product.quantityInStock) {
+      return; // Не дозволяємо збільшувати кількість, кнопка "+" буде неактивною
+    }
+
+    //setErrorMessage(null);
+    setQuantity(newQuantity);
   };
 
   // Додаємо товар у кошик
-  const handleAddToCart = () => {
-    if (product) {
-      dispatch(
-        addToCart({
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+
+    if (token && userId) {
+      try {
+        await axios.post(
+          `${API_URL}/api/Cart/add`,
+          { userId, productId: product.id, quantity },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        dispatch(addToCart({
           productId: product.id,
           productName: product.name,
           price: product.price,
           quantity,
           images: productImages,
-        })
-      );
+          quantityInStock: product.quantityInStock
+        }));
+      } catch (error: any) {
+        setErrorMessage(error.response?.data?.message || "Помилка додавання товару в кошик.");
+      }
+    } else {
+      dispatch(addToCart({
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity,
+        images: productImages,
+        quantityInStock: product.quantityInStock
+      }));
+
+      const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+      const existingItem = cartItems.find(item => item.productId === product.id);
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cartItems.push({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          quantity,
+          images: productImages,
+          quantityInStock: product.quantityInStock
+        });
+      }
+      localStorage.setItem("cart", JSON.stringify(cartItems));
     }
   };
 
@@ -72,7 +123,7 @@ const ProductPage = () => {
 
   if (isLoading) return <div>Завантаження...</div>;
   if (!product) return <div>Продукт не знайдено</div>;
-
+  const isAddButtonDisabled = quantity >= product.quantityInStock;
   return (
     <div className="container mx-auto py-6">
       <nav className="text-gray-600 mb-4 flex items-center">
@@ -122,12 +173,23 @@ const ProductPage = () => {
           <p><strong>Модель:</strong> {product.modeles}</p>
           <p><strong>Код:</strong> {product.code}</p>
           <p><strong>Ціна:</strong> {product.price} грн</p>
+          <p><strong>На складі:</strong> {product.quantityInStock} шт.</p>
 
           <div className="flex items-center mt-4">
             <span className="mr-2">Кількість:</span>
-            <button onClick={() => handleQuantityChange(-1)} className="bg-gray-600 px-3 py-1 rounded-md">-</button>
+            <button 
+              onClick={() => handleQuantityChange(-1)} className="bg-gray-600 px-3 py-1 rounded-md"
+            >
+              -
+            </button>
             <span className="mx-2">{quantity}</span>
-            <button onClick={() => handleQuantityChange(1)} className="bg-gray-600 px-3 py-1 rounded-md">+</button>
+            <button
+              onClick={() => handleQuantityChange(1)}
+              className={`px-3 py-1 rounded-md ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600'}`}
+              disabled={isAddButtonDisabled}
+            >
+              +
+            </button>
           </div>
 
           <button

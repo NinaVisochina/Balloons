@@ -6,6 +6,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   images?: string[];
+  quantityInStock: number; // Додаємо поле для кількості на складі
 }
 
 // interface CartState {

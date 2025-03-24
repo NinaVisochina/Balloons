@@ -7,7 +7,7 @@ export const ordersApi = createApi({
   reducerPath: 'ordersApi',
   baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api` }),
   endpoints: (builder) => ({
-    createOrder: builder.mutation<void, { userId: string; items: any; totalAmount: number }>({
+    createOrder: builder.mutation<void, { userId: string; items: any; }>({
       query: (orderData) => ({
         url: '/Order/create',
         method: 'POST',

@@ -35,17 +35,47 @@ public class CartService : ICartService
                 Price = i.Product.Price,
                 Images = i.Product.ProductImages != null
                     ? i.Product.ProductImages.Select(img => img.Image).ToList()
-                    : new List<string>()
+                    : new List<string>(),
+                QuantityInStock = i.Product.QuantityInStock // Додаємо кількість на складі
             }).ToList()
         };
     }
 
     public async Task AddToCartAsync(string userId, int productId, int quantity)
     {
+        // Перевіряємо, чи існує продукт
+        var product = await _context.Products
+            .FirstOrDefaultAsync(p => p.Id == productId);
+
+        if (product == null)
+        {
+            throw new Exception($"Product with ID {productId} not found.");
+        }
+
+        // Перевіряємо, чи достатньо товару на складі
         var cart = await _context.Carts
             .Include(c => c.Items)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
+        int currentQuantityInCart = 0;
+
+        if (cart != null)
+        {
+            var existingItem = cart.Items.FirstOrDefault(ci => ci.ProductId == productId);
+            if (existingItem != null)
+            {
+                currentQuantityInCart = existingItem.Quantity;
+            }
+        }
+
+        int newTotalQuantity = currentQuantityInCart + quantity;
+
+        if (newTotalQuantity > product.QuantityInStock)
+        {
+            throw new Exception($"Cannot add {quantity} more of {product.Name}. Only {product.QuantityInStock} available in stock.");
+        }
+
+        // Якщо перевірка пройшла, додаємо товар у кошик
         if (cart == null)
         {
             cart = new Cart { UserId = userId };
@@ -97,6 +127,21 @@ public class CartService : ICartService
 
     public async Task UpdateCartItemQuantityAsync(string userId, int productId, int quantity)
     {
+        // Перевіряємо, чи існує продукт
+        var product = await _context.Products
+            .FirstOrDefaultAsync(p => p.Id == productId);
+
+        if (product == null)
+        {
+            throw new Exception($"Product with ID {productId} not found.");
+        }
+
+        // Перевіряємо, чи нова кількість не перевищує запас на складі
+        if (quantity > product.QuantityInStock)
+        {
+            throw new Exception($"Cannot set quantity to {quantity} for {product.Name}. Only {product.QuantityInStock} available in stock.");
+        }
+
         var cart = await _context.Carts
             .Include(c => c.Items)
             .FirstOrDefaultAsync(c => c.UserId == userId);

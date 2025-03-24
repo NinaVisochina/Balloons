@@ -86,22 +86,47 @@ const CheckoutPage: React.FC = () => {
     }
   
     const orderItems: IOrderItem[] = cart.map(item => ({
-      productId: item.productId.toString(),
+      productId: item.productId, // Видаляємо .toString()
       productName: item.productName,
-      price: item.price,
+      price: Number(item.price.toFixed(2)), // Округлюємо до 2 знаків після коми
       quantity: item.quantity,
     }));
   
-    const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  
+    //const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    // Перевірка, чи є елементи в кошику
+    if (orderItems.length === 0) {
+      alert('Кошик порожній!');
+      return;
+    }
+
+    // Перевірка коректності даних
+    const invalidItems = orderItems.filter(item => 
+      !item.productId || item.quantity <= 0 || !item.price || !item.productName
+    );
+    if (invalidItems.length > 0) {
+      alert('Деякі товари в кошику мають некоректні дані. Перевірте кошик.');
+      return;
+    }
+
+    // Перевірка QuantityInStock
+    const outOfStockItems = cart.filter(item => item.quantity > item.quantityInStock);
+    if (outOfStockItems.length > 0) {
+      const errorMessage = outOfStockItems.map(item => 
+        `Товар "${item.productName}": у кошику ${item.quantity} шт., але на складі лише ${item.quantityInStock} шт.`
+      ).join("\n");
+      alert(`Не можна оформити замовлення:\n${errorMessage}`);
+      return;
+    }
+
     const orderData: ICreateOrder = {
       userId: userId,  
       address: `${userData.city}, Warehouse: ${userData.warehouse}`,
       items: orderItems,
-      totalAmount,
       discountId: null,
     };
-  
+
+    console.log("Дані, які надсилаються на сервер:", orderData);
+    
     try {
       await createOrder(orderData).unwrap();
       

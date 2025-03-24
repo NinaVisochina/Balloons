@@ -49,8 +49,18 @@ const CartPage: React.FC = () => {
 
 
   const handleChangeQuantity = async (productId: number, newQuantity: number) => {
+    // Знаходимо товар у кошику
+    const item = cart.find(item => item.productId === productId);
+    if (!item) return;
+
+    // Перевірка на мінімальну кількість
     if (newQuantity <= 0) return;
 
+    // Перевірка на максимальну кількість (quantityInStock)
+    if (newQuantity > item.quantityInStock) {
+      return; // Не дозволяємо збільшувати кількість, кнопка "+" буде неактивною
+    }
+    
     if (userId) {
       try {
         // Оновлення через API
@@ -87,29 +97,49 @@ const CartPage: React.FC = () => {
         <p>Корзина порожня</p>
       ) : (
         <ul className="space-y-4">
-          {cart.map(item => (
-            <li key={item.productId} className="bg-white p-4 shadow-md rounded-lg flex items-center justify-between">
-              <div className="flex items-center">
-                <img
-                  src={item.images && item.images.length > 0 ? `${API_URL}/images/300_${item.images[0]}` : "/path-to-placeholder-image.jpg"}                  
-                  alt={item.productName}
-                  className="w-20 h-20 object-cover rounded-md mr-4"
-                />
-                <div>
-                  <h3 className="font-semibold">{item.productName || `Product ID: ${item.productId}`}</h3>
+          {cart.map(item => {
+            const isAddButtonDisabled = item.quantity >= item.quantityInStock; // Оголошуємо тут для кожного товару
+
+            return (
+              <li key={item.productId} className="bg-white p-4 shadow-md rounded-lg flex items-center justify-between">
+                <div className="flex items-center">
+                  <img
+                    src={item.images && item.images.length > 0 ? `${API_URL}/images/300_${item.images[0]}` : "/path-to-placeholder-image.jpg"}
+                    alt={item.productName}
+                    className="w-20 h-20 object-cover rounded-md mr-4"
+                  />
+                  <div>
+                    <h3 className="font-semibold">{item.productName || `Product ID: ${item.productId}`}</h3>
                     <p>Кількість: {item.quantity}</p>
+                    <p>Доступно на складі: {item.quantityInStock} шт.</p>
                     <p className="text-gray-500"><span>{isNaN(item.price) ? "N/A" : `${item.price} грн`}</span></p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center space-x-4">
-              <button onClick={() => handleChangeQuantity(item.productId, item.quantity + 1)}>+</button>
-              <button onClick={() => handleChangeQuantity(item.productId, item.quantity - 1)}>-</button>
-              <button className="bg-red-500 px-3 py-1 rounded-md text-white hover:bg-red-600" 
-                  onClick={() => handleRemoveItem(item.productId)}>Remove
-              </button>
-              </div>
-            </li>
-          ))}
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => handleChangeQuantity(item.productId, item.quantity + 1)}
+                    className={`px-3 py-1 rounded-md ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 text-white hover:bg-gray-700'}`}
+                    disabled={isAddButtonDisabled}
+                  >
+                    +
+                  </button>
+                  <span className="text-gray-700 font-semibold">{item.quantity}</span> {/* Додаємо відображення кількості */}
+                  <button
+                    onClick={() => handleChangeQuantity(item.productId, item.quantity - 1)}
+                    className="bg-gray-600 text-white px-3 py-1 rounded-md hover:bg-gray-700"
+                  >
+                    -
+                  </button>
+                  <button
+                    className="bg-red-500 px-3 py-1 rounded-md text-white hover:bg-red-600"
+                    onClick={() => handleRemoveItem(item.productId)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       <div className="mt-6">
