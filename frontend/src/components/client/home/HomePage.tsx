@@ -9,7 +9,8 @@ import { API_URL } from "../../../env";
 
 // Імпорт зображень для слайдера
 import bannerKids from "../../../assets/images/banner-kids.jpg"; // Перший банер (дитяче свято)
-import bannerBalloons from "../../../assets/images/banner-balloons.jpg"; // Другий банер (зображення 1, просто кульки)
+import bannerBalloons from "../../../assets/images/bannerBalloonsMirrored.jpg"
+//import bannerBalloons from "../../../assets/images/banner-balloons.jpg"; // Другий банер (зображення 1, просто кульки)
 import bannerCelebration from "../../../assets/images/banner-celebration.jpg"; // Третій банер (baby shower)
 
 // Масив із даними для слайдера

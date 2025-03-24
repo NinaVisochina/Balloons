@@ -5,7 +5,7 @@ import { RootState } from '../../../store';
 import { clearCart } from '../../../interfaces/cart/cartSlice';
 import { useCreateOrderMutation } from '../../../services/ordersApi';
 import { ICreateOrder, IOrderItem } from '../../../interfaces/order';
-import { authFetch } from '../../../interfaces/users/authFetch';  // Assuming this is how you fetch user data
+import { authFetch } from '../../../interfaces/users/authFetch';  
 import { ICity, IWarehouse } from '../../../interfaces/adress';
 
 const CheckoutPage: React.FC = () => {
@@ -49,11 +49,11 @@ const CheckoutPage: React.FC = () => {
               phone: data.phoneNumber || '',
             }));
           } else {
-            console.error('Failed to fetch user data');
+            console.error('Не вдалося отримати дані користувача');
           }
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Помилка під час отримання даних користувача:', error);
       }
     };
 
@@ -199,14 +199,14 @@ const CheckoutPage: React.FC = () => {
   
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+      <h1 className="text-2xl font-bold mb-4">Оформлення замовлення</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {user && (
           <div className="mb-4">
-            <h3 className="text-lg font-semibold">Your Information</h3>
-            <p><strong>Name:</strong> {user.firstname} {user.lastname}</p>
+            <h3 className="text-lg font-semibold">Ваші дані</h3>
+            <p><strong>Ім'я:</strong> {user.firstname} {user.lastname}</p>
             <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Phone:</strong> {user.phoneNumber || 'Not provided'}</p>
+            <p><strong>Телефон:</strong> {user.phoneNumber || 'Не вказано'}</p>
           </div>
         )}
 
@@ -223,7 +223,7 @@ const CheckoutPage: React.FC = () => {
         </div> */}
 
         <div>
-          <label className="block text-sm font-medium">City</label>
+          <label className="block text-sm font-medium">Місто</label>
           <select
             name="city"
             value={userData.city}
@@ -234,7 +234,7 @@ const CheckoutPage: React.FC = () => {
             className="w-full p-2 border border-gray-300 rounded-md"
             required
           >
-            <option value="">Select a city</option>
+            <option value="">Виберіть місто</option>
             {cities.map(city => (
               <option key={city.Ref} value={city.Ref}>
                 {city.Description}
@@ -244,7 +244,7 @@ const CheckoutPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Warehouse</label>
+          <label className="block text-sm font-medium">Відділення</label>
           <select
             name="warehouse"
             value={userData.warehouse}
@@ -253,7 +253,7 @@ const CheckoutPage: React.FC = () => {
             required
             disabled={!userData.city}
           >
-            <option value="">Select a warehouse</option>
+            <option value="">Виберіть відділення</option>
             {warehouses.map(warehouse => (
               <option key={warehouse.SiteKey} value={warehouse.SiteKey}>
                 {warehouse.Description}
@@ -263,7 +263,7 @@ const CheckoutPage: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium">Phone</label>
+          <label className="block text-sm font-medium">Телефон</label>
           <input
             type="tel"
             name="phone"
@@ -276,14 +276,14 @@ const CheckoutPage: React.FC = () => {
 
         <button
           type="submit"
-          className="bg-blue-500 px-4 py-2 text-white rounded-md hover:bg-blue-600"
+          className="bg-accent px-6 py-3 text-white rounded-lg font-semibold transition duration-300 hover:bg-opacity-80"
         >
-          Place Order
+          Оформити замовлення
         </button>
       </form>
 
       <div className="mt-6">
-        <h2 className="text-lg font-semibold">Your Cart</h2>
+        <h2 className="text-lg font-semibold">Ваша корзина</h2>
         <ul>
           {cart.map(item => (
             <li key={item.productId} className="flex justify-between py-2">
@@ -293,7 +293,7 @@ const CheckoutPage: React.FC = () => {
           ))}
         </ul>
         <p className="mt-4 font-semibold">
-          Total: {cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн
+          Сума: {cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн
         </p>
       </div>
     </div>
