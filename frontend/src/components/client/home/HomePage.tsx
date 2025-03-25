@@ -63,22 +63,24 @@ const HomePage = () => {
               <img
                 src={banner.image}
                 alt={banner.title}
-                className="w-full h-[600px] object-cover"
+                className="w-full h-[80vh] max-h-[600px] min-h-[400px] object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-start p-12 md:p-8 sm:p-6">
-                <h1 className="text-5xl md:text-4xl sm:text-3xl font-caveat text-white drop-shadow-lg animate-fadeIn">
-                  {banner.title}
-                </h1>
-                <p className="text-2xl md:text-xl sm:text-lg font-sans text-white mt-4 drop-shadow-lg animate-fadeIn animation-delay-200">
-                  {banner.subtitle}
-                </p>
-                <Link
-                  to={banner.link}
-                  className="mt-6 bg-accent text-white font-sans px-8 py-3 rounded-lg hover:bg-accentDark transition duration-300 animate-fadeIn animation-delay-400 text-lg sm:text-base"
-                >
-                  {banner.cta}
-                </Link>
+              <div className="absolute inset-0 flex flex-col justify-center items-start p-12 md:p-8 sm:p-6">
+                <div className="bg-gradient-to-r from-black/70 to-transparent backdrop-blur-sm p-6 rounded-lg max-w-lg space-y-4">
+                  <h1 className="text-5xl md:text-4xl sm:text-3xl font-caveat text-white drop-shadow-lg animate-fadeIn">
+                    {banner.title}
+                  </h1>
+                  <p className="text-2xl md:text-xl sm:text-lg font-sans text-white drop-shadow-lg animate-fadeIn animation-delay-200">
+                    {banner.subtitle}
+                  </p>
+                  <Link
+                    to={banner.link}
+                    className="inline-block bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-8 py-3 rounded-lg shadow-lg hover:from-accentDark hover:to-pink-600 hover:shadow-xl transition duration-300 animate-fadeIn animation-delay-400 text-lg sm:text-base"
+                  >
+                    {banner.cta}
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

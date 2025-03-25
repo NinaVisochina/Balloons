@@ -41,7 +41,7 @@ const ProfilePage = () => {
       try {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-            throw new Error("No token found");
+            throw new Error("Токен відсутній");
           }
 
         const response = await authFetch(`${API_URL}/api/Accounts/profile`, {
@@ -72,7 +72,7 @@ const ProfilePage = () => {
       try {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-          throw new Error("No token found");
+          throw new Error("Токен відсутній");
         }
 
         const response = await authFetch(`${API_URL}/api/Order/${userId}`, {
@@ -130,7 +130,7 @@ const ProfilePage = () => {
             </div>
             <Link
               to="/profile/edit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="inline-block bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-4 py-2 rounded-lg shadow-md hover:from-accentDark hover:to-pink-600 hover:shadow-lg transition duration-300"
             >
               Редагувати
             </Link>
@@ -174,8 +174,8 @@ const ProfilePage = () => {
             )}
           </div>
         );
-      case "wishlist":
-        return <h2 className="text-2xl font-bold">Мій список бажань</h2>;
+      // case "wishlist":
+      //   return <h2 className="text-2xl font-bold">Мій список бажань</h2>;
       default:
         return null;
     }
@@ -202,14 +202,14 @@ const ProfilePage = () => {
           >
             Мої замовлення
           </button>
-          <button
+          {/* <button
             onClick={() => setActiveTab("wishlist")}
             className={`block text-left w-full px-4 py-2 rounded-md hover:bg-gray-100 ${
               activeTab === "wishlist" ? "bg-gray-100 font-bold" : ""
             }`}
           >
             Мій список бажань
-          </button>
+          </button> */}
           <button
             onClick={onLogout}
             className="block text-left w-full px-4 py-2 rounded-md text-red-600 hover:bg-gray-100"

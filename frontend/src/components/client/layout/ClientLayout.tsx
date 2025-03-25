@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
-import { FaHeart, FaSearch, FaShoppingCart, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { FaHeart, FaSearch, FaShoppingCart, FaSignInAlt, FaUser } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
-import { clearCart } from "../../../interfaces/cart/cartSlice";
 import Logo from "../../../assets/logo.png";
 import { useGetProductsByNameQuery } from "../../../services/productApi";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategorySlugQuery } from "../../../services/categoryApi";
@@ -18,7 +17,7 @@ const ClientLayout = () => {
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
-  const dispatch = useDispatch(); 
+  //const dispatch = useDispatch(); 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { data: searchResults } = useGetProductsByNameQuery(search, {
     skip: search.length < 3,
@@ -68,16 +67,16 @@ const ClientLayout = () => {
   //   setFilteredSubCategories([]);
   // };
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("cart");
-    localStorage.removeItem("isAdmin");
-    dispatch(clearCart());
-    alert("Ви успішно вийшли з системи!");
-    navigate("/");
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("refreshToken");
+  //   localStorage.removeItem("userId");
+  //   localStorage.removeItem("cart");
+  //   localStorage.removeItem("isAdmin");
+  //   dispatch(clearCart());
+  //   alert("Ви успішно вийшли з системи!");
+  //   navigate("/");
+  // };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,17 +96,17 @@ const ClientLayout = () => {
   return (
     <div className="bg-background text-text font-sans">
       <header className="bg-primary shadow-md">
-        <div className="flex items-center justify-between p-4 max-w-7xl mx-auto">
+        <div className="flex items-center justify-between p-4 sm:p-3 xs:p-2 max-w-7xl mx-auto">
           <Link to="/" className="flex items-center space-x-2">
-            <img src={Logo} alt="Logo" className="h-12 w-auto" />
-            <span className="text-3xl font-caveat text-text">
-              BallonsShop
+            <img src={Logo} alt="Logo" className="h-12 w-auto sm:h-10 xs:h-8" />
+            <span className="text-3xl sm:text-2xl xs:text-xl font-caveat text-text">
+              BalloonsShop
             </span>
           </Link>
   
           <button
             onClick={toggleMenu}
-            className="border border-accent text-accent text-lg px-6 py-2 rounded-lg hover:bg-accent hover:text-white transition duration-300"
+            className="bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-6 py-2 sm:px-4 sm:py-1 xs:px-3 xs:py-1 rounded-lg shadow-md hover:from-accentDark hover:to-pink-600 hover:shadow-lg transition duration-300"
           >
             Каталог
           </button>
@@ -167,57 +166,61 @@ const ClientLayout = () => {
   </div>
 )}
 
-          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 border border-gray-200">
+          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 border border-gray-200">
             <input
               type="text"
               placeholder="Я шукаю..."
-              className="outline-none px-3 py-1 text-lg text-text w-64"
+              className="outline-none px-3 py-1 text-lg sm:text-base xs:text-sm w-64 sm:w-48 xs:w-32"
               value={search}
               onChange={handleSearch}
             />
             <button
               type="submit"
-              className="text-accent text-lg px-3 py-1 rounded-lg hover:text-primary transition duration-300"
+              className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg"
             >
-              <FaSearch />
+              <FaSearch size={18} className="sm:w-4 sm:h-4 xs:w-3 xs:h-3" />
             </button>
             {showSuggestions && searchResults && searchResults.length > 0 && (
-  <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
-    {searchResults?.map((product) => (
-      <li
-        key={product.id}
-        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
-        onClick={() => handleSuggestionClick(product.id)}
-      >
-        {product.name}
-      </li>
-    ))}
-  </ul>
-)}
-
+              <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
+                {searchResults?.map((product) => (
+                  <li
+                    key={product.id}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
+                    onClick={() => handleSuggestionClick(product.id)}
+                  >
+                    {product.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </form>
   
-          <div className="flex items-center space-x-6">
-          <Link to="/cart" className="flex items-center space-x-2 text-xl text-accent hover:text-accent-dark">
-            <FaShoppingCart size={24} />
-            <span>{cartTotal}</span>
-          </Link>  
+          <div className="flex items-center space-x-6 sm:space-x-4 xs:space-x-2">
+            <Link to="/cart" className="flex items-center space-x-2 text-xl">
+              <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg">
+                <FaShoppingCart size={24} className="sm:w-5 sm:h-5 xs:w-4 xs:h-4" />
+              </div>
+              <span className="text-text">{cartTotal}</span>
+            </Link>
             <nav className="flex items-center space-x-4 text-xl">
               {token ? (
-                <>
-                  <Link to="/profile" className="text-accent hover:text-accent-dark"><FaUser size={24} /></Link>
-                  <button onClick={handleLogout} className="text-accent hover:text-accent-dark">
-                    <FaSignOutAlt size={24} />
-                  </button>
-                </>
+                <Link to="/profile">
+                  <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg">
+                    <FaUser size={24} className="sm:w-5 sm:h-5 xs:w-4 xs:h-4" />
+                  </div>
+                </Link>
               ) : (
-                <Link to="/login" className="text-accent hover:text-accent-dark">
-                  <FaSignInAlt size={24} />
+                <Link to="/login">
+                  <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg">
+                    <FaSignInAlt size={24} className="sm:w-5 sm:h-5 xs:w-4 xs:h-4" />
+                  </div>
                 </Link>
               )}
-            </nav>  
-            <Link to="/wishlist" className="text-accent hover:text-accent-dark">
-              <FaHeart size={24} />
+            </nav>
+            <Link to="/wishlist">
+              <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg">
+                <FaHeart size={24} className="sm:w-5 sm:h-5 xs:w-4 xs:h-4" />
+              </div>
             </Link>
           </div>
         </div>

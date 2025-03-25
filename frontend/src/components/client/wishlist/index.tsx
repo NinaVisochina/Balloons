@@ -5,6 +5,7 @@ import { setWishList, removeFromWishList } from "../../../store/wishlistSlice";
 import { RootState } from "../../../store";
 import { API_URL } from "../../../env";
 import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
+import { FaShoppingCart, FaTrash } from "react-icons/fa";
 
 const WishListPage = () => {
   const dispatch = useDispatch();
@@ -20,14 +21,14 @@ const WishListPage = () => {
           const mappedData = response.data.map((item: any) => ({
             id: item.id,
             productId: item.productId,
-            productName: item.productName || "No Name",
+            productName: item.productName || "Без назви",
             productPrice: item.productPrice || 0,
             productImage: item.productImage || "",
           }));
           dispatch(setWishList(mappedData));
         })
         .catch((error) => {
-          console.error("Error fetching wish list items:", error);
+          console.error("Помилка при отриманні списку бажань:", error);
         });
     }
   }, [userId, dispatch]);
@@ -37,7 +38,7 @@ const WishListPage = () => {
     const token = localStorage.getItem("accessToken"); // Отримуємо токен
 
     if (!token) {
-      console.error("Token is missing");
+      console.error("Токен відсутній");
       return;
     }
     
@@ -51,7 +52,7 @@ const WishListPage = () => {
         dispatch(removeFromWishList(productId));
       })
       .catch((error) => {
-        console.error("Error removing from wish list:", error);
+        console.error("Помилка при видаленні зі списку бажань:", error);
       });
   };
 
@@ -68,7 +69,15 @@ const WishListPage = () => {
           { userId, productId: item.productId, quantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        dispatch(addToCart({ productId: item.productId, productName: item.productName, price: item.productPrice, quantity, images: [item.productImage], quantityInStock: item.quantityInStock || 0 }));
+        dispatch(
+          addToCart({ 
+            productId: item.productId, 
+            productName: item.productName, 
+            price: item.productPrice, 
+            quantity, 
+            images: [item.productImage], 
+            quantityInStock: item.quantityInStock || 0 
+          }));
       } catch (error) {
         console.error("Помилка додавання товару в БД", error);
       }
@@ -95,8 +104,8 @@ const WishListPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h2 className="text-3xl font-semibold mb-6">My Wish List</h2>
+    <div className="max-w-7xl mx-auto py-6 px-6">
+      <h2 className="text-3xl font-caveat text-text mb-6">Список бажань</h2>
       {wishListItems.length > 0 ? (
         <ul className="space-y-4">
           {wishListItems.map((item) => (
@@ -111,29 +120,31 @@ const WishListPage = () => {
                   className="w-20 h-20 object-cover rounded-md mr-4"
                 />
                 <div>
-                  <h3 className="font-semibold">{item.productName}</h3>
-                  <p className="text-gray-700">{item.productPrice} грн</p>
+                  <h3 className="font-sans font-semibold text-text">{item.productName}</h3>
+                  <p className="text-accent font-sans">{item.productPrice} грн</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => handleAddToCart(item)}
-                  className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+                  className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg"
+                  title="Додати до кошика"
                 >
-                  Додати до кошика
+                  <FaShoppingCart size={18} />
                 </button>
                 <button
                   onClick={() => handleRemove(item.productId)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                  className="p-2 rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition duration-300 shadow-md hover:shadow-lg"
+                  title="Видалити зі списку бажань"
                 >
-                  Видалити
+                  <FaTrash size={18} />
                 </button>
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-gray-500">No items in wish list.</p>
+        <p className="text-gray-500 font-sans">У вашому списку бажань немає товарів.</p>
       )}
     </div>
   );

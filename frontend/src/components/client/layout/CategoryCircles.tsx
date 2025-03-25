@@ -14,6 +14,26 @@ const CategoryCircles = () => {
         slidesToShow: 6, // Кількість видимих категорій одночасно
         slidesToScroll: 1,
         arrows: true, // Відображення стрілок
+        responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 4,
+              },
+            },
+            {
+              breakpoint: 768,
+              settings: {
+                slidesToShow: 3,
+              },
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 2,
+              },
+            },
+        ],
     };
 
     if (isLoading) return <p>Завантаження категорій...</p>;
