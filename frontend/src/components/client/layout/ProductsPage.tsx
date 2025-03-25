@@ -245,23 +245,14 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                 return (
                   <li
                     key={product.id}
-                    className="relative bg-white p-4 shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg"
+                    className="relative bg-white shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg group"
                     onMouseEnter={() => setHoveredProductId(product.id)}
                     onMouseLeave={() => setHoveredProductId(null)}
                   >
-                    <Link to={`/product/${product.slug}`} className="block">
-                      <img
-                        src={`${API_URL}/images/600_${product.images[0]}`}
-                        alt={product.name}
-                        className="w-full h-40 object-cover rounded-t-lg"
-                      />
-                      <h2 className="text-lg font-semibold mt-2 font-sans text-text">{product.name}</h2>
-                    </Link>
-
-                    {/* Сердечко для вішліста */}
+                    {/* Вішліст */}
                     <button
                       onClick={() => toggleWishList(product.id)}
-                      className="absolute top-2 right-2 w-6 h-6"
+                      className="absolute top-2 right-2 w-6 h-6 z-10"
                     >
                       <img
                         src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
@@ -269,45 +260,51 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                         className="w-full h-full object-contain"
                       />
                     </button>
-
-                    {/* Ховер-ефект */}
+                
+                    <Link to={`/product/${product.slug}`} className="block">
+                      <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
+                        <img
+                          src={`${API_URL}/images/600_${product.images[0]}`}
+                          alt={product.name}
+                          className="object-contain h-full w-full p-4"
+                        />
+                      </div>
+                      <div className="p-3">
+                        <h2 className="text-md font-semibold font-sans text-text text-center">{product.name}</h2>
+                        <p className="text-center text-sm text-gray-600">Розмір: {product.size}</p>
+                        <p className="text-center font-bold text-accent mt-1">{product.price} грн</p>
+                      </div>
+                    </Link>
+                
+                    {/* Ховер-панель */}
                     {hoveredProductId === product.id && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            <button
-                              onClick={() => handleQuantityChange(product.id, -1)}
-                              className="bg-accent text-white px-2 py-1 rounded-md hover:bg-accentDark"
-                            >
-                              -
-                            </button>
-                            <span className="mx-2">{currentQuantity}</span>
-                            <button
-                              onClick={() => handleQuantityChange(product.id, 1)}
-                              className={`px-2 py-1 rounded-md text-white ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-accent hover:bg-accentDark'}`}
-                              disabled={isAddButtonDisabled}
-                            >
-                              +
-                            </button>
-                          </div>
+                      <div className="absolute bottom-0 left-0 right-0 bg-[#2d2d2d] bg-opacity-95 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+                        <div className="flex items-center">
                           <button
-                            onClick={() => handleAddToCart(product)}
-                            className="bg-accent text-white px-4 py-2 rounded-lg hover:bg-accentDark"
+                            onClick={() => handleQuantityChange(product.id, -1)}
+                            className="bg-[#f87171] text-white px-2 py-1 rounded-md hover:bg-red-600"
                           >
-                            Додати в кошик
+                            -
+                          </button>
+                          <span className="mx-2">{currentQuantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(product.id, 1)}
+                            className={`px-2 py-1 rounded-md text-white ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#f87171] hover:bg-red-600'}`}
+                            disabled={isAddButtonDisabled}
+                          >
+                            +
                           </button>
                         </div>
+                        <button
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-[#f87171] text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full sm:w-auto"
+                        >
+                          Додати в кошик
+                        </button>
                       </div>
                     )}
-
-                    <p className="font-sans text-text">Модель: {product.modeles}</p>
-                    <p className="font-sans text-text">Код: {product.code}</p>
-                    <p className="font-sans text-text">Розмір: {product.size}</p>
-                    <p className="font-sans text-text">Кількість в упаковці: {product.quantityInPack}</p>
-                    <p className="font-sans text-text">На складі: {product.quantityInStock} шт.</p>
-                    <p className="font-bold mt-2 font-sans text-text">{product.price} грн</p>
                   </li>
-                );
+                );                
               })}
             </ul>
           ) : (
