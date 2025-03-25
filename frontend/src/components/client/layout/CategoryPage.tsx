@@ -27,6 +27,7 @@ const CategoryPage = () => {
     : { data: [], isLoading: false };
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
   if (subCategoriesLoading || productsLoading) {
     return <div>Завантаження...</div>;
@@ -57,6 +58,8 @@ const CategoryPage = () => {
             setSelectedManufacturers={setSelectedManufacturers}
             selectedQuantities={selectedQuantities}
             setSelectedQuantities={setSelectedQuantities}
+            selectedSizes={selectedSizes} // 🆕
+            setSelectedSizes={setSelectedSizes} // 🆕
           />
         </div>
 

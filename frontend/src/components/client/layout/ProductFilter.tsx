@@ -6,10 +6,14 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
   setSelectedManufacturers,
   selectedQuantities,
   setSelectedQuantities,
+  selectedSizes,
+  setSelectedSizes
 }) => {
   // Отримання унікальних значень
   const uniqueManufacturers = Array.from(new Set(products.map((p) => p.manufacturer)));
   const uniqueQuantities = Array.from(new Set(products.map((p) => p.quantityInPack)));
+  const uniqueSizes = Array.from(new Set(products.map((p) => p.size)));
+
 
   // Фільтрація доступних кількостей залежно від виробника
   const availableQuantities = Array.from(
@@ -20,8 +24,8 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
     )
   );
 
-// Оновлення вибору виробника
-const toggleManufacturer = (manufacturer: string) => {
+  // Оновлення вибору виробника
+  const toggleManufacturer = (manufacturer: string) => {
     setSelectedManufacturers((prev: string[] | ((prev: string[]) => string[])) =>
       Array.isArray(prev) // Перевіряємо, чи prev масив
         ? prev.includes(manufacturer)
@@ -30,7 +34,18 @@ const toggleManufacturer = (manufacturer: string) => {
         : []
     );
   };
-  
+
+  const toggleSize = (size: string) => {
+    setSelectedSizes((prev: string[] | ((prev: string[]) => string[])) =>
+      Array.isArray(prev)
+        ? prev.includes(size)
+          ? prev.filter((s) => s !== size)
+          : [...prev, size]
+        : []
+    );
+  };
+
+
   // Оновлення вибору кількості в упаковці
   const toggleQuantity = (quantity: number) => {
     setSelectedQuantities((prev: number[] | ((prev: number[]) => number[])) =>
@@ -41,8 +56,8 @@ const toggleManufacturer = (manufacturer: string) => {
         : []
     );
   };
-  
-  
+
+
 
   return (
     <div className="bg-gray-100 p-4 rounded-md shadow-md">
@@ -66,8 +81,27 @@ const toggleManufacturer = (manufacturer: string) => {
         </ul>
       </div>
 
+      {/* Фільтр розміру */}
+      <div className="mt-4">
+        <h3 className="font-semibold cursor-pointer">Розмір</h3>
+        <ul>
+          {uniqueSizes.map((size) => (
+            <li key={size} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={selectedSizes.includes(size)}
+                onChange={() => toggleSize(size)}
+                className="mr-2"
+              />
+              {size}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+
       {/* Фільтр кількості в упаковці */}
-      <div>
+      <div className="mt-4">
         <h3 className="font-semibold cursor-pointer">Кількість в упаковці</h3>
         <ul>
           {uniqueQuantities.map((quantity) => (

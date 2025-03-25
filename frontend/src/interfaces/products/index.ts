@@ -83,7 +83,10 @@ export interface ProductsPageProps {
   export interface ProductFilterProps {
     products: IProductItem[];
     selectedManufacturers: string[];
-    setSelectedManufacturers: React.Dispatch<React.SetStateAction<string[]>>; // <-- важливо!
+    setSelectedManufacturers: React.Dispatch<React.SetStateAction<string[]>>;
     selectedQuantities: number[];
-    setSelectedQuantities: React.Dispatch<React.SetStateAction<number[]>>; // <-- важливо!
+    setSelectedQuantities: React.Dispatch<React.SetStateAction<number[]>>;
+    selectedSizes: string[]; // 🆕 додано
+    setSelectedSizes: React.Dispatch<React.SetStateAction<string[]>>; // 🆕 додано
   }
+  

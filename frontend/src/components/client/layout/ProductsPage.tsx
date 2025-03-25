@@ -31,6 +31,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [wishList, setWishList] = useState<number[]>([]);
   const isCategoryPage = location.pathname.includes(`/category/${categorySlug}`);
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
@@ -42,7 +43,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
       selectedManufacturers.length === 0 || selectedManufacturers.includes(product.manufacturer);
     const matchesQuantity =
       selectedQuantities.length === 0 || selectedQuantities.includes(product.quantityInPack);
-    return matchesManufacturer && matchesQuantity;
+    const matchesSize = 
+    selectedSizes.length === 0 || selectedSizes.includes(product.size);
+    return matchesManufacturer && matchesQuantity && matchesSize;
   });
 
   const dispatch = useDispatch();
@@ -244,6 +247,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
               setSelectedManufacturers={setSelectedManufacturers}
               selectedQuantities={selectedQuantities}
               setSelectedQuantities={setSelectedQuantities}
+              selectedSizes={selectedSizes} // 🆕
+              setSelectedSizes={setSelectedSizes} // 🆕
             />
           </div>
         )}
