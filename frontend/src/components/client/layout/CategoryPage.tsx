@@ -7,7 +7,7 @@ import { useGetCategoryBySlugQuery } from "../../../services/categoryApi";
 import { useGetSubCategoriesByCategorySlugQuery } from "../../../services/categoryApi";
 import ProductsPage from "./ProductsPage";
 import { useState, useEffect } from "react";
-import ProductFilter from "./ProductFilter";
+// import ProductFilter from "./ProductFilter";
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug?: string }>();
