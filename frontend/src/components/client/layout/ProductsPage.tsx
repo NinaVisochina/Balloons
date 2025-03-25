@@ -194,6 +194,14 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
     }
   };
 
+  useEffect(() => {
+    // Скидання фільтрів при зміні підкатегорії
+    setSelectedManufacturers([]);
+    setSelectedQuantities([]);
+    setSelectedSizes([]);
+  }, [location.pathname]);
+  
+
   if (!products || products.length === 0) {
     return <div className="font-sans text-text">Продукти не знайдено.</div>;
   }

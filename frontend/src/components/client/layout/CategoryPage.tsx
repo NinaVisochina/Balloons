@@ -52,7 +52,7 @@ const CategoryPage = () => {
       <div className="container mx-auto py-6 flex">
         <div className="w-1/4">
           <CategorySidebar onCategoryChange={setCategoryId} />
-          <ProductFilter
+          {/* <ProductFilter
             products={products || []}
             selectedManufacturers={selectedManufacturers}
             setSelectedManufacturers={setSelectedManufacturers}
@@ -60,7 +60,7 @@ const CategoryPage = () => {
             setSelectedQuantities={setSelectedQuantities}
             selectedSizes={selectedSizes} // 🆕
             setSelectedSizes={setSelectedSizes} // 🆕
-          />
+          /> */}
         </div>
 
         <div className="w-3/4 ml-6">
