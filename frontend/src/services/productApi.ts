@@ -21,6 +21,13 @@ export const productApi = createApi({
                 method: 'DELETE',
             }),
         }),
+        updateProduct: builder.mutation<void, FormData>({
+            query: (formData) => ({
+                url: "/Products",
+                method: "PUT",
+                body: formData,
+            }),
+        }),
         getProductById: builder.query<IProductItem, number>({
             query: (id) => `/products/${id}`,
         }),
@@ -50,6 +57,7 @@ export const {
     useGetProductByIdQuery,
     useGetProductBySlugQuery, // ✅ Запит на продукт за SLUG
     useDeleteProductMutation,
+    useUpdateProductMutation,  // Додаємо мутацію для редагування
     useGetProductsByCategoryIdQuery,
     useGetProductsByCategorySlugQuery, // ✅ Доданий запит на категорію за SLUG
     useGetProductsBySubCategoryIdQuery,

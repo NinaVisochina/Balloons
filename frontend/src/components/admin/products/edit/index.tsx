@@ -1,94 +1,118 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { http_common, API_URL } from "../../../../env";
+import { API_URL } from "../../../../env";
 import { Button, Form, Modal, Input, Upload, UploadFile, Space, InputNumber, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { IProductEdit, IProductItem } from "../../../../interfaces/products";
-import { ISubCategoryName } from "../../../../interfaces/subcategory";
+import { IProductEdit } from "../../../../interfaces/products";
+import { useGetProductBySlugQuery, useUpdateProductMutation, useGetProductsQuery } from "../../../../services/productApi";
+import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
 
 const ProductEditPage = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm<IProductEdit>();
     const [files, setFiles] = useState<UploadFile[]>([]);
-    const [subcategories, setSubCategories] = useState<ISubCategoryName[]>([]);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState("");
     const [previewTitle, setPreviewTitle] = useState("");
     const [productId, setProductId] = useState<number | null>(null);
 
-    useEffect(() => {
-        http_common.get<ISubCategoryName[]>("/api/SubCategory")
-            .then(resp => setSubCategories(resp.data));
-    }, []);
+    // Завантажуємо підкатегорії
+    const { data: subcategories = [] } = useGetSubCategoriesQuery();
+
+    // Завантажуємо продукт за slug
+    const { data: productData } = useGetProductBySlugQuery(slug!, { skip: !slug });
+
+    // Використовуємо мутацію для редагування
+    const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+
+    // Отримуємо refetch для getProducts
+    const { refetch: refetchProducts } = useGetProductsQuery();
 
     useEffect(() => {
-        if (!slug) return;
+        if (!productData) return;
 
-        http_common.get<IProductItem>(`/api/products/slug/${slug}`)
-            .then(resp => {
-                const { data } = resp;
-                setProductId(data.id);
-                form.setFieldsValue({
-                    id: data.id,
-                    code: data.code,
-                    name: data.name,
-                    price: data.price,
-                    manufacturer: data.manufacturer,
-                    size: data.size,
-                    color: data.color,
-                    type: data.type,
-                    form: data.form,
-                    quantityInPack: data.quantityInPack,
-                    quantityInStock: data.quantityInStock,
-                    subCategoryId: data.subCategoryId,
-                    description: data.description
-                });
+        const data = productData;
+        setProductId(data.id);
+        form.setFieldsValue({
+            id: data.id,
+            code: data.code,
+            name: data.name,
+            price: data.price,
+            manufacturer: data.manufacturer,
+            size: data.size,
+            color: data.color,
+            type: data.type,
+            form: data.form,
+            quantityInPack: data.quantityInPack,
+            quantityInStock: data.quantityInStock,
+            subCategoryId: data.subCategoryId,
+            description: data.description
+        });
 
-                const newFileList: UploadFile[] = data.images.map((image) => ({
-                    uid: image,
-                    name: image,
-                    status: "done",
-                    url: `${API_URL}/images/300_${image}`
-                }));
-                setFiles(newFileList);
-            })
-            .catch(error => console.error("Error fetching product details:", error));
-    }, [slug]);
+        const newFileList: UploadFile[] = data.images.map((image) => ({
+            uid: image,
+            name: image,
+            status: "done",
+            url: `${API_URL}/images/300_${image}`
+        }));
+        setFiles(newFileList);
+    }, [productData, form]);
 
     const onSubmit = async (values: IProductEdit) => {
         console.log("Send Data", values);
-    
+
         const formData = new FormData();
-        formData.append("id", productId!.toString());
-        formData.append("slug", slug!); // Додаємо slug у FormData
-        formData.append("name", values.name);
-        formData.append("code", values.code);
-        formData.append("price", values.price.toString());
-        formData.append("manufacturer", values.manufacturer);
-        formData.append("size", values.size);
-        formData.append("color", values.color);
-        formData.append("type", values.type);
-        formData.append("form", values.form);
-        formData.append("quantityInPack", values.quantityInPack.toString());
-        formData.append("quantityInStock", values.quantityInStock.toString());
-        formData.append("subCategoryId", values.subCategoryId.toString());
-        formData.append("description", values.description);
-    
-        files.forEach(file => {
+        formData.append("Id", productId!.toString());
+        formData.append("Slug", slug!);
+        formData.append("Name", values.name);
+        formData.append("Code", values.code);
+        formData.append("Price", values.price.toString());
+        formData.append("Manufacturer", values.manufacturer);
+        formData.append("Size", values.size);
+        formData.append("Color", values.color);
+        formData.append("Type", values.type);
+        formData.append("Form", values.form);
+        formData.append("QuantityInPack", values.quantityInPack.toString());
+        formData.append("QuantityInStock", values.quantityInStock.toString());
+        formData.append("SubCategoryId", values.subCategoryId.toString());
+        formData.append("Description", values.description);
+
+        // Перевіряємо, чи є хоча б одне зображення
+        // if (files.length === 0) {
+        //     alert("Будь ласка, додайте хоча б одне зображення.");
+        //     return;
+        // }
+
+        // Завантажуємо всі зображення (і старі, і нові) як нові
+        for (const file of files) {
             if (file.originFileObj) {
-                formData.append("images", file.originFileObj);
+                // Нове зображення
+                formData.append("images[]", file.originFileObj);
+            } else if (file.url) {
+                // Старе зображення: завантажуємо його з URL
+                try {
+                    const response = await fetch(file.url);
+                    const blob = await response.blob();
+                    const fileName = file.name || file.url.substring(file.url.lastIndexOf("/") + 1);
+                    const newFile = new File([blob], fileName, { type: blob.type });
+                    formData.append("images[]", newFile);
+                } catch (error) {
+                    console.error(`Помилка завантаження старого зображення ${file.url}:`, error);
+                }
             }
-        });
-    
+        }
+
+        // Логування для перевірки
+        console.log("Files to send:", files);
+
         try {
-            // Змінюємо URL на /api/products (без slug у маршруті)
-            await http_common.put(`/api/Products`, formData, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
+            await updateProduct(formData).unwrap();
+            // Викликаємо refetch для оновлення списку товарів
+            refetchProducts();
             navigate("/admin/products");
         } catch (error) {
-            console.error("Error updating product: ", error);
+            console.error("Помилка оновлення товару: ", error);
         }
     };
 
@@ -99,9 +123,9 @@ const ProductEditPage = () => {
 
     return (
         <>
-            <p className="text-center text-3xl font-bold mb-7">Edit Product</p>
+            <p className="text-center text-3xl font-bold mb-7">Редагування товару</p>
             <Form form={form} onFinish={onSubmit} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-            <Form.Item name="id" hidden>
+                <Form.Item name="id" hidden>
                     <Input type="hidden" />
                 </Form.Item>
                 <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please provide a valid product name." }]}>
@@ -162,7 +186,7 @@ const ProductEditPage = () => {
                             setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1));
                         }}
                         onChange={({ fileList }) => setFiles(fileList)}
-                        beforeUpload={() => false} // Запобігає автоматичному завантаженню файлів
+                        beforeUpload={() => false}
                     >
                         {files.length >= 8 ? null : (
                             <div>
@@ -174,7 +198,7 @@ const ProductEditPage = () => {
                 </Form.Item>
 
                 <Form.Item wrapperCol={{ span: 10, offset: 10 }}>
-                <Space>
+                    <Space>
                         <Link to="/admin/products">
                             <Button
                                 className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
@@ -186,6 +210,7 @@ const ProductEditPage = () => {
                         <Button
                             className="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-500 transition duration-200"
                             htmlType="submit"
+                            loading={isUpdating}
                         >
                             Оновити
                         </Button>
@@ -201,6 +226,7 @@ const ProductEditPage = () => {
 };
 
 export default ProductEditPage;
+
 // import {useState, useEffect} from "react";
 // import {useNavigate, useParams, Link} from "react-router-dom";
 // import {http_common, API_URL} from '../../../../env';

@@ -219,6 +219,9 @@ namespace BackendShop.Services
 
             if (product == null) throw new Exception("Продукт не знайдено");
 
+            // Логування отриманих даних
+            Console.WriteLine($"Received model: {System.Text.Json.JsonSerializer.Serialize(model)}");
+
             // Зберігаємо старий Slug для перевірки, чи він змінився
             var oldSlug = product.Slug;
 
@@ -228,15 +231,11 @@ namespace BackendShop.Services
             // Перевіряємо, чи змінилася назва продукту або Slug
             if (product.Name != model.Name || string.IsNullOrWhiteSpace(product.Slug))
             {
-                // Якщо назва змінилася або Slug порожній, генеруємо новий Slug
                 product.GenerateSlug();
-
-                // Перевіряємо, чи новий Slug унікальний (тільки якщо він змінився)
                 if (product.Slug != oldSlug)
                 {
                     var existingSlug = await _context.Products
                         .AnyAsync(p => p.Slug == product.Slug && p.Id != product.Id);
-
                     if (existingSlug)
                     {
                         throw new Exception("Slug вже використовується. Оберіть іншу назву.");
@@ -244,39 +243,44 @@ namespace BackendShop.Services
                 }
             }
 
-            // Обробляємо зображення
-            var oldNameImages = model.Images?.Where(x => x.ContentType.Contains("old-image"))
-                .Select(x => x.FileName) ?? [];
-
-            var imgToDelete = product?.ProductImages?.Where(x => !oldNameImages.Contains(x.Image)) ?? [];
-            foreach (var imgDel in imgToDelete)
+            // Видаляємо всі старі зображення
+            if (product.ProductImages != null && product.ProductImages.Any())
             {
-                _context.ProductImages.Remove(imgDel);
-                _imageHulk.Delete(imgDel.Image);
+                foreach (var img in product.ProductImages)
+                {
+                    Console.WriteLine($"Deleting old image: {img.Image}");
+                    _context.ProductImages.Remove(img);
+                    _imageHulk.Delete(img.Image);
+                }
             }
 
-            if (model.Images is not null)
+            // Додаємо всі зображення як нові
+            if (model.Images is not null && model.Images.Any())
             {
                 int index = 0;
                 foreach (var image in model.Images)
                 {
-                    if (image.ContentType == "old-image")
+                    Console.WriteLine($"Saving new image: {image.FileName}");
+                    var imagePath = await _imageHulk.Save(image);
+                    _context.ProductImages.Add(new ProductImageEntity
                     {
-                        var oldImage = product?.ProductImages?.FirstOrDefault(x => x.Image == image.FileName)!;
-                        oldImage.Priority = index;
-                    }
-                    else
-                    {
-                        var imagePath = await _imageHulk.Save(image);
-                        _context.ProductImages.Add(new ProductImageEntity
-                        {
-                            Image = imagePath,
-                            Product = product,
-                            Priority = index
-                        });
-                    }
+                        Image = imagePath,
+                        Product = product,
+                        Priority = index
+                    });
                     index++;
                 }
+            }
+            else
+            {
+                // Якщо зображень немає, додаємо заглушку noimage.jpg
+                Console.WriteLine("No images provided, adding default noimage.jpg");
+                _context.ProductImages.Add(new ProductImageEntity
+                {
+                    Image = "noimage.jpg",
+                    Product = product,
+                    Priority = 0
+                });
             }
 
             // Зберігаємо зміни
