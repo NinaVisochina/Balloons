@@ -69,6 +69,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
     }));
   };
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   const handleAddToCart = async (product: IProductItem) => {
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
@@ -81,26 +83,32 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           { userId, productId: product.id, quantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        dispatch(addToCart({ 
-          productId: product.id, 
-          productName: product.name, 
-          price: product.price, 
-          quantity, 
+        dispatch(addToCart({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          quantity,
           images: product.images || [],
           quantityInStock: product.quantityInStock
         }));
+
+        // ✅ Показати toast
+        setToastMessage(`«${product.name}» доданий у кошик`);
+        setTimeout(() => setToastMessage(null), 3000);
+
       } catch (error) {
         console.error(error.response?.data?.message || "Помилка додавання товару в кошик.");
       }
     } else {
-      const cartItem: CartItem = { 
-        productId: product.id, 
-        productName: product.name, 
-        price: product.price, 
-        quantity, 
+      const cartItem: CartItem = {
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity,
         images: product.images || [],
         quantityInStock: product.quantityInStock
       };
+
       dispatch(addToCart(cartItem));
 
       const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -111,6 +119,10 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
         cartItems.push(cartItem);
       }
       localStorage.setItem("cart", JSON.stringify(cartItems));
+
+      // ✅ Показати toast для незареєстрованих
+      setToastMessage(`«${product.name}» доданий у кошик`);
+      setTimeout(() => setToastMessage(null), 4000);
     }
   };
 
@@ -207,7 +219,12 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           </>
         )}
       </nav>
-      
+      {toastMessage && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-6 py-2 sm:px-4 sm:py-1 xs:px-3 xs:py-1 rounded-lg shadow-md hover:from-accentDark hover:to-pink-600 hover:shadow-lg transition duration-300 z-50">
+          {toastMessage}
+        </div>
+      )}
+
       {/* Повідомлення про помилку */}
       {errorMessage && (
         <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
@@ -260,7 +277,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                         className="w-full h-full object-contain"
                       />
                     </button>
-                
+
                     <Link to={`/product/${product.slug}`} className="block">
                       <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
                         <img
@@ -275,7 +292,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                         <p className="text-center font-bold text-accent mt-1">{product.price} грн</p>
                       </div>
                     </Link>
-                
+
                     {/* Ховер-панель */}
                     {hoveredProductId === product.id && (
                       <div className="absolute bottom-0 left-0 right-0 bg-[#2d2d2d] bg-opacity-95 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
@@ -304,7 +321,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
                       </div>
                     )}
                   </li>
-                );                
+                );
               })}
             </ul>
           ) : (
