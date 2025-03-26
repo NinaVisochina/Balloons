@@ -95,12 +95,13 @@ const ClientLayout = () => {
 
   return (
     <div className="bg-background text-text font-sans">
-      <header className="bg-primary shadow-md">
+      <header className="bg-gradient-to-r from-primary to-pink-200 shadow-md">
         <div className="flex items-center justify-between p-4 sm:p-3 xs:p-2 max-w-7xl mx-auto">
           <Link to="/" className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-12 w-auto sm:h-10 xs:h-8" />
-            <span className="text-3xl sm:text-2xl xs:text-xl font-caveat text-text">
-              BalloonsShop
+            <span className="text-3xl sm:text-2xl xs:text-xl font-caveat drop-shadow-md" style={{ fontWeight: 600 }}>
+              <span className="text-pink-700">Balloons</span>
+              <span className="text-pink-500">Shop</span>
             </span>
           </Link>
   
@@ -196,11 +197,15 @@ const ClientLayout = () => {
           </form>
   
           <div className="flex items-center space-x-6 sm:space-x-4 xs:space-x-2">
-            <Link to="/cart" className="flex items-center space-x-2 text-xl">
+            <Link to="/cart" className="relative flex items-center">
               <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg">
                 <FaShoppingCart size={24} className="sm:w-5 sm:h-5 xs:w-4 xs:h-4" />
               </div>
-              <span className="text-text">{cartTotal}</span>
+              {cartTotal > 0 && (
+                <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartTotal}
+                </span>
+              )}
             </Link>
             <nav className="flex items-center space-x-4 text-xl">
               {token ? (
