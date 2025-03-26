@@ -201,25 +201,40 @@ namespace BackendShop.Core.Services
             var user = await userManager.FindByIdAsync(userId);
 
             if (user == null)
-                throw new Exception("Користувача не знайдено");
+                throw new HttpException("Користувача не знайдено", HttpStatusCode.NotFound);
 
-            // Оновлюємо дані користувача
+            // Перевірка унікальності email
+            if (user.Email != model.Email)
+            {
+                var existingUser = await userManager.FindByEmailAsync(model.Email);
+                if (existingUser != null && existingUser.Id != user.Id)
+                {
+                    throw new HttpException("Користувач із таким email уже існує", HttpStatusCode.BadRequest);
+                }
+                user.Email = model.Email;
+            }
+
+            // Оновлення інших полів
             user.Firstname = model.FirstName;
             user.Lastname = model.LastName;
             user.PhoneNumber = model.PhoneNumber;
-            user.Email = model.Email;
 
-            // Додайте валідацію для інших полів, якщо потрібно
+            // Обробка birthdate
             if (!string.IsNullOrEmpty(model.Birthdate))
             {
-                if (DateTime.TryParse(model.Birthdate, out var birthdate))
+                if (DateTime.TryParseExact(model.Birthdate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var birthdate))
                 {
-                    user.Birthdate = birthdate;
+                    // Конвертуємо дату в UTC
+                    user.Birthdate = DateTime.SpecifyKind(birthdate, DateTimeKind.Utc);
                 }
                 else
                 {
-                    throw new Exception("Некоректний формат дати народження");
+                    throw new HttpException("Некоректний формат дати народження. Очікується формат: yyyy-MM-dd", HttpStatusCode.BadRequest);
                 }
+            }
+            else
+            {
+                user.Birthdate = null; // Якщо birthdate порожнє, встановлюємо null
             }
 
             // Зберігаємо зміни
@@ -227,7 +242,7 @@ namespace BackendShop.Core.Services
 
             if (!result.Succeeded)
             {
-                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+                throw new HttpException(string.Join(", ", result.Errors.Select(e => e.Description)), HttpStatusCode.BadRequest);
             }
         }
 

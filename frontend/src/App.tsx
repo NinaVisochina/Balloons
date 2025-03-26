@@ -33,6 +33,7 @@ import ProductPage from "./components/client/layout/ProductPage";
 import PrivateRoute from "./components/admin/PrivateRoute.tsx";
 import AdminOrders from "./components/admin/orders/index.tsx";
 import WishListPage from "./components/client/wishlist/index.tsx";
+import { ToastContainer } from "react-toastify";
 // import CategoryLayout from "./components/client/layout/CategoryLayout.tsx";
 
 
@@ -100,6 +101,7 @@ export default function App() {
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
             </Routes>
+            <ToastContainer />
         </>
     )
 }

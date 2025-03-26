@@ -65,13 +65,26 @@ namespace BackendShop.BackShop.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto model)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-                return Unauthorized();
+                if (userId == null)
+                    return Unauthorized(new { message = "Користувач не авторизований" });
 
-            await accountsService.UpdateProfileAsync(userId, model);
-            return Ok(new { message = "Профіль успішно оновлено" });
+                await accountsService.UpdateProfileAsync(userId, model);
+                return Ok(new { message = "Профіль успішно оновлено" });
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode((int)ex.StatusCode, new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                // Логування помилки (ви можете додати ILogger для кращого логування)
+                Console.WriteLine($"Помилка при оновленні профілю: {ex.Message}");
+                return StatusCode(500, new { message = "Внутрішня помилка сервера" });
+            }
         }
 
         [HttpGet("users")]
