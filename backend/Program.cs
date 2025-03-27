@@ -6,7 +6,6 @@ using BackendShop.Core.Services;
 using BackendShop.Data;
 using BackendShop.Data.Data;
 using BackendShop.Data.DataSeeder;
-using BackendShop.Services;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
