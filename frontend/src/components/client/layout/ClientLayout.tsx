@@ -7,6 +7,7 @@ import { RootState } from "../../../store";
 import Logo from "../../../assets/logo.png";
 import { useGetProductsByNameQuery } from "../../../services/productApi";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategorySlugQuery } from "../../../services/categoryApi";
+import { API_URL } from "../../../env";
 
 
 const ClientLayout = () => {
@@ -41,28 +42,17 @@ const ClientLayout = () => {
   }, [subCategoryData, hoveredCategory]);
 
 
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value;
-  //   console.log("🔍 Введений пошуковий запит:", value);
-  //   setSearch(value);
-  //   setShowSuggestions(value.length >= 3);
-  // };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
     setShowSuggestions(value.trim().length >= 3);
   };
-  
-  // const handleSuggestionClick = (productId: number) => {
-  //   navigate(`/product/${productId}`);
-  //   setShowSuggestions(false);
-  // };
-  const handleSuggestionClick = (productId: number) => {
-    navigate(`/product/${productId}`);
+  const handleSuggestionClick = (productSlug: string) => {
+    navigate(`/product/${productSlug}`);
     setShowSuggestions(false);
-    setSearch(""); // Очищаємо поле після переходу
+    setSearch("");
   };
-  
+
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -71,23 +61,6 @@ const ClientLayout = () => {
   const handleCategoryHover = (categoryId: number) => {
     setHoveredCategory(categoryId);
   };
-
-  // const handleCategoryLeave = () => {
-  //   setHoveredCategory(null);
-  //   setFilteredSubCategories([]);
-  // };
-
-  // const handleLogout = () => {
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("refreshToken");
-  //   localStorage.removeItem("userId");
-  //   localStorage.removeItem("cart");
-  //   localStorage.removeItem("isAdmin");
-  //   dispatch(clearCart());
-  //   alert("Ви успішно вийшли з системи!");
-  //   navigate("/");
-  // };
-
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) {
@@ -175,35 +148,6 @@ const ClientLayout = () => {
               )}
             </div>
           )}
-
-          {/* <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 border border-gray-200">
-            <input
-              type="text"
-              placeholder="Я шукаю..."
-              className="outline-none px-3 py-1 text-lg sm:text-base xs:text-sm w-64 sm:w-48 xs:w-32"
-              value={search}
-              onChange={handleSearch}
-            />
-            <button
-              type="submit"
-              className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg"
-            >
-              <FaSearch size={18} className="sm:w-4 sm:h-4 xs:w-3 xs:h-3" />
-            </button>
-            {showSuggestions && searchResults && searchResults.length > 0 && (
-              <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
-                {searchResults?.map((product) => (
-                  <li
-                    key={product.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
-                    onClick={() => handleSuggestionClick(product.id)}
-                  >
-                    {product.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </form> */}
           <div className="relative w-64 sm:w-48 xs:w-32">
             <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 border border-gray-200">
               <input
@@ -224,14 +168,22 @@ const ClientLayout = () => {
             {/* Підказки */}
             {showSuggestions && searchResults && searchResults.length > 0 && (
               <ul className="absolute top-full left-0 z-50 w-full bg-white shadow-md rounded-md mt-1 max-h-60 overflow-y-auto border border-gray-200">
-                {searchResults.map((product) => (
+                {searchResults?.map((product) => (
                   <li
                     key={product.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
-                    onClick={() => handleSuggestionClick(product.id)}
+                    className="flex items-center space-x-3 px-4 py-2 hover:bg-pink-100 cursor-pointer text-text w-72"
+                    onClick={() => handleSuggestionClick(product.slug)}
+                    title={product.name}
                   >
-                    {product.name}
+                    <img
+                      src={`${API_URL}/images/600_${product.images[0]}`}
+                      alt={product.name}
+                      className="w-10 h-10 object-cover rounded"
+                    />
+                    <span className="flex-1">{product.name}</span>
                   </li>
+
+
                 ))}
               </ul>
             )}
