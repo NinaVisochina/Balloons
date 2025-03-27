@@ -54,6 +54,11 @@ builder.Services.AddScoped<ITelegramService>(provider =>
     return new TelegramService(client, config);
 });
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables(); // 🔥 обов'язково
+
 var app = builder.Build();
 
 // -------------- Seed Initial Data

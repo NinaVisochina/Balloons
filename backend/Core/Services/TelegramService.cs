@@ -11,8 +11,10 @@ public class TelegramService : ITelegramService
     public TelegramService(HttpClient httpClient, IConfiguration config)
     {
         _httpClient = httpClient;
-        _botToken = config["TelegramBot:Token"];
-        _chatId = config["TelegramBot:ChatId"];
+        //_botToken = config["TelegramBot:Token"];
+        //_chatId = config["TelegramBot:ChatId"];
+        _botToken = Environment.GetEnvironmentVariable("TELEGRAMBOT__TOKEN");
+        _chatId = Environment.GetEnvironmentVariable("TELEGRAMBOT__CHATID");
     }
 
     public async Task SendMessageAsync(string message)
