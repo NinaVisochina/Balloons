@@ -44,7 +44,15 @@ builder.Services.AddSwaggerJWT();
 builder.Services.AddHangfire(connectionString);
 
 builder.Services.AddCorsPolicies();
-builder.Services.AddHttpClient<ITelegramService, TelegramService>();
+builder.Services.AddHttpClient<TelegramService>();
+
+builder.Services.AddScoped<ITelegramService>(provider =>
+{
+    var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
+    var config = provider.GetRequiredService<IConfiguration>();
+    var client = httpClientFactory.CreateClient();
+    return new TelegramService(client, config);
+});
 
 var app = builder.Build();
 
@@ -62,7 +70,7 @@ var app = builder.Build();
 //    app.UseSwaggerUI();
 //}
 
-// Увімкнення Swagger для всіх середовищ
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

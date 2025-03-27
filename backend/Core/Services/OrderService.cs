@@ -10,10 +10,10 @@ public class OrderService : IOrderService
     private readonly ShopDbContext _context;
     private readonly ITelegramService _telegramService;
 
-
-    public OrderService(ShopDbContext context)
+    public OrderService(ShopDbContext context, ITelegramService telegramService)
     {
         _context = context;
+        _telegramService = telegramService;
     }
 
     public async Task<int> CreateOrderAsync(CreateOrderDto orderDto)
@@ -136,12 +136,6 @@ public class OrderService : IOrderService
     {
         _context.Orders.Update(order);
         await _context.SaveChangesAsync();
-    }
-
-    public OrderService(ShopDbContext context, ITelegramService telegramService)
-    {
-        _context = context;
-        _telegramService = telegramService;
     }
 
 }

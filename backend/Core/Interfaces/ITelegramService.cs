@@ -1,6 +1,7 @@
-﻿namespace BackendShop.Core.Interfaces
+﻿namespace BackendShop.Core.Interfaces;
+
+public interface ITelegramService
 {
-    public class ITelegramService
-    {
-    }
+    Task SendMessageAsync(string message);
 }
+
