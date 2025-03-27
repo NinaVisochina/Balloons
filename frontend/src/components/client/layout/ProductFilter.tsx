@@ -60,22 +60,22 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 
 
   return (
-    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-      <h2 className="text-xl font-bold mb-2">Фільтр</h2>
+    <div className="w-64 bg-white p-4 rounded-lg shadow-md border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300 mt-4">
+      <h2 className="text-2xl font-caveat text-pink-700 font-bold mb-2">Фільтр</h2>
 
       {/* Фільтр виробників */}
       <div className="mb-4">
-        <h3 className="font-semibold cursor-pointer">Виробники</h3>
+        <h3 className="font-sans text-gray-700 font-semibold cursor-pointer">Виробники</h3>
         <ul>
           {uniqueManufacturers.map((manufacturer) => (
-            <li key={manufacturer} className="flex items-center">
+            <li key={manufacturer} className="flex items-center mt-1">
               <input
                 type="checkbox"
                 checked={selectedManufacturers.includes(manufacturer)}
                 onChange={() => toggleManufacturer(manufacturer)}
-                className="mr-2"
+                className="mr-2 h-4 w-4 text-pink-500 focus:ring-pink-400 border-gray-300 rounded"
               />
-              {manufacturer}
+              <span className="text-gray-700">{manufacturer}</span>
             </li>
           ))}
         </ul>
@@ -83,17 +83,17 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 
       {/* Фільтр розміру */}
       <div className="mt-4">
-        <h3 className="font-semibold cursor-pointer">Розмір</h3>
+        <h3 className="font-sans text-gray-700 font-semibold cursor-pointer">Розмір</h3>
         <ul>
           {uniqueSizes.map((size) => (
-            <li key={size} className="flex items-center">
+            <li key={size} className="flex items-center mt-1">
               <input
                 type="checkbox"
                 checked={selectedSizes.includes(size)}
                 onChange={() => toggleSize(size)}
-                className="mr-2"
+                className="mr-2 h-4 w-4 text-pink-500 focus:ring-pink-400 border-gray-300 rounded"
               />
-              {size}
+              <span className="text-gray-700">{size}</span>              
             </li>
           ))}
         </ul>
@@ -102,16 +102,16 @@ const ProductFilter: React.FC<ProductFilterProps> = ({
 
       {/* Фільтр кількості в упаковці */}
       <div className="mt-4">
-        <h3 className="font-semibold cursor-pointer">Кількість в упаковці</h3>
+        <h3 className="font-sans text-gray-700 font-semibold cursor-pointer">Кількість в упаковці</h3>
         <ul>
           {uniqueQuantities.map((quantity) => (
-            <li key={quantity} className="flex items-center">
+            <li key={quantity} className="flex items-center mt-1">
               <input
                 type="checkbox"
                 checked={selectedQuantities.includes(quantity)}
                 onChange={() => toggleQuantity(quantity)}
                 disabled={!availableQuantities.includes(quantity)}
-                className="mr-2"
+                className="mr-2 h-4 w-4 text-pink-500 focus:ring-pink-400 border-gray-300 rounded"
               />
               <span className={availableQuantities.includes(quantity) ? "" : "text-gray-400"}>
                 {quantity} шт

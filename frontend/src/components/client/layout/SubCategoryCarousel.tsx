@@ -1,11 +1,11 @@
 import Slider from "react-slick";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useGetSubCategoriesQuery } from "../../../services/subcategoryApi";
 import { API_URL } from "../../../env";
 
 const SubCategoryCarousel = () => {
     const { data: subCategories, isLoading } = useGetSubCategoriesQuery();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const settings = {
         dots: true,
@@ -43,17 +43,20 @@ const SubCategoryCarousel = () => {
         <div>
             <Slider {...settings}>
                 {subCategories?.map((subCategory) => (
-                    <div 
-                        key={subCategory.id} 
-                        className="p-4 cursor-pointer"
-                        onClick={() => navigate(`/subcategory/products/${subCategory.slug}`)} // ✅ Використовуємо slug
+                    <div
+                        key={subCategory.id}
+                        className="p-4 cursor-pointer text-center"
                     >
-                        <Link to={`/subcategory/products/${subCategory.slug}`}> {/* ✅ Використовуємо slug */}
+                        <Link to={`/subcategory/products/${subCategory.slug}`}>
                             <img
                                 src={`${API_URL}/images/1200_${subCategory.imageSubCategory}`}
                                 alt={subCategory.name}
                                 className="w-full h-100 object-cover rounded-lg"
                             />
+                            {/* Додаємо назву підкатегорії */}
+                            <p className="text-sm font-semibold mt-2 hover:text-pink-500 transition duration-200">
+                                {subCategory.name}
+                            </p>
                         </Link>
                     </div>
                 ))}

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../../services/categoryApi";
 import { API_URL } from "../../../env";
 
-
 const CategoryCircles = () => {
     const { data: categories, isLoading } = useGetCategoriesQuery();
 
@@ -11,9 +10,9 @@ const CategoryCircles = () => {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 6, // Кількість видимих категорій одночасно
+        slidesToShow: 6,
         slidesToScroll: 1,
-        arrows: true, // Відображення стрілок
+        arrows: true,
         responsive: [
             {
               breakpoint: 1024,
@@ -38,7 +37,6 @@ const CategoryCircles = () => {
 
     if (isLoading) return <p>Завантаження категорій...</p>;
 
-    // 🔹 Сортуємо категорії за ID
     const sortedCategories = categories ? [...categories].sort((a, b) => a.id - b.id) : [];
 
     return (
@@ -47,19 +45,19 @@ const CategoryCircles = () => {
                 {sortedCategories.map((category) => (
                     <div key={category.id} className="text-center">
                         <Link
-                            to={`/category/${category.slug}`} // 🔹 Виправлено помилку шаблонного рядка
+                            to={`/category/${category.slug}`}
                             className="flex flex-col items-center"
                         >
                             {/* Кружечок із зображенням */}
-                            <div className="w-40 h-40 rounded-full overflow-hidden border shadow-lg">
+                            <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-pink-100 shadow-lg hover:border-pink-300 hover:scale-105 transition duration-300">
                                 <img
-                                    src={`${API_URL}/images/1200_${category.imageCategory}`} // 🔹 Виправлено синтаксис  src={`${API_URL}/images/300_${category.imageCategory}`}
+                                    src={`${API_URL}/images/1200_${category.imageCategory}`}
                                     alt={category.name}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
                             {/* Назва категорії */}
-                            <p className="text-sm font-semibold mt-2">
+                            <p className="text-sm font-semibold mt-2 hover:text-pink-500 transition duration-200">
                                 {category.name}
                             </p>
                         </Link>

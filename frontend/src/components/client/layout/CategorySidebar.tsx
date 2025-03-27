@@ -37,52 +37,48 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ onCategoryChange }) =
   if (isLoading) return <p>Завантаження...</p>;
 
   return (
-    <div className="w-64 bg-white text-brown-700 p-4 rounded-lg shadow-md">
-      <h2 className="font-bold text-xl mb-2">Категорії</h2>
+    <div className="w-64 bg-white p-4 rounded-lg shadow-md border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300">
+      <h2 className="font-caveat text-2xl text-pink-700 font-bold mb-2">Категорії</h2>
       <ul>
-    {categories?.slice().sort((a, b) => a.id - b.id).map((category) => (
-        <li key={category.id} className="mb-2">
+        {categories?.slice().sort((a, b) => a.id - b.id).map((category) => (
+          <li key={category.id} className="mb-2">
             <div className="flex justify-between items-center p-2">
-                {/* Натискання на назву переходить на сторінку категорії */}
-                <Link 
-                    to={`/category/${category.slug}`} 
-                    className={`cursor-pointer ${categoryId === category.id ? "text-yellow-600" : ""}`}
-                >
-                    {category.name}
-                </Link>
-
-                {/* Натискання на + відкриває підкатегорії без переходу */}
-                <span 
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                        e.stopPropagation(); // Зупиняємо спливання події, щоб не переходило на категорію
-                        setOpenCategory(openCategory === category.id ? null : category.id);
-                    }}
-                >
-                    {openCategory === category.id ? "−" : "+"}
-                </span>
+              <Link 
+                to={`/category/${category.slug}`} 
+                className={`text-gray-700 hover:text-pink-500 transition duration-200 ${categoryId === category.id ? "text-pink-500" : ""}`}
+              >
+                {category.name}
+              </Link>
+              <span 
+                className="text-gray-700 cursor-pointer hover:text-pink-500 transition duration-200"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenCategory(openCategory === category.id ? null : category.id);
+                }}
+              >
+                {openCategory === category.id ? "−" : "+"}
+              </span>
             </div>
 
-            {/* Відображаємо підкатегорії тільки для активної категорії */}
             {openCategory === category.id && subCategories?.length > 0 && (
-                <ul className="ml-4">
-                    {subCategories
-                        .filter((sub: ISubCategoryItem) => sub.categoryId === category.id)
-                        .map((sub: ISubCategoryItem) => (
-                            <li key={sub.id} className="mt-1">
-                                <Link
-                                    to={`/subcategory/products/${sub.slug}`}
-                                    className="text-yellow-600 hover:text-yellow-900"
-                                >
-                                    {sub.name}
-                                </Link>
-                            </li>
-                        ))}
-                </ul>
+              <ul className="ml-4">
+                {subCategories
+                  .filter((sub: ISubCategoryItem) => sub.categoryId === category.id)
+                  .map((sub: ISubCategoryItem) => (
+                    <li key={sub.id} className="mt-1">
+                      <Link
+                        to={`/subcategory/products/${sub.slug}`}
+                        className="text-pink-500 hover:text-pink-700 transition duration-200"
+                      >
+                        {sub.name}
+                      </Link>
+                    </li>
+                  ))}
+              </ul>
             )}
-        </li>
-    ))}
-</ul>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

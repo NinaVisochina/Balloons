@@ -94,7 +94,7 @@ const Footer = () => {
       </div>
 
       {/* Нижній рядок футера */}
-      <div className="mt-8 pt-4 border-t border-gray-200 text-center text-gray-500">
+      <div className="mt-8 pt-4 border-t border-pink-300 text-center text-gray-500">
         <p>
           © {new Date().getFullYear()}{" "}
           <span className="font-caveat">

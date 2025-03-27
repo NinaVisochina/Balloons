@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useGetProductsByCategorySlugQuery } from "../../../services/productApi";
 import CategorySidebar from "./CategorySidebar";
 import { API_URL } from "../../../env";
@@ -8,9 +8,11 @@ import { useGetSubCategoriesByCategorySlugQuery } from "../../../services/catego
 import ProductsPage from "./ProductsPage";
 import { useState, useEffect } from "react";
 import ProductFilter from "./ProductFilter";
+import { FaHome } from "react-icons/fa";
 
 const CategoryPage = () => {
   const { slug } = useParams<{ slug?: string }>();
+  const location = useLocation();
 
   const { data: category } = slug
     ? useGetCategoryBySlugQuery(slug)
@@ -29,6 +31,8 @@ const CategoryPage = () => {
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
 
+  const isCategoryPage = location.pathname.includes(`/category/${slug}`);
+
   if (subCategoriesLoading || productsLoading) {
     return <div>Завантаження...</div>;
   }
@@ -36,10 +40,10 @@ const CategoryPage = () => {
   const filteredSubCategories = subCategories?.filter((sub: ISubCategoryItem) => sub.categoryId === categoryId) || [];
 
   return (
-    <div className="container mx-auto py-6 flex flex-col">
+    <div className="container mx-auto py-6 px-4 sm:px-6 flex flex-col">
       <nav className="text-gray-600 mb-4 flex items-center">
-        <Link to="/" className="hover:text-black text-lg">
-          <span className="mr-2">🏠</span>
+        <Link to="/" className="hover:text-pink-500 transition duration-200">
+          <FaHome className="inline-block mr-2 w-5 h-5 text-gray-600 hover:text-pink-500 transition duration-200" />
         </Link>
         {category?.name && (
           <>
@@ -49,8 +53,8 @@ const CategoryPage = () => {
         )}
       </nav>
 
-      <div className="container mx-auto py-6 flex">
-        <div className="w-1/4">
+      <div className="flex flex-col sm:flex-row">
+        <div className="w-full sm:w-64 mb-4 sm:mb-0">
           <CategorySidebar onCategoryChange={setCategoryId} />
           <ProductFilter
             products={products || []}
@@ -63,28 +67,32 @@ const CategoryPage = () => {
           />
         </div>
 
-        <div className="w-3/4 ml-6">
-          <h1 className="text-2xl font-bold mb-4 text-center">Підкатегорії</h1>
+        <div className="flex-1 sm:ml-6">
           {filteredSubCategories.length > 0 ? (
-            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-4 justify-items-center">
-              {filteredSubCategories.map((sub: ISubCategoryItem) => (
-                <li key={sub.id} className="bg-white p-4 shadow-sm rounded-lg sm:p-2">
-                  <Link to={`/subcategory/products/${sub.slug}`} className="block">
-                    <img
-                      src={`${API_URL}/images/300_${sub.imageSubCategory}`}
-                      alt={sub.name}
-                      className="w-24 h-24 object-cover rounded-full mx-auto transition-transform duration-300 hover:scale-105 hover:opacity-90 shadow-md"
-                    />
-                  </Link>
-                  <h2 className="text-base font-medium mt-3 text-center">{sub.name}</h2>
-                </li>
-              ))}
-            </ul>
+            <div className="bg-white px-6 pt-4 pb-6 rounded-lg shadow-md border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300">
+              <h1 className="text-2xl font-caveat text-pink-700 font-bold text-center mb-4">Підкатегорії</h1>
+              <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 justify-items-center">
+                {filteredSubCategories.map((sub: ISubCategoryItem) => (
+                  <li key={sub.id} className="bg-white p-4 rounded-md transition-transform duration-300 hover:scale-105 hover:shadow-md">
+                    <Link to={`/subcategory/products/${sub.slug}`} className="block">
+                      <img
+                        src={`${API_URL}/images/300_${sub.imageSubCategory}`}
+                        alt={sub.name}
+                        className="w-32 h-32 object-cover rounded-lg mx-auto transition-transform duration-300 hover:scale-105 hover:opacity-90"
+                      />
+                    </Link>
+                    <h2 className="text-base font-sans text-gray-700 mt-3 text-center">{sub.name}</h2>
+                  </li>
+                ))}
+              </ul>
+            </div>
           ) : (
-            <p>У цій категорії немає підкатегорій.</p>
+            <p className="text-gray-700">У цій категорії немає підкатегорій.</p>
           )}
 
-          <h1 className="text-2xl font-bold mt-12 mb-6"></h1>
+          {isCategoryPage && (
+            <h2 className="text-xl font-caveat text-pink-700 mb-4 mt-6">Товари</h2>
+          )}
           <ProductsPage categorySlug={category?.slug} />
         </div>
       </div>

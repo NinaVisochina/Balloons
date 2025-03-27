@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useGetSubCategoryByIdQuery } from "../../../services/subcategoryApi";
 import { API_URL } from "../../../env";
 import axios from "axios";
+import { FaHome, FaShoppingCart } from "react-icons/fa";
 
 const ProductPage = () => {
   const { slug } = useParams();
@@ -13,7 +14,6 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState<number | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  //const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Отримуємо ID продукту за його slug
   const { data: productBySlug, isLoading } = useGetProductBySlugQuery(slug!, {
@@ -50,10 +50,9 @@ const ProductPage = () => {
 
     // Перевірка на максимальну кількість (quantityInStock)
     if (newQuantity > product.quantityInStock) {
-      return; // Не дозволяємо збільшувати кількість, кнопка "+" буде неактивною
+      return;
     }
 
-    //setErrorMessage(null);
     setQuantity(newQuantity);
   };
 
@@ -80,7 +79,7 @@ const ProductPage = () => {
           quantityInStock: product.quantityInStock
         }));
       } catch (error: any) {
-        //setErrorMessage(error.response?.data?.message || "Помилка додавання товару в кошик.");
+        // Обробка помилок
       }
     } else {
       dispatch(addToCart({
@@ -124,16 +123,17 @@ const ProductPage = () => {
   if (isLoading) return <div>Завантаження...</div>;
   if (!product) return <div>Продукт не знайдено</div>;
   const isAddButtonDisabled = quantity >= product.quantityInStock;
+
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto py-6 px-4 sm:px-6">
       <nav className="text-gray-600 mb-4 flex items-center">
-        <Link to="/" className="hover:text-black text-lg">
-          <span className="mr-2">🏠</span>
+        <Link to="/" className="hover:text-pink-500 transition duration-200">
+          <FaHome className="inline-block mr-2 w-5 h-5 text-gray-600 hover:text-pink-500 transition duration-200" />
         </Link>
         {subCategory?.categoryName && (
           <>
             <span className="mx-2">/</span>
-            <Link to={`/category/${subCategory.categoryId}`} className="hover:underline text-black">
+            <Link to={`/category/${subCategory.categoryId}`} className="hover:text-pink-500 transition duration-200">
               {subCategory.categoryName}
             </Link>
           </>
@@ -141,7 +141,7 @@ const ProductPage = () => {
         {subCategory?.name && (
           <>
             <span className="mx-2">/</span>
-            <Link to={`/subcategory/${subCategory.slug}/products`} className="hover:underline text-black">
+            <Link to={`/subcategory/${subCategory.slug}/products`} className="hover:text-pink-500 transition duration-200">
               {subCategory.name}
             </Link>
           </>
@@ -150,52 +150,66 @@ const ProductPage = () => {
         <span className="text-black">{product.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {productImages.length > 0 ? (
-          <div className="relative w-full max-w-lg">
-            <button onClick={handlePrevImage} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-2 py-1 rounded-md">◀</button>
-            <img
-              src={`${API_URL}/images/600_${productImages[currentImageIndex]}`}
-              alt={product.name}
-              className="w-full h-auto max-h-[500px] object-contain rounded-lg"
-            />
-            <button onClick={handleNextImage} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-700 text-white px-2 py-1 rounded-md">▶</button>
-          </div>
-        ) : (
-          <div className="w-full h-80 flex items-center justify-center bg-gray-200 text-gray-500">
-            Зображення відсутнє
-          </div>
-        )}
+      <div className="bg-white p-6 rounded-lg shadow-md border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {productImages.length > 0 ? (
+            <div className="relative w-full max-w-lg">
+              <button
+                onClick={handlePrevImage}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-gray-300 to-gray-600 text-white px-2 py-1 rounded-md shadow-md hover:from-gray-500 hover:to-gray-800 transition duration-300"
+              >
+                ◀
+              </button>
+              <img
+                src={`${API_URL}/images/600_${productImages[currentImageIndex]}`}
+                alt={product.name}
+                className="w-full h-auto max-h-[500px] object-contain rounded-lg animate-fadeIn"
+              />
+              <button
+                onClick={handleNextImage}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-gray-600 to-gray-300 text-white px-2 py-1 rounded-md shadow-md hover:from-gray-800 hover:to-gray-500 transition duration-300"
+              >
+                ▶
+              </button>
+            </div>
+          ) : (
+            <div className="w-full h-80 flex items-center justify-center bg-gray-200 text-gray-500">
+              Зображення відсутнє
+            </div>
+          )}
 
-        <div>
-          <h1 className="text-2xl font-bold">{product.name}</h1>
-          <p><strong>Виробник:</strong> {product.manufacturer}</p>
-          <p><strong>Код:</strong> {product.code}</p>
-          <p><strong>Ціна:</strong> {product.price} грн</p>
+          <div>
+            <h1 className="text-2xl font-caveat text-pink-700 font-bold">{product.name}</h1>
+            <p className="text-gray-700 leading-6"><strong>Виробник:</strong> {product.manufacturer}</p>            
+            <p className="text-gray-700 leading-6"><strong>Код:</strong> {product.code}</p>
+            <p className="text-gray-700 leading-6"><strong>Ціна:</strong> {product.price} грн</p>
 
-          <div className="flex items-center mt-4">
-            <span className="mr-2">Кількість:</span>
-            <button 
-              onClick={() => handleQuantityChange(-1)} className="bg-gray-300 px-3 py-1 rounded-md"
-            >
-              -
-            </button>
-            <span className="mx-2">{quantity}</span>
+            <div className="flex items-center mt-4">
+              <span className="mr-2">Кількість:</span>
+              <button
+                onClick={() => handleQuantityChange(-1)}
+                className="bg-gradient-to-r from-gray-200 to-gray-400 px-3 py-1 rounded-md shadow-md hover:from-gray-400 hover:to-gray-500 transition duration-300"
+              >
+                -
+              </button>
+              <span className="mx-2">{quantity}</span>
+              <button
+                onClick={() => handleQuantityChange(1)}
+                className={`px-3 py-1 rounded-md shadow-md transition duration-300 ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gradient-to-r from-gray-200 to-gray-400 hover:from-gray-400 hover:to-gray-500'}`}
+                disabled={isAddButtonDisabled}
+              >
+                +
+              </button>
+            </div>
+
             <button
-              onClick={() => handleQuantityChange(1)}
-              className={`px-3 py-1 rounded-md ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gray-300'}`}
-              disabled={isAddButtonDisabled}
+              onClick={handleAddToCart}
+              className="mt-4 bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-6 py-3 rounded-lg font-semibold shadow-lg hover:from-pink-500 hover:to-pink-600 hover:shadow-xl hover:scale-105 transition duration-300 flex items-center justify-center"
             >
-              +
+              <FaShoppingCart className="mr-2 w-5 h-5" />
+              Купити
             </button>
           </div>
-
-          <button
-            onClick={handleAddToCart}
-            className="mt-4 bg-accent px-6 py-3 text-white rounded-lg font-semibold transition duration-300 hover:bg-opacity-80"
-          >
-            Купити
-          </button>
         </div>
       </div>
     </div>

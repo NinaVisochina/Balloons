@@ -12,6 +12,7 @@ import axios from "axios";
 import bookmark from '../../../assets/images/bookmark.png';
 import bookmarkWhite from '../../../assets/images/bookmark-white.png';
 import { useGetCategoryBySlugQuery } from "../../../services/categoryApi";
+import { FaHome, FaShoppingCart } from "react-icons/fa";
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySlug }) => {
   const { slug, subslug } = useParams<{ slug?: string, subslug?: string }>();
@@ -208,30 +209,31 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
   return (
     <div className="max-w-7xl mx-auto py-6 flex flex-col px-6">
-      {/* Хлібні крихти */}
-      <nav className="text-secondary mb-4 flex items-center font-sans">
-        <Link to="/" className="hover:text-text">
-          <span className="mr-2">🏠</span>
-        </Link>
-        {category?.name && (
-          <>
-            <span className="mx-2">/</span>
-            <Link to={`/category/${categorySlug}`} className="hover:text-text">
-              {category.name}
-            </Link>
-          </>
-        )}
-        {subCategory?.name && (
-          <>
-            <span className="mx-2">/</span>
-            <Link to={`/subcategory/${subCategorySlug}/products`} className="hover:text-text">
-              {subCategory.name}
-            </Link>
-          </>
-        )}
-      </nav>
+      {!isCategoryPage && (
+        <nav className="text-gray-600 mb-4 flex items-center font-sans">
+          <Link to="/" className="hover:text-pink-500 transition duration-200">
+            <FaHome className="inline-block mr-2 w-5 h-5 text-gray-600 hover:text-pink-500 transition duration-200" />
+          </Link>
+          {category?.name && (
+            <>
+              <span className="mx-2">/</span>
+              <Link to={`/category/${categorySlug}`} className="hover:text-pink-500 transition duration-200">
+                {category.name}
+              </Link>
+            </>
+          )}
+          {subCategory?.name && (
+            <>
+              <span className="mx-2">/</span>
+              <Link to={`/subcategory/${subCategorySlug}/products`} className="hover:text-pink-500 transition duration-200">
+                {subCategory.name}
+              </Link>
+            </>
+          )}
+        </nav>
+      )}
       {toastMessage && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-6 py-2 sm:px-4 sm:py-1 xs:px-3 xs:py-1 rounded-lg shadow-md hover:from-accentDark hover:to-pink-600 hover:shadow-lg transition duration-300 z-50">
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-pink-400 to-pink-500 text-white font-sans px-6 py-2 sm:px-4 sm:py-1 xs:px-3 xs:py-1 rounded-lg shadow-md hover:from-pink-500 hover:to-pink-600 hover:shadow-lg transition duration-300 z-50">
           {toastMessage}
         </div>
       )}
@@ -244,10 +246,10 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
       )}
 
       {/* Основний контент: Sidebar + Продукти */}
-      <div className="flex">
+      <div className="flex flex-col sm:flex-row">
         {/* Sidebar */}
         {!isCategoryPage && (
-          <div className="w-1/4 flex flex-col gap-4">
+          <div className="w-full sm:w-64 flex flex-col gap-4 mb-4 sm:mb-0">
             <CategorySidebar onCategoryChange={() => { }} />
             <ProductFilter
               products={products || []}
@@ -262,83 +264,83 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
         )}
 
         {/* Основний контент */}
-        <div className={isCategoryPage ? "w-full" : "ml-6 flex-1"}>
-          <h1 className="text-2xl font-caveat text-text mb-4">{subCategory?.name || "Продукти"}</h1>
-
+        <div className={isCategoryPage ? "w-full" : "flex-1 sm:ml-6"}>
+        {!isCategoryPage && subCategory?.name && (
+            <h2 className="text-xl font-caveat text-pink-700 mb-4">{subCategory.name}</h2>
+          )}
           {/* Фільтрація продуктів */}
           {filteredProducts.length > 0 ? (
-            <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {filteredProducts.map((product: IProductItem) => {
-                const currentQuantity = productQuantities[product.id] || 1;
-                const isAddButtonDisabled = currentQuantity >= product.quantityInStock; // Оголошуємо тут
+            <ul className="grid grid-cols-1 md:grid-cols-3 gap-16 w-full">
+            {filteredProducts.map((product: IProductItem) => {
+              const currentQuantity = productQuantities[product.id] || 1;
+              const isAddButtonDisabled = currentQuantity >= product.quantityInStock;
 
-                return (
-                  <li
-                    key={product.id}
-                    className="relative bg-white shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg group"
-                    onMouseEnter={() => setHoveredProductId(product.id)}
-                    onMouseLeave={() => setHoveredProductId(null)}
+              return (
+                <li
+                  key={product.id}
+                  className="relative bg-white shadow-md rounded-lg border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300 group"
+                  onMouseEnter={() => setHoveredProductId(product.id)}
+                  onMouseLeave={() => setHoveredProductId(null)}
+                >
+                  <button
+                    onClick={() => toggleWishList(product.id)}
+                    className="absolute top-2 right-2 w-6 h-6 z-10"
                   >
-                    {/* Вішліст */}
-                    <button
-                      onClick={() => toggleWishList(product.id)}
-                      className="absolute top-2 right-2 w-6 h-6 z-10"
-                    >
+                    <img
+                      src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
+                      alt="bookmark"
+                      className="w-full h-full object-contain"
+                    />
+                  </button>
+
+                  <Link to={`/product/${product.slug}`} className="block">
+                    <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
                       <img
-                        src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
-                        alt="bookmark"
-                        className="w-full h-full object-contain"
+                        src={`${API_URL}/images/600_${product.images[0]}`}
+                        alt={product.name}
+                        className="object-contain h-full w-full p-4"
                       />
-                    </button>
+                    </div>
+                    <div className="p-3">
+                      <h2 className="text-md font-sans text-gray-700 text-center">{product.name}</h2>
+                      <p className="text-center text-sm text-gray-600">Розмір: {product.size}</p>
+                      <p className="text-center font-bold text-pink-500 mt-1">{product.price} грн</p>
+                    </div>
+                  </Link>
 
-                    <Link to={`/product/${product.slug}`} className="block">
-                      <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
-                        <img
-                          src={`${API_URL}/images/600_${product.images[0]}`}
-                          alt={product.name}
-                          className="object-contain h-full w-full p-4"
-                        />
-                      </div>
-                      <div className="p-3">
-                        <h2 className="text-md font-semibold font-sans text-text text-center">{product.name}</h2>
-                        <p className="text-center text-sm text-gray-600">Розмір: {product.size}</p>
-                        <p className="text-center font-bold text-accent mt-1">{product.price} грн</p>
-                      </div>
-                    </Link>
-
-                    {/* Ховер-панель */}
-                    {hoveredProductId === product.id && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-[#2d2d2d] bg-opacity-95 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
-                        <div className="flex items-center">
-                          <button
-                            onClick={() => handleQuantityChange(product.id, -1)}
-                            className="bg-[#f87171] text-white px-2 py-1 rounded-md hover:bg-red-600"
-                          >
-                            -
-                          </button>
-                          <span className="mx-2">{currentQuantity}</span>
-                          <button
-                            onClick={() => handleQuantityChange(product.id, 1)}
-                            className={`px-2 py-1 rounded-md text-white ${isAddButtonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#f87171] hover:bg-red-600'}`}
-                            disabled={isAddButtonDisabled}
-                          >
-                            +
-                          </button>
-                        </div>
+                  {hoveredProductId === product.id && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-gray-600 bg-opacity-75 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+                      <div className="flex items-center">
                         <button
-                          onClick={() => handleAddToCart(product)}
-                          className="bg-[#f87171] text-white px-4 py-2 rounded-lg hover:bg-red-600 w-full sm:w-auto"
+                          onClick={() => handleQuantityChange(product.id, -1)}
+                          className="bg-gradient-to-r from-gray-200 to-gray-400 px-2 py-1 rounded-md shadow-md hover:from-gray-400 hover:to-gray-500 transition duration-300"
                         >
-                          Додати в кошик
+                          -
+                        </button>
+                        <span className="mx-2">{currentQuantity}</span>
+                        <button
+                          onClick={() => handleQuantityChange(product.id, 1)}
+                          className={`px-2 py-1 rounded-md shadow-md transition duration-300 ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gradient-to-r from-gray-200 to-gray-400 hover:from-gray-400 hover:to-gray-500'}`}
+                          disabled={isAddButtonDisabled}
+                        >
+                          +
                         </button>
                       </div>
-                    )}
-                  </li>
-                );
+                      <button
+                        onClick={() => handleAddToCart(product)}
+                        className="bg-gradient-to-r from-accent to-pink-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg hover:from-pink-500 hover:to-pink-600 hover:shadow-xl transition duration-300 w-full sm:w-auto flex items-center justify-center"
+                      >
+                        <FaShoppingCart className="mr-2 w-5 h-5" />
+                        Купити
+                      </button>
+                    </div>
+                  )}
+                </li>
+              );
               })}
             </ul>
           ) : (
-            <p className="text-secondary mt-4 font-sans">Немає продуктів, які відповідають фільтрам.</p>
+            <p className="text-gray-700 mt-4 font-sans">Немає продуктів, які відповідають фільтрам.</p>
           )}
         </div>
       </div>
