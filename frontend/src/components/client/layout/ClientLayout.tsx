@@ -103,21 +103,23 @@ const ClientLayout = () => {
               {/* Ліва панель категорій */}
               <div className="w-[250px] bg-gray-50 p-4">
                 <ul className="space-y-2">
-                  {categories.map((category) => (
-                    <li
-                      key={category.id}
-                      className={`flex justify-between items-center px-4 py-2 cursor-pointer transition-all duration-300 ${hoveredCategory === category.id ? "bg-accent text-white" : "hover:bg-gray-200"
-                        }`}
-                      onMouseEnter={() => handleCategoryHover(category.id)}
-                      onClick={() => {
-                        navigate(`/category/${category.slug}`);
-                        setIsMenuOpen(false); // Закриває меню після натискання
-                      }}
-                    >
-                      <span>{category.name}</span>
-                      <span className="text-secondary">›</span>
-                    </li>
-                  ))}
+                  {[...categories]
+                    .sort((a, b) => a.id - b.id)
+                    .map((category) => (
+                      <li
+                        key={category.id}
+                        className={`flex justify-between items-center px-4 py-2 cursor-pointer transition-all duration-300 ${hoveredCategory === category.id ? "bg-accent text-white" : "hover:bg-gray-200"
+                          }`}
+                        onMouseEnter={() => handleCategoryHover(category.id)}
+                        onClick={() => {
+                          navigate(`/category/${category.slug}`);
+                          setIsMenuOpen(false); // Закриває меню після натискання
+                        }}
+                      >
+                        <span>{category.name}</span>
+                        <span className="text-secondary">›</span>
+                      </li>
+                    ))}
                 </ul>
               </div>
 
@@ -182,8 +184,6 @@ const ClientLayout = () => {
                     />
                     <span className="flex-1">{product.name}</span>
                   </li>
-
-
                 ))}
               </ul>
             )}

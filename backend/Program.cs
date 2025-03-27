@@ -45,6 +45,7 @@ builder.Services.AddSwaggerJWT();
 builder.Services.AddHangfire(connectionString);
 
 builder.Services.AddCorsPolicies();
+builder.Services.AddHttpClient<ITelegramService, TelegramService>();
 
 var app = builder.Build();
 

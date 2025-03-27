@@ -170,10 +170,8 @@ const ProductPage = () => {
         <div>
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <p><strong>Виробник:</strong> {product.manufacturer}</p>
-          <p><strong>Модель:</strong> {product.modeles}</p>
           <p><strong>Код:</strong> {product.code}</p>
           <p><strong>Ціна:</strong> {product.price} грн</p>
-          <p><strong>На складі:</strong> {product.quantityInStock} шт.</p>
 
           <div className="flex items-center mt-4">
             <span className="mr-2">Кількість:</span>
