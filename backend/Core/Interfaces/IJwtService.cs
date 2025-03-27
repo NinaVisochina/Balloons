@@ -6,7 +6,7 @@ namespace BackendShop.Core.Interfaces
     public interface IJwtService
     {
         // ------- Access Token
-        IEnumerable<Claim> GetClaims(User user);
+        Task<IEnumerable<Claim>> GetClaims(User user); // Змінюємо на Task
         string CreateToken(IEnumerable<Claim> claims);
 
         // ------- Refresh Token

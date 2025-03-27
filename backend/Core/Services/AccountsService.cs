@@ -18,12 +18,14 @@ namespace BackendShop.Core.Services
         UserManager<User> userManager,
         IMapper mapper,
         IJwtService jwtService,
-        IRepository<RefreshToken> refreshTokenR) : IAccountsService
+        IRepository<RefreshToken> refreshTokenR,
+        IGoogleAuthService googleAuthService) : IAccountsService
     {
         private readonly UserManager<User> userManager = userManager;
         private readonly IMapper mapper = mapper;
         private readonly IJwtService jwtService = jwtService;
         private readonly IRepository<RefreshToken> refreshTokenR = refreshTokenR;
+        private readonly IGoogleAuthService googleAuthService = googleAuthService;
 
         public async Task Register(RegisterDto model)
         {
@@ -65,7 +67,7 @@ namespace BackendShop.Core.Services
             Console.WriteLine($"User roles: {string.Join(", ", roles)}");
 
             // Генеруємо access токен з ролями користувача
-            var claims = jwtService.GetClaims(user).ToList(); // Отримуємо claims для користувача
+            var claims = (await jwtService.GetClaims(user)).ToList(); // Отримуємо claims для користувача
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role))); // Додаємо ролі як claims
             Console.WriteLine($"Claims before adding roles: {string.Join(", ", claims.Select(c => c.Type + ":" + c.Value))}");
             var accessToken = jwtService.CreateToken(claims); // Створюємо токен з усіма claims
@@ -255,6 +257,73 @@ namespace BackendShop.Core.Services
         public async Task<IEnumerable<User>> GetAllAdminsAsync()
         {
             return await userManager.GetUsersInRoleAsync("Admin");
+        }
+
+        public async Task<UserTokens> GoogleLoginAsync(string googleToken)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(googleToken))
+                {
+                    throw new ArgumentException("Google token is null or empty");
+                }
+
+                if (googleAuthService == null)
+                {
+                    throw new InvalidOperationException("googleAuthService is not initialized");
+                }
+
+                var googleUser = await googleAuthService.ValidateGoogleTokenAsync(googleToken);
+                if (googleUser == null)
+                {
+                    throw new Exception("Invalid Google token");
+                }
+
+                if (string.IsNullOrEmpty(googleUser.Email))
+                {
+                    throw new Exception("Google user email is missing");
+                }
+
+                var user = await userManager.FindByEmailAsync(googleUser.Email);
+                if (user == null)
+                {
+                    user = new User
+                    {
+                        UserName = googleUser.Email,
+                        Email = googleUser.Email
+                    };
+                    var result = await userManager.CreateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "User");
+                    }
+                    else
+                    {
+                        throw new Exception("Failed to create user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+                    }
+                }
+
+                var roles = await userManager.GetRolesAsync(user);
+                bool isAdmin = roles.Any(role => role.Equals("Admin", StringComparison.OrdinalIgnoreCase));
+
+                var claims = (await jwtService.GetClaims(user)).ToList();
+                claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                var accessToken = jwtService.CreateToken(claims);
+                var refreshTokenEntity = await CreateRefreshToken(user.Id);
+
+                return new UserTokens
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshTokenEntity.Token,
+                    UserId = user.Id,
+                    IsAdmin = isAdmin
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GoogleLoginAsync: {ex.Message}\nStackTrace: {ex.StackTrace}");
+                throw;
+            }
         }
     }
 }

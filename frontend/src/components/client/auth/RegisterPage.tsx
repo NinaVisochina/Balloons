@@ -1,39 +1,70 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../env";
+import { GoogleOutlined } from "@ant-design/icons";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const RegisterPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate();
-  
-    const handleRegister = async () => {
-      if (password !== confirmPassword) {
-        alert("Паролі не співпадають!");
-        return;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      alert("Паролі не співпадають!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/accounts/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        alert("Реєстрація успішна! Тепер увійдіть.");
+        navigate("/login");
+      } else {
+        const error = await response.text();
+        alert(`Помилка реєстрації: ${error}`);
       }
-  
-      try {
-        const response = await fetch(`${API_URL}/api/accounts/auth/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-  
-        if (response.ok) {
-          alert("Реєстрація успішна! Тепер увійдіть.");
-          navigate("/login");
-        } else {
-          const error = await response.text();
-          alert(`Помилка реєстрації: ${error}`);
-        }
-      } catch (error) {
-        console.error("Register error:", error);
+    } catch (error) {
+      console.error("Register error:", error);
+    }
+  };
+  const onLoginGoogleResult = async (idToken: string) => {
+    console.log("Google ID Token", idToken);
+    try {
+      const response = await fetch(`${API_URL}/api/accounts/login/google`, {  
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(idToken),
+      });
+
+      const data = await response.json();
+      console.log("Server Response:", data);
+      if (response.ok) {
+        console.log("Server Response:", data);
+        // Зберігаємо дані в localStorage
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("userId", data.userId);
+        localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
+        navigate("/profile");
+      } else {
+        throw new Error(data.error || "Login failed");
       }
-    };
-  
-    return (
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
+
+  const CLIENT_ID = '824455261783-k5i4ushr8l5h867jd864krhs8cp30u4l.apps.googleusercontent.com';
+
+  return (
+    <GoogleOAuthProvider clientId={CLIENT_ID}>
       <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
         <h2 className="text-2xl font-bold mb-4">Реєстрація</h2>
         <form
@@ -113,10 +144,11 @@ const RegisterPage = () => {
           >
             Зареєструватися
           </button>
+          <GoogleLoginButton icon={<GoogleOutlined />} title='Увійти Google' onLogin={onLoginGoogleResult} />
         </form>
       </div>
-    );
-  };
-  
-  export default RegisterPage;
-  
+    </GoogleOAuthProvider>
+  );
+};
+
+export default RegisterPage;

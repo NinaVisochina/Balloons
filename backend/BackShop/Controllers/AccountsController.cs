@@ -103,6 +103,19 @@ namespace BackendShop.BackShop.Controllers
             return Ok(admins);
         }
 
+        [HttpPost("login/google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] string token)
+        {
+            try
+            {
+                var userTokens = await accountsService.GoogleLoginAsync(token);
+                return Ok(userTokens);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new { Error = ex.Message });
+            }
+        }
 
 
 

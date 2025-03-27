@@ -15,5 +15,6 @@ namespace BackendShop.Core.Interfaces
         Task RemoveExpiredRefreshTokens();
         Task<User> GetProfileAsync(string userId);
         Task UpdateProfileAsync(string userId, UpdateProfileDto model);
+        Task<UserTokens> GoogleLoginAsync(string googleToken);
     }
 }

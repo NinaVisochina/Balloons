@@ -20,7 +20,7 @@ const banners = [
     title: "Створюй свято для дітей!",
     subtitle: "Кульки для незабутнього дня народження",
     cta: "Замовити зараз!",
-    link: "/subcategory/products/z-malyunkom", 
+    link: "/subcategory/products/z-malyunkamy", 
   },
   {
     image: bannerBalloons,

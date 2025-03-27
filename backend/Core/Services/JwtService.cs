@@ -40,7 +40,7 @@ namespace BackendShop.Core.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public IEnumerable<Claim> GetClaims(User user)
+        public async Task<IEnumerable<Claim>> GetClaims(User user)
         {
             var claims = new List<Claim>
             {
@@ -51,8 +51,7 @@ namespace BackendShop.Core.Services
             if (user.Birthdate.HasValue)
                 claims.Add(new Claim(ClaimTypes.DateOfBirth, user.Birthdate.ToString()!));
 
-            var roles = userManager.GetRolesAsync(user).Result;
-            //claims.AddRange(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
+            var roles = await userManager.GetRolesAsync(user); // Використовуємо await
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             return claims;
