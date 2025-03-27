@@ -1,4 +1,5 @@
 ﻿using BackendShop.Core.Dto.Order;
+using BackendShop.Core.Interfaces;
 using BackendShop.Data.Data;
 using BackendShop.Data.Entities;
 using BackendShop.Data.Enums;
@@ -7,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 public class OrderService : IOrderService
 {
     private readonly ShopDbContext _context;
+    private readonly ITelegramService _telegramService;
+
 
     public OrderService(ShopDbContext context)
     {
@@ -74,6 +77,15 @@ public class OrderService : IOrderService
         }
 
         await _context.SaveChangesAsync();
+        // Надсилання повідомлення адміну через Telegram
+        var message = $"🛍 Нове замовлення!\n" +
+                      $"👤 User ID: {order.UserId}\n" +
+                      $"📦 Товарів: {order.Items.Count}\n" +
+                      $"💰 Сума: {order.TotalAmount} грн\n" +
+                      $"🏠 Адреса: {order.Address ?? "не вказана"}";
+
+        await _telegramService.SendMessageAsync(message);
+
         return order.OrderId;
     }
 
@@ -124,6 +136,12 @@ public class OrderService : IOrderService
     {
         _context.Orders.Update(order);
         await _context.SaveChangesAsync();
+    }
+
+    public OrderService(ShopDbContext context, ITelegramService telegramService)
+    {
+        _context = context;
+        _telegramService = telegramService;
     }
 
 }
