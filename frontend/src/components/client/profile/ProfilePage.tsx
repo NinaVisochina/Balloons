@@ -223,35 +223,65 @@ const ProfilePage = () => {
     }
   };
 
+  // return (
+  //   <div className="max-w-7xl mx-auto mt-10 p-8 bg-white shadow-md rounded-md flex">
+  //     <div className="w-1/4 border-r pr-6">
+  //       <nav className="space-y-4">
+  //         <button
+  //           onClick={() => setActiveTab("account")}
+  //           className={`block text-left w-full px-4 py-3 rounded-lg hover:bg-gray-100 ${
+  //             activeTab === "account" ? "bg-gray-100 font-bold" : ""
+  //           }`}
+  //         >
+  //           Обліковий запис
+  //         </button>
+  //         <button
+  //           onClick={() => setActiveTab("orders")}
+  //           className={`block text-left w-full px-4 py-3 rounded-lg hover:bg-gray-100 ${
+  //             activeTab === "orders" ? "bg-gray-100 font-bold" : ""
+  //           }`}
+  //         >
+  //           Мої замовлення
+  //         </button>
+  //         <button
+  //           onClick={onLogout}
+  //           className="block text-left w-full px-4 py-3 rounded-lg text-pink-600 hover:bg-gray-100 hover:text-pink-700 transition duration-300"
+  //         >
+  //           Вихід
+  //         </button>
+  //       </nav>
+  //     </div>
+  //     <div className="w-3/4 pl-6">{renderTabContent()}</div>
+  //   </div>
   return (
-    <div className="max-w-7xl mx-auto mt-10 p-8 bg-white shadow-md rounded-md flex">
-      <div className="w-1/4 border-r pr-6">
-        <nav className="space-y-4">
+    <div className="max-w-7xl mx-auto mt-6 p-4 sm:p-6 bg-white shadow-md rounded-md grid grid-cols-1 md:grid-cols-[220px_1fr] gap-6">
+      
+      {/* Навігація */}
+      <div className="border-r md:border-r md:pr-4 flex md:block justify-center">
+        <nav className="flex md:flex-col gap-4 md:gap-2 text-center w-full">
           <button
             onClick={() => setActiveTab("account")}
-            className={`block text-left w-full px-4 py-3 rounded-lg hover:bg-gray-100 ${
-              activeTab === "account" ? "bg-gray-100 font-bold" : ""
-            }`}
+            className={`w-full px-4 py-2 rounded-lg hover:bg-gray-100 ${activeTab === "account" ? "bg-gray-100 font-bold" : ""}`}
           >
             Обліковий запис
           </button>
           <button
             onClick={() => setActiveTab("orders")}
-            className={`block text-left w-full px-4 py-3 rounded-lg hover:bg-gray-100 ${
-              activeTab === "orders" ? "bg-gray-100 font-bold" : ""
-            }`}
+            className={`w-full px-4 py-2 rounded-lg hover:bg-gray-100 ${activeTab === "orders" ? "bg-gray-100 font-bold" : ""}`}
           >
             Мої замовлення
           </button>
           <button
             onClick={onLogout}
-            className="block text-left w-full px-4 py-3 rounded-lg text-pink-600 hover:bg-gray-100 hover:text-pink-700 transition duration-300"
+            className="w-full px-4 py-2 rounded-lg text-pink-600 hover:bg-gray-100 hover:text-pink-700 transition duration-300"
           >
             Вихід
           </button>
         </nav>
       </div>
-      <div className="w-3/4 pl-6">{renderTabContent()}</div>
+  
+      {/* Контент */}
+      <div>{renderTabContent()}</div>
     </div>
   );
 };

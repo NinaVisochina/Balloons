@@ -80,13 +80,13 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/blog" className="text-gray-600 hover:text-pink-500 transition duration-200">
-                Блог
+              <Link to="/delivery" className="text-gray-600 hover:text-pink-500 transition duration-200">
+              Доставка і оплата
               </Link>
             </li>
             <li>
-              <Link to="/dropshipping" className="text-gray-600 hover:text-pink-500 transition duration-200">
-                Друк на шоперах
+              <Link to="/returns" className="text-gray-600 hover:text-pink-500 transition duration-200">
+              Повернення
               </Link>
             </li>
           </ul>

@@ -23,11 +23,6 @@ const SidebarLinks = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/cooperation" className="text-purple-600 hover:underline font-medium">
-                            Співпраця
-                        </Link>
-                    </li>
-                    <li>
                         <Link to="/how-to-use" className="text-purple-600 hover:underline font-medium">
                             Як користуватись сайтом
                         </Link>
@@ -64,16 +59,6 @@ const SidebarLinks = () => {
                     <li>
                         <Link to="/returns" className="text-purple-600 hover:underline font-medium">
                             Повернення
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/terms" className="text-purple-600 hover:underline font-medium">
-                            Умови використання сайту
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/blog" className="text-purple-600 hover:underline font-medium">
-                            Блог
                         </Link>
                     </li>
                 </ul>

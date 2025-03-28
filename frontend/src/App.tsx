@@ -34,6 +34,10 @@ import PrivateRoute from "./components/admin/PrivateRoute.tsx";
 import AdminOrders from "./components/admin/orders/index.tsx";
 import WishListPage from "./components/client/wishlist/index.tsx";
 import { ToastContainer } from "react-toastify";
+import ReviewsPage from "./components/client/layout/ReviewsPage.tsx";
+import DeliveryAndPaymentPage from "./components/client/layout/DeliveryAndPaymentPage.tsx";
+import HowToUsePage from "./components/client/layout/HowToUsePage.tsx";
+import ReturnPolicyPage from "./components/client/layout/ReturnPolicyPage.tsx";
 // import CategoryLayout from "./components/client/layout/CategoryLayout.tsx";
 
 
@@ -97,6 +101,11 @@ export default function App() {
                     <Route path="/category/:slug" element={<CategoryPage />} />
                     <Route path="/subcategory/products/:subslug" element={<ProductsPage />} />
                     <Route path="/product/:slug" element={<ProductPage />} />
+                    <Route path="reviews" element={<ReviewsPage />} />
+                    <Route path="delivery" element={<DeliveryAndPaymentPage />} />
+                    <Route path="how-to-use" element={<HowToUsePage />} />
+                    <Route path="returns" element={<ReturnPolicyPage />} />
+                    ReturnPolicyPage
                 </Route>
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
