@@ -168,42 +168,47 @@ const ClientLayout = () => {
             </div>
           )}
           <div className="flex items-center space-x-2 w-full sm:w-auto">
-            <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 xs:h-7 border border-gray-200 flex-1 max-w-[300px] sm:max-w-[400px]">
-              <input
-                type="text"
-                placeholder="Я шукаю..."
-                className="outline-none px-3 h-full text-lg sm:text-base xs:text-sm w-full placeholder-pink-300"
-                value={search}
-                onChange={handleSearch}
-              />
-              <button
-                type="submit"
-                className="p-1 h-full w-11 sm:w-8 xs:w-7 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+            <div className="relative w-full sm:w-auto sm:max-w-[400px]">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 xs:h-7 border border-gray-200 w-full"
               >
-                <FaSearch size={24} className="sm:w-5 sm:h-5 xs:w-3 xs:h-3" />
-              </button>
-            </form>
+                <input
+                  type="text"
+                  placeholder="Я шукаю..."
+                  className="outline-none px-3 h-full text-lg sm:text-base xs:text-sm w-full placeholder-pink-300"
+                  value={search}
+                  onChange={handleSearch}
+                />
+                <button
+                  type="submit"
+                  className="p-1 h-full w-11 sm:w-8 xs:w-7 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                >
+                  <FaSearch size={24} className="sm:w-5 sm:h-5 xs:w-3 xs:h-3" />
+                </button>
+              </form>
 
-            {/* Підказки */}
-            {showSuggestions && searchResults && searchResults.length > 0 && (
-              <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
-                {searchResults?.map((product) => (
-                  <li
-                    key={product.id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-text"
-                    onClick={() => handleSuggestionClick(product.slug)}
-                    title={product.name}
-                  >
-                    <img
-                      src={`${API_URL}/images/600_${product.images[0]}`}
-                      alt={product.name}
-                      className="w-10 h-10 object-cover rounded"
-                    />
-                    <span className="flex-1">{product.name}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
+              {/* Підказки (адаптовано) */}
+              {showSuggestions && searchResults && searchResults.length > 0 && (
+                <ul className="absolute z-40 top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 max-h-64 overflow-y-auto border border-gray-200">
+                  {searchResults.map((product) => (
+                    <li
+                      key={product.id}
+                      onClick={() => handleSuggestionClick(product.slug)}
+                      className="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer transition-all"
+                    >
+                      <img
+                        src={`${API_URL}/images/300_${product.images[0]}`}
+                        alt={product.name}
+                        className="w-10 h-10 object-cover rounded mr-3"
+                      />
+                      <span className="text-sm sm:text-base truncate">{product.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
             <div className="flex items-center space-x-2">
               <Link to="/cart" className="relative flex items-center">
                 <div className="p-2 rounded-full bg-gradient-to-r from-accent to-pink-500 text-white hover:from-accentDark hover:to-pink-600 transition duration-300 shadow-md hover:shadow-lg h-11 sm:h-8 xs:h-8 flex items-center justify-center">
