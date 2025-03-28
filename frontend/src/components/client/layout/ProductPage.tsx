@@ -126,29 +126,36 @@ const ProductPage = () => {
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6">
-      <nav className="text-gray-600 mb-4 flex items-center">
-        <Link to="/" className="hover:text-pink-500 transition duration-200">
-          <FaHome className="inline-block mr-2 w-5 h-5 text-gray-600 hover:text-pink-500 transition duration-200" />
+      <nav className="text-gray-600 mb-4 flex flex-wrap items-center text-sm sm:text-base space-x-1">
+        <Link to="/" className="flex items-center hover:text-pink-500 transition">
+          <FaHome className="inline-block mr-1 w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="hidden sm:inline">Головна</span>
         </Link>
+
         {subCategory?.categoryName && (
           <>
-            <span className="mx-2">/</span>
-            <Link to={`/category/${subCategory.categoryId}`} className="hover:text-pink-500 transition duration-200">
+            <span>/</span>
+            <Link to={`/category/${subCategory.categoryId}`} className="hover:text-pink-500 transition">
               {subCategory.categoryName}
             </Link>
           </>
         )}
+
         {subCategory?.name && (
           <>
-            <span className="mx-2">/</span>
-            <Link to={`/subcategory/${subCategory.slug}/products`} className="hover:text-pink-500 transition duration-200">
+            <span>/</span>
+            <Link to={`/subcategory/${subCategory.slug}/products`} className="hover:text-pink-500 transition">
               {subCategory.name}
             </Link>
           </>
         )}
-        <span className="mx-2">/</span>
-        <span className="text-black">{product.name}</span>
+
+        <span>/</span>
+        <span className="text-black truncate max-w-[160px] sm:max-w-none" title={product.name}>
+          {product.name}
+        </span>
       </nav>
+
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -180,7 +187,7 @@ const ProductPage = () => {
 
           <div>
             <h1 className="text-2xl font-caveat text-pink-700 font-bold">{product.name}</h1>
-            <p className="text-gray-700 leading-6"><strong>Виробник:</strong> {product.manufacturer}</p>            
+            <p className="text-gray-700 leading-6"><strong>Виробник:</strong> {product.manufacturer}</p>
             <p className="text-gray-700 leading-6"><strong>Код:</strong> {product.code}</p>
             <p className="text-gray-700 leading-6"><strong>Ціна:</strong> {product.price} грн</p>
 
