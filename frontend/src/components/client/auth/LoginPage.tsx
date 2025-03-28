@@ -222,7 +222,7 @@ const LoginPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600"
+          className="w-full bg-gradient-to-r from-accent to-pink-500 text-white font-sans py-3 rounded-lg shadow-lg hover:from-accentDark hover:to-pink-600 hover:shadow-xl transition duration-300 text-lg"
         >
           Увійти
         </button>
@@ -231,7 +231,7 @@ const LoginPage = () => {
         <p>
           Ще не зареєстровані?{" "}
           <Link to="/register"
-            className="text-blue-500 cursor-pointer"
+            className="text-pink-500 font-sans hover:text-pink-600 transition duration-200"
           >
             Зареєструйтесь
           </Link>

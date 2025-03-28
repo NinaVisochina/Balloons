@@ -140,7 +140,7 @@ const RegisterPage = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600"
+            className="w-full bg-gradient-to-r from-accent to-pink-500 text-white font-sans py-3 rounded-lg shadow-lg hover:from-accentDark hover:to-pink-600 hover:shadow-xl transition duration-300 text-lg mb-4"
           >
             Зареєструватися
           </button>
