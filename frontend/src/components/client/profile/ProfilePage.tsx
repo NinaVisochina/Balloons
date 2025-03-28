@@ -210,7 +210,7 @@ const ProfilePage = () => {
                 <p className="text-gray-600 mb-4">У вас немає замовлень.</p>
                 <Link
                   to="/catalog"
-                  className="inline-block bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-4 py-2 rounded-lg shadow-md hover:from-accentDark hover:to-pink-600 hover:shadow-lg transition duration-300"
+                  className="inline-block bg-gradient-to-r from-accent to-pink-500 text-white font-sans px-8 py-3 sm:px-6 sm:py-2 xs:px-4 xs:py-2 rounded-lg shadow-lg hover:from-accentDark hover:to-pink-600 hover:shadow-xl transition duration-300 animate-fadeIn animation-delay-400 text-lg sm:text-base xs:text-sm"
                 >
                   Перейти до покупок
                 </Link>
