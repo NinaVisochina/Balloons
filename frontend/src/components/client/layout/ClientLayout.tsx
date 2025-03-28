@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
-import { FaHeart, FaSearch, FaShoppingCart, FaSignInAlt, FaUser } from "react-icons/fa";
+import { FaHeart, FaSearch, FaShoppingCart, FaSignInAlt, FaTimes, FaUser } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import Logo from "../../../assets/logo.png";
@@ -106,10 +106,18 @@ const ClientLayout = () => {
           </button>
           {isMenuOpen && !categoriesLoading && categories && (
             <div
-            className="absolute left-0 top-0 w-full sm:w-[500px] h-screen bg-white text-text shadow-lg z-50 flex flex-col sm:flex-row"
-            onMouseEnter={() => setIsMenuOpen(true)}
-            onMouseLeave={() => setIsMenuOpen(false)}
+              className="absolute left-0 top-0 w-full sm:w-[500px] h-screen bg-white text-text shadow-lg z-50 flex flex-col sm:flex-row"
+              onMouseEnter={() => setIsMenuOpen(true)}
+              onMouseLeave={() => setIsMenuOpen(false)}
             >
+              {/* Хрестик для закриття меню */}
+              <button
+                onClick={toggleMenu}
+                className="absolute top-3 right-4 text-pink-600 hover:text-pink-800 z-50"
+              >
+                <FaTimes size={28} />
+              </button>
+
               {/* Ліва панель категорій */}
               <div className="w-full sm:w-[250px] bg-gray-50 p-4">
                 <ul className="space-y-2">
@@ -161,7 +169,7 @@ const ClientLayout = () => {
           )}
           <div className="flex items-center space-x-2 w-full sm:w-auto">
             <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 sm:px-3 sm:py-1 xs:px-2 xs:py-1 xs:h-7 border border-gray-200 flex-1 max-w-[300px] sm:max-w-[400px]">
-            <input
+              <input
                 type="text"
                 placeholder="Я шукаю..."
                 className="outline-none px-3 h-full text-lg sm:text-base xs:text-sm w-full placeholder-pink-300"
@@ -228,7 +236,7 @@ const ClientLayout = () => {
                 </div>
               </Link>
             </div>
-          </div>          
+          </div>
         </div>
       </header>
       {/* className=container mx-auto py-6 px-6 */}
