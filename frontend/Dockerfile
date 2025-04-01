@@ -27,6 +27,10 @@ server { \
         root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
     } \
+    location /sitemap.xml { \
+    proxy_pass http://balloons_backend_1:5000/sitemap.xml; \
+    proxy_set_header Host $host; \
+    } \
     location /api/ { \
         proxy_pass http://balloons_backend_1:5000/api/; \
         proxy_set_header Host $host; \
