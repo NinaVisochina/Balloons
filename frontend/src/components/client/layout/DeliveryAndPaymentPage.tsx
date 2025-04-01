@@ -18,15 +18,15 @@ const DeliveryAndPaymentPage = () => {
                     <div>
                         <h2 className="text-2xl font-bold mb-4 text-purple-800">🚚 Доставка</h2>
                         <ul className="text-lg text-purple-950 space-y-3 mb-6">
-                            <li>📦 <strong>Самовивіз:</strong> м. Київ, з нашого магазину</li>
-                            <li>🚖 <strong>Кур'єром:</strong> По Києву — доставка в день замовлення або наступного дня</li>
+                            <li>📦 <strong>Самовивіз:</strong> м. Рівне, з нашого магазину</li>
+                            <li>🚖 <strong>Кур'єром:</strong> По Рівному — доставка в день замовлення або наступного дня</li>
                             <li>📬 <strong>Нова Пошта:</strong> Відправка по всій Україні щодня</li>
                         </ul>
 
                         <h2 className="text-2xl font-bold mb-4 text-purple-800">💳 Оплата</h2>
                         <ul className="text-lg text-purple-950 space-y-3">
                             <li>💵 Готівкою при отриманні (при самовивозі або кур'єрі)</li>
-                            <li>💳 Онлайн-оплата через LiqPay / Monobank / Privat24</li>
+                            {/* <li>💳 Онлайн-оплата через LiqPay / Monobank / Privat24</li> */}
                             <li>📲 Оплата на банківську картку (за реквізитами)</li>
                         </ul>
 

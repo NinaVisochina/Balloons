@@ -59,6 +59,8 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
     .AddEnvironmentVariables(); // 🔥 обов'язково
 
+builder.Services.AddScoped<ISitemapService, SitemapService>();
+
 var app = builder.Build();
 
 // -------------- Seed Initial Data

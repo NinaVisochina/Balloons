@@ -77,13 +77,13 @@ const AboutPage = () => {
                 <div className="mt-10 bg-gray-100 p-6 rounded-lg shadow-md">
                     <h3 className="text-xl font-bold mb-4 text-gray-800">Зв’яжіться з нами</h3>
                     <p className="text-lg text-gray-700 mb-2">
-                        📧 <strong>Email:</strong> info@yourshop.com
+                        📧 <strong>Email:</strong> perlamutr.net@gmail.com
                     </p>
                     <p className="text-lg text-gray-700 mb-2">
-                        📞 <strong>Телефон:</strong> +38 (098) 123-45-67
+                        📞 <strong>Телефон:</strong> +38 (068) 022-76-08
                     </p>
                     <p className="text-lg text-gray-700">
-                        📍 <strong>Адреса:</strong> м. Київ, вул. Святкова, 10
+                        📍 <strong>Адреса:</strong> м. Рівне, вул. Шевченка, 7. р-к "Моріон", 80
                     </p>
                 </div>
             </div>

@@ -21,26 +21,23 @@ const ContactsPage = () => {
                             📞 <strong>Телефони:</strong>
                         </p>
                         <ul className="text-lg text-purple-950 space-y-2">
-                            <li>+380 68 301 02 20</li>
-                            <li>+380 63 928 11 09</li>
-                            <li>+380 66 235 66 71</li>
-                            <li>+380 97 870 06 14</li>
+                            <li>+38 (068) 022-76-08</li>
                         </ul>
 
                         <p className="text-lg text-purple-800 mt-4 mb-2">
-                            📧 <strong>Email:</strong> sales@bookopt.com.ua
+                            📧 <strong>Email:</strong> perlamutr.net@gmail.com
                         </p>
 
                         <p className="text-lg text-purple-950">
                             Інтернет-гуртівня BookOpt працює 7 днів в тиждень, 365 днів на рік, для того, щоб Ви могли
                             оформити замовлення у будь-який зручний для Вас час! Оформити замовлення можливо на сайті{" "}
                             <a
-                                href="https://bookopt.com.ua"
+                                href="https://balloons.in.ua"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-violet-800 hover:underline"
                             >
-                                bookopt.com.ua
+                                balloons.in.ua
                             </a>
                             , який працює цілодобово.
                         </p>
@@ -49,12 +46,11 @@ const ContactsPage = () => {
                             Якщо Вам потрібна допомога працівника кол-центру, Ви можете зателефонувати в робочий час:
                         </p>
                         <ul className="text-lg text-purple-950 mt-2 space-y-1">
-                            <li>Пн-Пт: 9:00 - 18:00</li>
-                            <li>Субота: 9:00 - 14:00</li>
+                            <li>Вт-Нд: 10:00 - 16:00</li>
                         </ul>
 
                         <p className="text-lg text-purple-800 mt-4">
-                            📍 <strong>Наша адреса:</strong> м. Тернопіль, вул. Гайова, 50
+                            📍 <strong>Наша адреса:</strong> м. Рівне, вул. Шевченка, 7. р-к "Моріон", 80
                         </p>
                     </div>
 

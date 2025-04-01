@@ -25,7 +25,7 @@ const ReturnPolicyPage = () => {
                         <ul className="list-disc pl-6 text-purple-950 space-y-2 text-lg">
                             <li>Повернення можливе протягом <strong>14 днів</strong> з моменту отримання замовлення</li>
                             <li>Товар має бути <strong>в оригінальній упаковці</strong>, без ознак використання</li>
-                            <li>Не підлягають поверненню товари, які були виготовлені на замовлення</li>
+                            <li>Не підлягають поверненню товари, які були у використанні</li>
                         </ul>
 
                         <h2 className="text-xl font-semibold text-purple-800 mt-6 mb-2">📬 Як оформити повернення?</h2>

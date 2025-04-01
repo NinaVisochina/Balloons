@@ -27,23 +27,23 @@ const PricingPolicyPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="bg-purple-200 text-center p-6 rounded-lg shadow-md">
                         <p className="text-2xl font-bold text-purple-900 mb-2">1 500 - 3 000 грн</p>
-                        <p className="text-xl font-bold text-purple-800">5%</p>
+                        <p className="text-xl font-bold text-purple-800">3%</p>
                     </div>
                     <div className="bg-purple-300 text-center p-6 rounded-lg shadow-md">
                         <p className="text-2xl font-bold text-purple-900 mb-2">3 000 - 6 000 грн</p>
-                        <p className="text-xl font-bold text-purple-800">7%</p>
+                        <p className="text-xl font-bold text-purple-800">5%</p>
                     </div>
                     <div className="bg-purple-400 text-center p-6 rounded-lg shadow-md">
                         <p className="text-2xl font-bold text-purple-900 mb-2">6 000 - 10 000 грн</p>
-                        <p className="text-xl font-bold text-purple-800">10%</p>
+                        <p className="text-xl font-bold text-purple-800">7%</p>
                     </div>
                     <div className="bg-purple-500 text-center p-6 rounded-lg shadow-md">
                         <p className="text-2xl font-bold text-purple-900 mb-2">10 000 - 20 000 грн</p>
-                        <p className="text-xl font-bold text-purple-800">15%</p>
+                        <p className="text-xl font-bold text-purple-800">10%</p>
                     </div>
                     <div className="bg-purple-600 text-center p-6 rounded-lg shadow-md">
                         <p className="text-2xl font-bold text-purple-100 mb-2">20 000 грн і більше</p>
-                        <p className="text-xl font-bold text-purple-100">17%</p>
+                        <p className="text-xl font-bold text-purple-100">13%</p>
                     </div>
 
                     {/* Кнопка */}
