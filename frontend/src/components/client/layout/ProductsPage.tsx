@@ -38,14 +38,18 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isMobile = window.innerWidth <= 768;
+  const [overstockMessage, setOverstockMessage] = useState<string | null>(null);
+
+
 
   const filteredProducts = products.filter((product) => {
     const matchesManufacturer =
       selectedManufacturers.length === 0 || selectedManufacturers.includes(product.manufacturer);
     const matchesQuantity =
       selectedQuantities.length === 0 || selectedQuantities.includes(product.quantityInPack);
-    const matchesSize = 
-    selectedSizes.length === 0 || selectedSizes.includes(product.size);
+    const matchesSize =
+      selectedSizes.length === 0 || selectedSizes.includes(product.size);
     return matchesManufacturer && matchesQuantity && matchesSize;
   });
 
@@ -79,7 +83,11 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
     const quantity = productQuantities[product.id] || 1;
-
+    if (quantity > product.quantityInStock) {
+      setOverstockMessage(`Товару "${product.name}" залишилось лише ${product.quantityInStock} шт.`);
+      setTimeout(() => setOverstockMessage(null), 4000);
+      return;
+    }
     if (token && userId) {
       try {
         await axios.post(
@@ -98,6 +106,15 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
         // ✅ Показати toast
         setToastMessage(`«${product.name}» доданий у кошик`);
+        setTimeout(() => {
+          setToastMessage(null);
+
+          // Очищення кількості через 2 секунди
+          setProductQuantities(prev => ({
+            ...prev,
+            [product.id]: 1
+          }));
+        }, 2000);
         setTimeout(() => setToastMessage(null), 3000);
 
       } catch (error) {
@@ -126,6 +143,17 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
       // ✅ Показати toast для незареєстрованих
       setToastMessage(`«${product.name}» доданий у кошик`);
+      setToastMessage(`«${product.name}» доданий у кошик`);
+      setTimeout(() => {
+        setToastMessage(null);
+
+        // Очищення кількості через 2 секунди
+        setProductQuantities(prev => ({
+          ...prev,
+          [product.id]: 1
+        }));
+      }, 2000);
+
       setTimeout(() => setToastMessage(null), 4000);
     }
   };
@@ -201,7 +229,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
     setSelectedQuantities([]);
     setSelectedSizes([]);
   }, [location.pathname]);
-  
+
 
   if (!products || products.length === 0) {
     return <div className="font-sans text-text">Продукти не знайдено.</div>;
@@ -237,6 +265,11 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
           {toastMessage}
         </div>
       )}
+      {overstockMessage && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-pink-400 text-white font-sans px-6 py-2 rounded-lg shadow-md z-50 animate-fadeIn">
+          {overstockMessage}
+        </div>
+      )}
 
       {/* Повідомлення про помилку */}
       {errorMessage && (
@@ -265,78 +298,137 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
 
         {/* Основний контент */}
         <div className={isCategoryPage ? "w-full" : "flex-1 sm:ml-6"}>
-        {!isCategoryPage && subCategory?.name && (
+          {!isCategoryPage && subCategory?.name && (
             <h2 className="text-xl font-caveat text-pink-700 mb-4">{subCategory.name}</h2>
           )}
           {/* Фільтрація продуктів */}
           {filteredProducts.length > 0 ? (
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-16 w-full">
-            {filteredProducts.map((product: IProductItem) => {
-              const currentQuantity = productQuantities[product.id] || 1;
-              const isAddButtonDisabled = currentQuantity >= product.quantityInStock;
+              {filteredProducts.map((product: IProductItem) => {
+                const currentQuantity = productQuantities[product.id] || 1;
+                const isAddButtonDisabled = currentQuantity >= product.quantityInStock;
 
-              return (
-                <li
-                  key={product.id}
-                  className="relative bg-white shadow-md rounded-lg border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300 group"
-                  onMouseEnter={() => setHoveredProductId(product.id)}
-                  onMouseLeave={() => setHoveredProductId(null)}
-                >
-                  <button
-                    onClick={() => toggleWishList(product.id)}
-                    className="absolute top-2 right-2 w-6 h-6 z-10"
+                return (
+                  <li
+                    key={product.id}
+                    className="relative bg-white shadow-md rounded-lg border border-pink-100 hover:border-pink-300 hover:shadow-xl transition duration-300 group"
+                    onMouseEnter={() => setHoveredProductId(product.id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
                   >
-                    <img
-                      src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
-                      alt="bookmark"
-                      className="w-full h-full object-contain"
-                    />
-                  </button>
-
-                  <Link to={`/product/${product.slug}`} className="block">
-                    <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
+                    <button
+                      onClick={() => toggleWishList(product.id)}
+                      className="absolute top-2 right-2 w-6 h-6 z-10"
+                    >
                       <img
-                        src={`${API_URL}/images/600_${product.images[0]}`}
-                        alt={product.name}
-                        className="object-contain h-full w-full p-4"
+                        src={wishList.includes(product.id) ? bookmark : bookmarkWhite}
+                        alt="bookmark"
+                        className="w-full h-full object-contain"
                       />
-                    </div>
+                    </button>
+
+                    <Link to={`/product/${product.slug}`} className="block">
+                      <div className="w-full h-52 sm:h-60 md:h-64 bg-white flex items-center justify-center overflow-hidden">
+                        <img
+                          src={`${API_URL}/images/600_${product.images[0]}`}
+                          alt={product.name}
+                          className="object-contain h-full w-full p-4"
+                        />
+                      </div>
+                    </Link>
                     <div className="p-3">
                       <h2 className="text-md font-sans text-gray-700 text-center">{product.name}</h2>
                       <p className="text-center text-sm text-gray-600">Розмір: {product.size}</p>
                       <p className="text-center font-bold text-pink-500 mt-1">{product.price} грн</p>
-                    </div>
-                  </Link>
 
-                  {hoveredProductId === product.id && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-gray-600 bg-opacity-75 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
-                      <div className="flex items-center">
+                      {isMobile && (
+                        <div className="mt-3 flex flex-col items-center gap-2">
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => handleQuantityChange(product.id, -1)}
+                              className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                            >
+                              -
+                            </button>
+                            <span className="mx-2">{currentQuantity}</span>
+                            <button
+                              onClick={() => handleQuantityChange(product.id, 1)}
+                              className={`px-2 py-1 rounded ${isAddButtonDisabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'}`}
+                              disabled={isAddButtonDisabled}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => handleAddToCart(product)}
+                            className="bg-gradient-to-r from-accent to-pink-500 text-white px-6 py-2 rounded-lg font-semibold shadow-md hover:from-pink-500 hover:to-pink-600 transition"
+                          >
+                            <FaShoppingCart className="inline-block mr-2" /> Купити
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+
+                    {(hoveredProductId === product.id || isMobile) && (
+                      <div className="absolute bottom-0 left-0 right-0 bg-gray-600 bg-opacity-75 text-white px-2 py-3 transition-all duration-300 ease-in-out flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => handleQuantityChange(product.id, -1)}
+                            className="bg-gradient-to-r from-gray-200 to-gray-400 px-2 py-1 rounded-md shadow-md hover:from-gray-400 hover:to-gray-500 transition duration-300"
+                          >
+                            -
+                          </button>
+                          {/* <span className="mx-2">{currentQuantity}</span> */}
+                          {/* <input
+                            type="number"
+                            min={1}
+                            max={product.quantityInStock}
+                            value={currentQuantity}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value);
+                              if (!isNaN(value)) {
+                                handleQuantityChange(product.id, value - currentQuantity);
+                              }
+                            }}
+                            // className="w-14 text-center text-black rounded-md border border-gray-300 px-1 py-0.5 mx-2"
+                            className="w-20 sm:w-24 text-center text-black rounded-md border border-gray-300 px-2 py-1 mx-2"
+                          /> */}
+                          <input
+                            type="number"
+                            min={1}
+                            max={product.quantityInStock}
+                            value={currentQuantity}
+                            onChange={(e) => {
+                              const value = parseInt(e.target.value);
+                              if (!isNaN(value)) {
+                                setProductQuantities(prev => ({
+                                  ...prev,
+                                  [product.id]: value,
+                                }));
+                              }
+                            }}
+                            className="w-14 text-center text-black rounded-md border border-gray-300 px-1 py-0.5 mx-2"
+                          />
+
+                          <button
+                            onClick={() => handleQuantityChange(product.id, 1)}
+                            className={`px-2 py-1 rounded-md shadow-md transition duration-300 ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gradient-to-r from-gray-200 to-gray-400 hover:from-gray-400 hover:to-gray-500'}`}
+                            disabled={isAddButtonDisabled}
+                          >
+                            +
+                          </button>
+                        </div>
                         <button
-                          onClick={() => handleQuantityChange(product.id, -1)}
-                          className="bg-gradient-to-r from-gray-200 to-gray-400 px-2 py-1 rounded-md shadow-md hover:from-gray-400 hover:to-gray-500 transition duration-300"
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-gradient-to-r from-accent to-pink-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg hover:from-pink-500 hover:to-pink-600 hover:shadow-xl transition duration-300 w-full sm:w-auto flex items-center justify-center"
                         >
-                          -
-                        </button>
-                        <span className="mx-2">{currentQuantity}</span>
-                        <button
-                          onClick={() => handleQuantityChange(product.id, 1)}
-                          className={`px-2 py-1 rounded-md shadow-md transition duration-300 ${isAddButtonDisabled ? 'bg-gray-200 cursor-not-allowed' : 'bg-gradient-to-r from-gray-200 to-gray-400 hover:from-gray-400 hover:to-gray-500'}`}
-                          disabled={isAddButtonDisabled}
-                        >
-                          +
+                          <FaShoppingCart className="mr-2 w-5 h-5" />
+                          Купити
                         </button>
                       </div>
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="bg-gradient-to-r from-accent to-pink-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg hover:from-pink-500 hover:to-pink-600 hover:shadow-xl transition duration-300 w-full sm:w-auto flex items-center justify-center"
-                      >
-                        <FaShoppingCart className="mr-2 w-5 h-5" />
-                        Купити
-                      </button>
-                    </div>
-                  )}
-                </li>
-              );
+                    )}
+                  </li>
+                );
               })}
             </ul>
           ) : (

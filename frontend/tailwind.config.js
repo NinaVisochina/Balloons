@@ -17,6 +17,9 @@ export default {
   ],
   theme: {
     extend: {
+      animation: {
+        fadeIn: 'fadeIn 0.3s ease-in-out',
+      },
       colors: {
         primary: '#F9E8E1', // М’який персиковий для хедера
         background: '#FFFFFF', // Білий фон
@@ -42,6 +45,12 @@ export default {
         //grayLight: '#F3F4F6',       // Світло-сірий для фону
         //grayDark: '#374151',        // Темно-сірий для тексту
         //yellowAccent: '#FDE047',    // Жовтий для акцентів
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
       fontFamily: {
         sans: ["'Roboto'", "sans-serif"],

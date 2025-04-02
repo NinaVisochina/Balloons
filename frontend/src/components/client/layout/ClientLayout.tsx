@@ -147,7 +147,7 @@ const ClientLayout = () => {
                   onMouseEnter={() => setHoveredCategory(hoveredCategory)}
                   onMouseLeave={() => setHoveredCategory(null)}
                 >
-                  <h3 className="font-caveat text-text text-lg mb-2">Підкатегорії</h3>
+                  <h3 className="font-caveat text-text text-lg mb-2"></h3>
                   <ul className="space-y-2">
                     {filteredSubCategories.map((subCategory) => (
                       <li key={subCategory.id}>
