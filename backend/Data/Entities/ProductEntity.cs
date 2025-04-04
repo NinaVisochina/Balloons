@@ -10,9 +10,7 @@ namespace BackendShop.Data.Entities
         [Key]
         public int Id { get; set; }
         public string? Slug { get; set; }
-
-        [Required]
-        public string Code { get; set; } = string.Empty;
+        public string? Code { get; set; } = string.Empty;
 
         [Required, StringLength(255)]
         public string Name { get; set; } = string.Empty;

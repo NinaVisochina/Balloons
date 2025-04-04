@@ -43,11 +43,10 @@ const ProductListPage = () => {
         {subcategories.map((sub) => (
           <button
             key={sub.id}
-            className={`px-4 py-2 rounded-full border text-sm ${
-              selectedSubCategoryId === sub.id
-                ? "bg-pink-200 text-black font-semibold"
-                : "bg-white text-gray-700 hover:bg-gray-100"
-            }`}
+            className={`px-4 py-2 rounded-full border text-sm ${selectedSubCategoryId === sub.id
+              ? "bg-pink-200 text-black font-semibold"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
             onClick={() => setSelectedSubCategoryId(sub.id)}
           >
             {sub.name}
@@ -63,6 +62,7 @@ const ProductListPage = () => {
             <tr className="bg-gray-200">
               <th className="p-2 border">#</th>
               <th className="p-2 border">Зображення</th>
+              <th className="p-2 border">Код</th>
               <th className="p-2 border">Назва</th>
               <th className="p-2 border">Підкатегорія</th>
               <th className="p-2 border">Ціна</th>
@@ -85,7 +85,9 @@ const ProductListPage = () => {
                     <span>Зображення відсутнє</span>
                   )}
                 </td>
+                <td className="p-2 border text-center text-sm font-mono text-gray-700">{product.code}</td>
                 <td className="p-2 border">{product.name}</td>
+
                 <td className="p-2 border">
                   {subcategories.find((cat) => cat.id === product.subCategoryId)?.name || "Невідома"}
                 </td>

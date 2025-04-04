@@ -15,6 +15,13 @@ namespace BackendShop.BackShop.Controllers
             _productService = productService;
         }
 
+        [HttpGet("generate-code/{subCategoryId}")]
+        public async Task<IActionResult> GenerateCode(int subCategoryId)
+        {
+            var code = await _productService.GenerateProductCodeAsync(subCategoryId);
+            return Ok(code);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetList()
         {

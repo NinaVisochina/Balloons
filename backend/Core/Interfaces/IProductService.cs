@@ -5,6 +5,7 @@ namespace BackendShop.Core.Interfaces
 {
     public interface IProductService
     {
+        Task<string> GenerateProductCodeAsync(int subCategoryId);
         Task<List<ProductItemViewModel>> GetListAsync();
         Task<ProductItemViewModel> GetByIdAsync(int id);
         Task CreateAsync(ProductCreateViewModel model);

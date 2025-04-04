@@ -20,7 +20,18 @@ namespace BackendShop.Services
             _mapper = mapper;
             _imageHulk = imageHulk;
         }
+        public async Task<string> GenerateProductCodeAsync(int subCategoryId)
+        {
+            var lastProduct = await _context.Products
+                .Where(p => p.SubCategoryId == subCategoryId)
+                .OrderByDescending(p => p.Id)
+                .FirstOrDefaultAsync();
 
+            var subPart = subCategoryId.ToString("D2");
+            var productPart = (lastProduct?.Id + 1 ?? 1).ToString("D4");
+
+            return $"{subPart}-{productPart}";
+        }
         public async Task<List<ProductItemViewModel>> GetListAsync()
         {
             return await _context.Products
@@ -42,6 +53,10 @@ namespace BackendShop.Services
         public async Task CreateAsync(ProductCreateViewModel model)
         {
             var entity = _mapper.Map<ProductEntity>(model);
+            if (string.IsNullOrWhiteSpace(entity.Code))
+            {
+                entity.Code = await GenerateProductCodeAsync(model.SubCategoryId);
+            }
             entity.GenerateSlug();
             _context.Products.Add(entity);
             await _context.SaveChangesAsync();
@@ -227,7 +242,10 @@ namespace BackendShop.Services
 
             // Оновлюємо поля продукту за допомогою AutoMapper
             _mapper.Map(model, product);
-
+            if (string.IsNullOrWhiteSpace(product.Code))
+            {
+                product.Code = await GenerateProductCodeAsync(product.SubCategoryId);
+            }
             // Перевіряємо, чи змінилася назва продукту або Slug
             if (product.Name != model.Name || string.IsNullOrWhiteSpace(product.Slug))
             {
