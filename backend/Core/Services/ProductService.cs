@@ -226,6 +226,84 @@ namespace BackendShop.Services
 
         //    await _context.SaveChangesAsync();
         //}
+        //public async Task EditAsync(ProductEditViewModel model)
+        //{
+        //    var product = await _context.Products
+        //        .Include(p => p.ProductImages)
+        //        .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+        //    if (product == null) throw new Exception("Продукт не знайдено");
+
+        //    // Логування отриманих даних
+        //    Console.WriteLine($"Received model: {System.Text.Json.JsonSerializer.Serialize(model)}");
+
+        //    // Зберігаємо старий Slug для перевірки, чи він змінився
+        //    var oldSlug = product.Slug;
+
+        //    // Оновлюємо поля продукту за допомогою AutoMapper
+        //    _mapper.Map(model, product);
+        //    if (string.IsNullOrWhiteSpace(product.Code))
+        //    {
+        //        product.Code = await GenerateProductCodeAsync(product.SubCategoryId);
+        //    }
+        //    // Перевіряємо, чи змінилася назва продукту або Slug
+        //    if (product.Name != model.Name || string.IsNullOrWhiteSpace(product.Slug))
+        //    {
+        //        product.GenerateSlug();
+        //        if (product.Slug != oldSlug)
+        //        {
+        //            var existingSlug = await _context.Products
+        //                .AnyAsync(p => p.Slug == product.Slug && p.Id != product.Id);
+        //            if (existingSlug)
+        //            {
+        //                throw new Exception("Slug вже використовується. Оберіть іншу назву.");
+        //            }
+        //        }
+        //    }
+
+        //    // Видаляємо всі старі зображення
+        //    if (product.ProductImages != null && product.ProductImages.Any())
+        //    {
+        //        foreach (var img in product.ProductImages)
+        //        {
+        //            Console.WriteLine($"Deleting old image: {img.Image}");
+        //            _context.ProductImages.Remove(img);
+        //            _imageHulk.Delete(img.Image);
+        //        }
+        //    }
+
+        //    // Додаємо всі зображення як нові
+        //    if (model.Images is not null && model.Images.Any())
+        //    {
+        //        int index = 0;
+        //        foreach (var image in model.Images)
+        //        {
+        //            Console.WriteLine($"Saving new image: {image.FileName}");
+        //            var imagePath = await _imageHulk.Save(image);
+        //            _context.ProductImages.Add(new ProductImageEntity
+        //            {
+        //                Image = imagePath,
+        //                Product = product,
+        //                Priority = index
+        //            });
+        //            index++;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // Якщо зображень немає, додаємо заглушку noimage.jpg
+        //        Console.WriteLine("No images provided, adding default noimage.jpg");
+        //        _context.ProductImages.Add(new ProductImageEntity
+        //        {
+        //            Image = "noimage.jpg",
+        //            Product = product,
+        //            Priority = 0
+        //        });
+        //    }
+
+        //    // Зберігаємо зміни
+        //    await _context.SaveChangesAsync();
+        //}
         public async Task EditAsync(ProductEditViewModel model)
         {
             var product = await _context.Products
@@ -234,22 +312,29 @@ namespace BackendShop.Services
 
             if (product == null) throw new Exception("Продукт не знайдено");
 
-            // Логування отриманих даних
             Console.WriteLine($"Received model: {System.Text.Json.JsonSerializer.Serialize(model)}");
 
-            // Зберігаємо старий Slug для перевірки, чи він змінився
             var oldSlug = product.Slug;
+            var oldCode = product.Code; // ⬅️ зберігаємо існуючий код
 
-            // Оновлюємо поля продукту за допомогою AutoMapper
             _mapper.Map(model, product);
+
+            // Якщо код не переданий — повертаємо старий
+            if (string.IsNullOrWhiteSpace(model.Code))
+            {
+                product.Code = oldCode;
+            }
+
+            // Якщо все ж коду немає — генеруємо
             if (string.IsNullOrWhiteSpace(product.Code))
             {
                 product.Code = await GenerateProductCodeAsync(product.SubCategoryId);
             }
-            // Перевіряємо, чи змінилася назва продукту або Slug
+
             if (product.Name != model.Name || string.IsNullOrWhiteSpace(product.Slug))
             {
                 product.GenerateSlug();
+
                 if (product.Slug != oldSlug)
                 {
                     var existingSlug = await _context.Products
@@ -261,7 +346,7 @@ namespace BackendShop.Services
                 }
             }
 
-            // Видаляємо всі старі зображення
+            // Видаляємо старі зображення
             if (product.ProductImages != null && product.ProductImages.Any())
             {
                 foreach (var img in product.ProductImages)
@@ -272,7 +357,7 @@ namespace BackendShop.Services
                 }
             }
 
-            // Додаємо всі зображення як нові
+            // Додаємо нові зображення або заглушку
             if (model.Images is not null && model.Images.Any())
             {
                 int index = 0;
@@ -291,7 +376,6 @@ namespace BackendShop.Services
             }
             else
             {
-                // Якщо зображень немає, додаємо заглушку noimage.jpg
                 Console.WriteLine("No images provided, adding default noimage.jpg");
                 _context.ProductImages.Add(new ProductImageEntity
                 {
@@ -301,7 +385,6 @@ namespace BackendShop.Services
                 });
             }
 
-            // Зберігаємо зміни
             await _context.SaveChangesAsync();
         }
 

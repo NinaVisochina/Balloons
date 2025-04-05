@@ -61,6 +61,7 @@ const ProductListPage = () => {
           <thead>
             <tr className="bg-gray-200">
               <th className="p-2 border">#</th>
+              <th className="p-2 border">Id</th>
               <th className="p-2 border">Зображення</th>
               <th className="p-2 border">Код</th>
               <th className="p-2 border">Назва</th>
@@ -74,6 +75,7 @@ const ProductListPage = () => {
             {filteredProducts.map((product, index) => (
               <tr key={product.id} className="hover:bg-gray-100">
                 <td className="p-2 border text-center">{index + 1}</td>
+                <td className="p-2 border">{product.id}</td>
                 <td className="p-2 border text-center">
                   {product.images.length > 0 ? (
                     <img
