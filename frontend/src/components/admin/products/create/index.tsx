@@ -24,15 +24,15 @@ const ProductCreatePage = () => {
             });
     }, []);
 
-    useEffect(() => {
-        const subCategoryId = form.getFieldValue("subCategoryId");
-        const currentCode = form.getFieldValue("code");
+    // useEffect(() => {
+    //     const subCategoryId = form.getFieldValue("subCategoryId");
+    //     const currentCode = form.getFieldValue("code");
 
-        if (subCategoryId && !currentCode) {
-            const generatedCode = `${subCategoryId.toString().padStart(2, "0")}-0001`;
-            form.setFieldsValue({ code: generatedCode });
-        }
-    }, [form.getFieldValue("subCategoryId")]);
+    //     if (subCategoryId && !currentCode) {
+    //         const generatedCode = `${subCategoryId.toString().padStart(2, "0")}-0001`;
+    //         form.setFieldsValue({ code: generatedCode });
+    //     }
+    // }, [form.getFieldValue("subCategoryId")]);
 
 
     useEffect(() => {
@@ -90,28 +90,11 @@ const ProductCreatePage = () => {
         <>
             <p className="text-center text-3xl font-bold mb-7">Create Product</p>
             <Form form={form} onFinish={onSubmit} labelCol={{ span: 6 }} wrapperCol={{ span: 14 }}>
-                {/* <Form.Item name="code" label="Code" hasFeedback
-                    rules={[{ required: true, message: 'Please provide a product code.' }]}>
-                    <Input placeholder='Enter product code' />
-                </Form.Item> */}
+               
                 <Form.Item name="code" label="Code" hasFeedback>
                     <Input placeholder='Enter product code (optional)' />
                 </Form.Item>
-                {/* <Form.Item name="code" label="Code" hasFeedback>
-                    <Input placeholder="Наприклад: 03-0001" />
-                </Form.Item>
-                <Form.Item shouldUpdate noStyle>
-                    {() => {
-                        const code = form.getFieldValue("code");
-                        return (
-                            code && (
-                                <div className="text-sm text-gray-500 ml-[25%] mb-4">
-                                    Попередній код товару: <strong>{code}</strong>
-                                </div>
-                            )
-                        );
-                    }}
-                </Form.Item> */}
+               
 
                 <Form.Item name="slug" label="Slug" hasFeedback>
                     <Input placeholder="Автоматично згенеровано" disabled />
