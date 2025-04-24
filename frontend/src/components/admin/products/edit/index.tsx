@@ -4,7 +4,7 @@ import { API_URL } from "../../../../env";
 import { Button, Form, Modal, Input, Upload, UploadFile, Space, InputNumber, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { IProductEdit } from "../../../../interfaces/products";
-import { useGetProductBySlugQuery, useUpdateProductMutation, useGetProductsQuery } from "../../../../services/productApi";
+import { useGetProductBySlugQuery, useUpdateProductMutation } from "../../../../services/productApi";
 import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
 
 const ProductEditPage = () => {
