@@ -10,23 +10,13 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# RUN echo 'server { \
-#     listen 80; \
-#     server_name balloons.in.ua api.balloons.in.ua; \
-#     location /.well-known/acme-challenge/ { \
-#         root /var/www/certbot; \
-#     } \
-#     return 301 https://$host$request_uri; \
-# } \
-RUN echo 'server { \ 
-      listen 80; \
-      server_name balloons.in.ua api.balloons.in.ua; \
-      location /.well-known/acme-challenge/ { \
-          root /var/www/certbot; \
-      } \
-      location / { \
-        # return 301 https://$host$request_uri; \
-      } \
+RUN echo 'server { \
+    listen 80; \
+    server_name balloons.in.ua api.balloons.in.ua; \
+    location /.well-known/acme-challenge/ { \
+        root /var/www/certbot; \
+    } \
+    return 301 https://$host$request_uri; \
 } \
 server { \
     listen 443 ssl; \
