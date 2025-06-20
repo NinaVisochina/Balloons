@@ -25,7 +25,7 @@ RUN echo 'server { \
           root /var/www/certbot; \
       } \
       location / { \
-        return 301 https://$host$request_uri; \
+        # return 301 https://$host$request_uri; \
       } \
 } \
 server { \
